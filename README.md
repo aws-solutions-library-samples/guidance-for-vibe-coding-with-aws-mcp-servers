@@ -2,24 +2,32 @@
 
 ## Table of Contents
 
-1. [Overview](#overview)
-   - [Architecture](#architecture)
-   - [Cost](#cost)
-2. [Deployment Options](#deployment-options)
-3. [Repository Structure](#repository-structure)
-4. [Prerequisites](#prerequisites)
-   - [Operating System](#operating-system)
-   - [Third-party Tools](#third-party-tools)
-   - [AWS Account Requirements](#aws-account-requirements)
-   - [Supported Regions](#supported-regions)
-5. [Deployment Steps](#deployment-steps)
-6. [Deployment Validation](#deployment-validation)
-7. [Running the Guidance](#running-the-guidance)
-8. [Next Steps](#next-steps)
-9. [Cleanup](#cleanup)
-10. [FAQ and Known Issues](#faq-and-known-issues)
-11. [Notices](#notices)
-12. [Authors](#authors)
+- [Guidance for Vibe Coding AI Agents with AWS MCP Servers](#guidance-for-vibe-coding-ai-agents-with-aws-mcp-servers)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+    - [Architecture](#architecture)
+    - [Cost](#cost)
+    - [Sample Cost Table](#sample-cost-table)
+  - [Deployment Options](#deployment-options)
+    - [Option 1: AWS Workshop Studio (Recommended for Workshop Participants)](#option-1-aws-workshop-studio-recommended-for-workshop-participants)
+    - [Option 2: Self-Deployment in Your Own AWS Account](#option-2-self-deployment-in-your-own-aws-account)
+  - [Repository Structure](#repository-structure)
+    - [System Components](#system-components)
+  - [Prerequisites](#prerequisites)
+    - [Operating System](#operating-system)
+    - [Third-party Tools](#third-party-tools)
+    - [AWS Account Requirements](#aws-account-requirements)
+    - [Supported Regions](#supported-regions)
+  - [Deployment Steps](#deployment-steps)
+    - [Step 1: Clone the Repository](#step-1-clone-the-repository)
+    - [Step 2: Install Dependencies and Start Workshop Documentation](#step-2-install-dependencies-and-start-workshop-documentation)
+  - [Deployment Validation](#deployment-validation)
+  - [Running the Guidance](#running-the-guidance)
+  - [Next Steps](#next-steps)
+  - [Cleanup](#cleanup)
+  - [FAQ and Known Issues](#faq-and-known-issues)
+  - [Notices](#notices)
+  - [Authors](#authors)
 
 ## Overview
 
@@ -61,27 +69,26 @@ The solution implements a multi-tier architecture combining Amazon Bedrock Agent
 
 ### Cost
 
-You are responsible for the cost of the AWS services used while running this Guidance. As of October 2025, the cost for running this Guidance with the default settings in the US West (Oregon) Region is estimated at approximately $XX.XX per month for processing XXXXX requests.
+You are responsible for the cost of the AWS services used while running this Guidance. As of October 2025, the cost for running this Guidance with the default settings in the US West (Oregon) Region is estimated at approximately **$258 per month** for continuous 24/7 operation.
 
-**Note:** Cost estimation is pending completion. This section will be updated with detailed pricing breakdown from AWS Pricing Calculator.
+**Note:** This estimate assumes continuous 24/7 usage with a moderately active workload. Actual costs will vary based on your specific usage patterns, interaction frequency, and data volumes.
 
 We recommend creating a [Budget](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html) through [AWS Cost Explorer](https://aws.amazon.com/aws-cost-management/aws-cost-explorer/) to help manage costs. Prices are subject to change. For full details, refer to the pricing webpage for each AWS service used in this Guidance.
 
 ### Sample Cost Table
 
-The following table provides a sample cost breakdown for deploying this Guidance with the default parameters in the US West (Oregon) Region for 3 hours of usage.
+The following table provides a sample cost breakdown for deploying this Guidance with the default parameters in the US West (Oregon) Region.
 
-| AWS Service              | Purpose                            | Cost [USD] | Note               |
-| ------------------------ | ---------------------------------- | ---------- | ------------------ |
-| Amazon Bedrock           | Agent model invocation             | $0.18      |                    |
-| Amazon Bedrock AgentCore | Hotel booking agent and MCP Server | $0.65      | 0.5 vCPU, 1 GB     |
-| Amazon Comprehend        | Toxicity detection API             | $0.03      | Optional challenge |
-| AWS DynamoDB             | Mock APIs                          | $0.003     |                    |
-| AWS Lambda               | Mock APIs                          | $0.0001    |                    |
-| Amazon ECR               | AgentCore image                    | $0.004     |                    |
-| Amazon CloudWatch        | Monitoring and logs                | $0.50      |                    |
-| Amazon Location Service  | Property resolution API            | $0.01      |                    |
-| **Total**                |                                    | **$1.38**  |                    |
+| AWS Service              | Purpose                            | Monthly Cost | Note                                                      |
+| ------------------------ | ---------------------------------- | ------------ | --------------------------------------------------------- |
+| Amazon Bedrock           | Agent model invocation             | $129.60      | 10K input, 10K output per hour assumption                 |
+| Amazon Bedrock AgentCore | Hotel booking agent and MCP Server | $114.91      | 0.5 vCPU, 1 GB, 100 events per hour for short term memory |
+| Amazon Comprehend        | Toxicity detection API             | $1.44        | Optional challenge (20 requests per hour)                 |
+| AWS DynamoDB             | Mock APIs                          | $1.83        |                                                           |
+| AWS Lambda               | Mock APIs                          | $0.07        |                                                           |
+| Amazon ECR               | AgentCore image                    | $0.10        | 1 GB Container Image storage                              |
+| Amazon CloudWatch        | Monitoring and logs                | $10.00       | 20 GB log storage                                         |
+| **Total**                |                                    | **$257.96**  |                                                           |
 
 ## Deployment Options
 
@@ -237,8 +244,7 @@ While the solution may work in other regions, these two regions are officially s
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/aws-samples/agentcore-tech-summit-2025.git
-cd agentcore-tech-summit-2025
+git clone https://github.com/aws-solutions-library-samples/guidance-for-vibe-coding-with-aws-mcp-servers.git
 ```
 
 ### Step 2: Install Dependencies and Start Workshop Documentation

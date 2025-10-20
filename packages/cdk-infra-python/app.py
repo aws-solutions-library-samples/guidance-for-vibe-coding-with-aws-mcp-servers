@@ -18,7 +18,9 @@ MockApisStack(
 
 # Hotel Booking Agent stack (must be deployed first)
 booking_agent_stack = BookingAgentCoreStack(
-    app, "AgentCoreTechSummitBookingAgent", description="Hotel Booking Agent for AgentCore Tech Summit 2025 workshop"
+    app,
+    "AgentCoreTechSummitBookingAgent",
+    description="Hotel Booking Agent for AgentCore Tech Summit 2025 workshop (Solution ID: SO9638)",
 )
 
 # MCP Server stack (depends on booking agent stack)
