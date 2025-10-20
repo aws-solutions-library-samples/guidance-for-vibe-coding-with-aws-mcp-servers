@@ -1,0 +1,1 @@
+# Property Resolution construct package

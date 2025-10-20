@@ -1,0 +1,74 @@
+meta {
+  name: Misspelled Property Name Query
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{apiUrl}}/property-resolution
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  X-Api-Key: {{apiKey}}
+}
+
+body:json {
+  {
+    "unique_client_id": "AWS_PACE_Agent",
+    "anon_guest_id": "guest_12345",
+    "input": {
+      "query": "san franciso hotles"
+    },
+    "session_context": {
+      "session_id": "session_test_{{testId}}",
+      "local_ts": "2025-05-21T12:00:00Z",
+      "country_name": "United States",
+      "region_name": "California",
+      "city_name": "San Francisco",
+      "user_agent": "Bruno Test Client"
+    }
+  }
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("Response includes San Francisco properties despite misspellings", function() {
+    expect(res.body).to.have.property("statusCode");
+    expect(res.body.statusCode).to.equal(200);
+    
+    expect(res.body).to.have.property("result");
+    expect(res.body.result).to.be.an("array").that.is.not.empty;
+    
+    // Check for San Francisco properties in results
+    const sfProperties = res.body.result.filter(p => 
+      p.metadata.address.city.toLowerCase().includes("san francisco"));
+    expect(sfProperties.length).to.be.at.least(1);
+    
+    // Verify fuzzy matching worked - expect at least 2 properties despite misspellings
+    expect(res.body.result.length).to.be.at.least(2);
+  });
+  
+  test("Properties include required fields", function() {
+    const firstProperty = res.body.result[0];
+    
+    // Check required fields
+    expect(firstProperty).to.have.property("spirit_cd");
+    expect(firstProperty.spirit_cd).to.be.a("string");
+    
+    expect(firstProperty).to.have.property("hotel_id");
+    expect(firstProperty.hotel_id).to.be.a("number");
+    
+    expect(firstProperty).to.have.property("metadata");
+    expect(firstProperty.metadata).to.have.property("property_name");
+    expect(firstProperty.metadata).to.have.property("address");
+    
+    expect(firstProperty).to.have.property("rank");
+    expect(firstProperty.rank).to.be.a("number");
+  });
+}

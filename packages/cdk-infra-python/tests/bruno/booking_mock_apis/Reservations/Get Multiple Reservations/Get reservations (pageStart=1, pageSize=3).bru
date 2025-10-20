@@ -1,0 +1,20 @@
+meta {
+  name: Get reservations (pageStart=1, pageSize=3)
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{apiUrl}}/reservation?pageStart=1&pageSize=3
+  body: none
+  auth: none
+
+headers {
+  X-Api-Key: {{apiKey}}
+}
+}
+
+params:query {
+  pageStart: 1
+  pageSize: 3
+}

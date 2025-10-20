@@ -1,0 +1,1174 @@
+openapi: 3.0.1
+info:
+  title: Reservation Services
+  description: "These APIs provide orchestrations relating to creating, modifying,\
+    \ canceling, retrieving, and back-office processing of hotel reservations."
+  version: "1.0"
+servers:
+- url: https://services-c1.synxis.com/v1/api/
+# security:
+# - oauth2_authentication: []
+tags:
+- name: Reservation
+  description: "The Reservation APIs are designed to create, retrieve, update, and\
+    \ cancel bookings."
+- name: Reservation Notification
+  description: The Reservation Notification APIs are designed to create or update
+    a booking without an availability check. The product requested is assumed to be
+    available.
+- name: Reservation Summary
+  description: The Reservation Summary APIs are designed to retrieve and reset aggregated
+    reservation counts.
+paths:
+  /reservation:
+    get:
+      tags:
+      - Reservation
+      summary: Gets a list of reservations.
+      description: Gets a list of reservations based on a wide variety of search criteria.
+      operationId: queryReservations
+      parameters:
+      - name: status
+        in: query
+        description: Identifies the reservation status.
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - Booked
+            - Cancelled
+            - Confirmed
+            - Ignored
+            - OnHold
+            - PendingModify
+            - PaymentPending
+            - Requested
+            - Released
+            - Stored
+            - Waitlisted
+      - name: crsConfirmationNumber
+        in: query
+        description: "CRS confirmation number(s), matches all."
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: arrival
+        in: query
+        description: "Arrival dates used in the search. If blank, the search will\
+          \ include all dates.  Values are start and end dates delimited by a semi-colon\
+          \ (;). \n* ```arrival=2023-07-15;2023-07-21``` (includes reservations arriving\
+          \ between the semi-colon separated dates).\n"
+        schema:
+          type: string
+      - name: departure
+        in: query
+        description: "Departure dates used in the search.  If blank, the search will\
+          \ include all dates.  Values are start and end dates delimited by a semi-colon\
+          \ (;), ***None***, ***Past***, ***Future***.  \n* ```departure=2023-08-10;2023-08-11```\
+          \ (includes reservations departing between the semi-colon separated dates).\n\
+          * ```departure=None``` (specifies an unbound search)\n* ```departure=Past```\
+          \ (includes all Past departure dates)\n* ```departure=Future``` (includes\
+          \ all Future departure dates)\n"
+        schema:
+          type: string
+      - name: pageStart
+        in: query
+        description: Starting record to be returned in the response.
+        schema:
+          type: string
+        example: "0"
+      - name: pageSize
+        in: query
+        description: Number of records to be returned in the response (0 = return
+          all).
+        schema:
+          type: string
+        example: "1"
+      responses:
+        "200":
+          description: List of matching reservations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationsModel'
+    post:
+      tags:
+      - Reservation
+      summary: Creates a new reservation.
+      description: |
+        Create a reservation with a reservation status of ***Booked***, ***Waitlisted***, ***OnHold***, or ***Confirmed***.
+      operationId: createReservation
+      requestBody:
+        description: Reservation model.
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/BookingModel'
+        required: true
+      responses:
+        "200":
+          description: Created reservation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationsModel'
+      x-codegen-request-body-name: rez
+    patch:
+      tags:
+      - Reservation
+      summary: Updates an existing reservation.
+      description: |
+        Enables modification of a previously booked reservation using only the data included in the request message.
+      operationId: modifyReservation
+      requestBody:
+        description: Update reservation model.
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/UpdateBookingModel'
+        required: true
+      responses:
+        "200":
+          description: Updated reservation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationsModel'
+      x-codegen-request-body-name: updateRezRequest
+  /reservation/cancel:
+    post:
+      tags:
+      - Reservation
+      summary: Cancels a reservation.
+      description: |
+        This operation allows the user to cancel a reservation.  Reservations cannot be cancelled if any of the following are true.
+          * Reservation status is not ***Confirmed*** or is already cancelled
+          * Reservation cancellation policy does not allow a cancellation
+          * Reservation package policy does not allow a cancellation
+      operationId: cancelReservation
+      requestBody:
+        description: Reservation cancellation model.
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/CancelModel'
+        required: true
+      responses:
+        "200":
+          description: Cancel response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelResponseModel'
+      x-codegen-request-body-name: rez
+  /reservation/hotel/{hotelId}/{id}:
+    get:
+      tags:
+      - Reservation
+      summary: Retrieves a single reservation.
+      description: |
+        Retrieve a reservation by hotel and reservation id.
+      operationId: fetchReservation
+      parameters:
+      - name: hotelId
+        in: path
+        description: Id that uniquely identifies a single hotel property in SynXis
+          CR.
+        required: true
+        schema:
+          type: string
+        example: "11113"
+      - name: id
+        in: path
+        description: "The id will be matched to itinerary number, confirmation number,\
+          \ guest CRS reference number and cancellation number, in that order. The\
+          \ first match will be returned."
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A single reservation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationResponseModel'
+  /reservation/availability:
+    get:
+      tags:
+      - Reservation
+      summary: Check room availability for specific dates
+      description: Returns available room types with pricing and amenities for the specified hotel and date range
+      operationId: checkRoomAvailability
+      parameters:
+      - name: hotel_id
+        in: query
+        description: Hotel ID or spirit code (e.g., HCSF, 10001)
+        required: true
+        schema:
+          type: string
+        example: "HCSF"
+      - name: check_in_date
+        in: query
+        description: Check-in date in YYYY-MM-DD format
+        required: true
+        schema:
+          type: string
+          format: date
+        example: "2024-03-15"
+      - name: check_out_date
+        in: query
+        description: Check-out date in YYYY-MM-DD format
+        required: true
+        schema:
+          type: string
+          format: date
+        example: "2024-03-17"
+      - name: room_type
+        in: query
+        description: Optional specific room type to filter (e.g., King, Queen, Suite)
+        required: false
+        schema:
+          type: string
+        example: "King"
+      responses:
+        "200":
+          description: Room availability results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomAvailabilityResponse'
+        "400":
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomAvailabilityError'
+  /reservation/payment/validate:
+    post:
+      tags:
+      - Reservation
+      summary: Validate credit card payment information
+      description: Validates credit card details including card number, expiration date, CVV, and cardholder name using industry standard validation
+      operationId: validatePaymentDetails
+      requestBody:
+        description: Credit card payment information to validate
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentValidationRequest'
+      responses:
+        "200":
+          description: Payment validation results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentValidationResponse'
+        "400":
+          description: Invalid payment information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentValidationResponse'
+components:
+  schemas:
+    UpdateBookingModel:
+      type: object
+      properties:
+        Reservations:
+          type: array
+          items:
+            $ref: '#/components/schemas/BookingModel'
+    BookingModel:
+      type: object
+      properties:
+        BookingInfo:
+          type: object
+          properties:
+            BookedBy:
+              type: string
+              description: Name of a person who made a reservation.
+              example: John Doe
+            BookingDate:
+              type: string
+              description: Date when a booking is created (YYYY-MM-DDTHH:MM:SS).
+              format: date
+        Brand:
+          type: object
+          properties:
+            Code:
+              type: string
+              description: Code identifying a specific brand.
+              example: PB1
+            Id:
+              type: integer
+              description: Unique number that identifies a specific brand in SynXis
+                CR.
+              example: 800003
+            Name:
+              type: string
+              description: Name of a brand.
+              example: Paradise Brand Group
+        CrsConfirmationNumber:
+          type: string
+          description: CRS confirmation number identifying a reservation.
+          example: 64707CU000968
+        Chain:
+          type: object
+          properties:
+            Code:
+              type: string
+              description: Unique Code that identifies a hotel chain or management
+                group in SynXis CR.
+              example: SYHC
+            Id:
+              type: integer
+              description: Unique Id that identifies a hotel chain or management group
+                in SynXis CR.
+              example: 15458
+            Name:
+              type: string
+              description: SynXis hotel chain.
+        Currency:
+          type: object
+          properties:
+            Code:
+              type: string
+              description: "Currency code for the monetary unit. Use ISO 4217, three\
+                \ alpha codes."
+              example: USD
+            Name:
+              type: string
+              description: Name of the currency.
+              example: US Dollars
+            Symbol:
+              type: string
+              description: Symbol of the currency.
+              example: $
+        Guests:
+          type: array
+          xml:
+            name: Guest
+          items:
+            type: object
+            properties:
+              Comments:
+                type: string
+                description: Specifies comments for the guest.
+              EmailAddress:
+                type: array
+                xml:
+                  name: Email
+                items:
+                  type: object
+                  properties:
+                    Type:
+                      type: string
+                      description: Type of an email address of a guest.
+                      example: Primary
+                      enum:
+                      - Mobile
+                      - Primary
+                    Value:
+                      type: string
+                      description: Email address of the guest.
+                      example: larry.walker@mail.com
+              ContactNumbers:
+                type: array
+                xml:
+                  name: ContactNumber
+                items:
+                  type: object
+                  properties:
+                    Number:
+                      type: string
+                      description: A contact number through which a guest can be reached.
+                      example: "55512345678"
+              DateOfBirth:
+                type: string
+                description: Guest date of birth.
+                format: date
+                example: 1985-05-18
+              Gender:
+                type: string
+                description: Identifies the gender of a guest.
+                example: Male
+                enum:
+                - Female
+                - Male
+                - Unspecified
+              Payments:
+                type: array
+                xml:
+                  name: Payment
+                items:
+                  type: object
+                  properties:
+                    Amount:
+                      type: number
+                      description: Specifies the amount to be applied to the payment
+                        method in a split payment scenario.
+                      example: 125.0
+                    PaymentCard:
+                      $ref: '#/components/schemas/PaymentCardModel'
+                    Type:
+                      type: string
+                      description: Specifies the type of a payment method.
+                      example: CreditCard
+                      enum:
+                      - BankDeposit
+                      - Cash
+                      - Check
+                      - CreditCard
+                      - DirectBill
+                      - eWallet
+                      - LoyaltyCertificate
+                      - LoyaltyPoints
+                      - MailDeposit
+                      - None
+                      - TravelAgent
+                      - Undetermined
+              PersonName:
+                type: object
+                properties:
+                  GivenName:
+                    type: string
+                    description: Specifies the Given/First name of a guest.
+                    example: Larry
+                  MiddleName:
+                    type: string
+                    description: Specifies a middle initial of a guest (maximum of
+                      2 characters).
+                    example: A
+                  Surname:
+                    type: string
+                    description: Specifies the Surname/Lastname of the guest.
+                    example: Walker
+        Hotel:
+          type: object
+          properties:
+            Code:
+              type: string
+              description: Code that uniquely identifies a single hotel property in
+                SynXis CR.
+              example: HOP
+            Id:
+              type: integer
+              description: Unique Id that identifies a hotel in SynXis CR.
+              example: 13098
+            Name:
+              type: string
+              description: Name of a hotel.
+              example: SynXis Hotel
+        RoomPrices:
+          type: object
+          properties:
+            TotalPrice:
+              type: object
+              properties:
+                Price:
+                  $ref: '#/components/schemas/PriceModel'
+        RoomStay:
+          type: object
+          properties:
+            GuestCount:
+              type: array
+              xml:
+                name: Count
+              items:
+                type: object
+                properties:
+                  NumGuests:
+                    type: integer
+                    description: Number of guests associated with the package.
+                    example: 2
+            NumRooms:
+              type: integer
+              description: Specifies how many rooms are requested.
+              example: 1
+            Products:
+              type: array
+              xml:
+                name: Product
+              items:
+                type: object
+                properties:
+                  Product:
+                    type: object
+                    properties:
+                      RoomCode:
+                        type: string
+                        description: Code associated with a room.
+                        example: A1K
+                      RoomName:
+                        type: string
+                        description: Name associated with a room.
+                        example: Standard King
+                      RoomUnit:
+                        type: string
+                        description: Specifies a room unit number associated with
+                          a stay date.  Only applicable for Property Management Systems.
+                        example: "201"
+                  Price:
+                    type: object
+                    properties:
+                      Amount:
+                        type: number
+                        description: Amount is used to specify the applicable amount.
+                        example: 250.0
+                      Points:
+                        type: number
+                        description: Points is used to specify the applicable points
+                          value.
+                        example: 5000.0
+            CheckInDate:
+              type: string
+              description: Defines the check in date.
+              format: date
+            CheckOutDate:
+              type: string
+              description: Defines the check-out date.
+              format: date
+        status:
+          type: string
+          description: Current state of the reservation.
+          example: Confirmed
+          enum:
+          - Booked
+          - Cancelled
+          - Confirmed
+          - Ignored
+          - OnHold
+          - PendingModify
+          - PaymentPending
+          - Requested
+          - Released
+          - Stored
+          - Waitlisted
+    CancelModel:
+      type: object
+      properties:
+        Hotel:
+          type: object
+          properties:
+            Id:
+              type: integer
+              description: Id that uniquely identifies a single hotel property in
+                SynXis CR.
+              example: 11113
+        CrsConfirmationNumber:
+          type: string
+          description: SynXis CR reservation confirmation number.
+          example: 11113EC000239
+        CancellationDetails:
+          type: object
+          properties:
+            Comment:
+              type: string
+              description: Comments associated to the canceled reservation.
+              example: Family issues
+    CancelResponseModel:
+      type: object
+      properties:
+        CrsCancellationNumber:
+          type: string
+          description: SynXis CR reservation confirmation number.
+          example: 11113X000239
+    ReservationsModel:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        reservations:
+          type: array
+          xml:
+            name: Reservation
+          items:
+            $ref: '#/components/schemas/ReservationResponseModel'
+    ReservationResponseModel:
+      allOf:
+      - $ref: '#/components/schemas/BookingModelResponse'
+      - type: object
+        properties:
+          CreateDateTime:
+            type: string
+            description: The UTC Datetime when the reservation was created.
+            example: 2023-07-17T19:24:57
+          UpdateDateTime:
+            type: string
+            description: The UTC Datetime of the last update to the reservation.
+            example: 2023-07-17T19:24:57
+    Pagination:
+      type: object
+      properties:
+        total:
+          type: integer
+          description: Total number of records.
+          example: 1
+        start:
+          type: integer
+          description: Start index of the record.
+          example: 0
+        size:
+          type: integer
+          description: Number of records in the response.
+          example: 0
+    PriceModel:
+      type: object
+      properties:
+        CurrencyCode:
+          type: string
+          description: ISO 4217 three alpha currency code.
+          example: USD
+        TotalAmount:
+          type: number
+          description: Total value of the price.
+          example: 200.0
+        TotalAmountIncludingTaxesFees:
+          type: number
+          description: Total value of the price with taxes and fees included.
+          example: 335.5
+      description: Contains details for the pricing elements.
+    PaymentCardModel:
+      type: object
+      properties:
+        CardHolder:
+          type: string
+          description: Specifies who is the card holder.
+          example: Larry Walker
+        CardNumber:
+          type: string
+          description: Number of a credit card.
+          example: "4444444444444444"
+        CardSecurityCode:
+          type: string
+          description: Security code of a credit card.
+          example: "123"
+        ExpireDate:
+          type: string
+          description: Expiration date of a credit card.
+          example: "1223"
+    PaymentCardModelResponse:
+      type: object
+      properties:
+        CardHolder:
+          type: string
+          description: Specifies who is the card holder.
+          example: Larry Walker
+        CardNumber:
+          type: string
+          description: Number of a credit card.
+          example: "4444444444444444"
+        CardSecurityCode:
+          type: string
+          description: Security code of a credit card.
+          example: "123"
+        ExpireDate:
+          type: string
+          description: Expiration date of a credit card.
+          example: "1223"
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+          x-mapping: ApplicationResults.Success
+        timeStamp:
+          type: string
+          format: date-time
+          x-mapping: ApplicationResults.Success.TimeStamp
+    ErrorResponse:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: Returns an application-specific code associated with the error.
+          example: Error Code
+          x-mapping: ApplicationResults.Error.SystemSpecificResults.Message.Code
+        errorMessage:
+          type: string
+          description: Returns an application-specific message associated with the
+            error.
+          example: InvalidHotelId
+          x-mapping: ApplicationResults.Error.SystemSpecificResults.Message.Value
+        timeStamp:
+          type: string
+          description: Timestamp when the message was processed.
+          format: date-time
+          x-mapping: ApplicationResults.Error.TimeStamp
+    BookingModelResponse:
+      type: object
+      properties:
+        BookingInfo:
+          type: object
+          properties:
+            BookedBy:
+              type: string
+              description: Name of a person who made a reservation.
+              example: John Doe
+            BookingDate:
+              type: string
+              description: Date when a booking is created (YYYY-MM-DDTHH:MM:SS).
+              format: date
+        Brand:
+          type: object
+          properties:
+            Code:
+              type: string
+              description: Code identifying a specific brand.
+              example: PB1
+            Id:
+              type: integer
+              description: Unique number that identifies a specific brand in SynXis
+                CR.
+              example: 800003
+            Name:
+              type: string
+              description: Name of a brand.
+              example: Paradise Brand Group
+        CrsConfirmationNumber:
+          type: string
+          description: CRS confirmation number identifying a reservation.
+          example: 64707CU000968
+        Chain:
+          type: object
+          properties:
+            Code:
+              type: string
+              description: Unique Code that identifies a hotel chain or management
+                group in SynXis CR.
+              example: SYHC
+            Id:
+              type: integer
+              description: Unique Id that identifies a hotel chain or management group
+                in SynXis CR.
+              example: 15458
+            Name:
+              type: string
+              description: SynXis hotel chain.
+        Currency:
+          type: object
+          properties:
+            Code:
+              type: string
+              description: "Currency code for the monetary unit. Use ISO 4217, three\
+                \ alpha codes."
+              example: USD
+            Name:
+              type: string
+              description: Name of the currency.
+              example: US Dollars
+            Symbol:
+              type: string
+              description: Symbol of the currency.
+              example: $
+        Guests:
+          type: array
+          xml:
+            name: Guest
+          items:
+            type: object
+            properties:
+              Comments:
+                type: string
+                description: Specifies comments for the guest.
+              EmailAddress:
+                type: array
+                xml:
+                  name: Email
+                items:
+                  type: object
+                  properties:
+                    Type:
+                      type: string
+                      description: Type of an email address of a guest.
+                      example: Primary
+                      enum:
+                      - Mobile
+                      - Primary
+                    Value:
+                      type: string
+                      description: Email address of the guest.
+                      example: larry.walker@mail.com
+              ContactNumbers:
+                type: array
+                xml:
+                  name: ContactNumber
+                items:
+                  type: object
+                  properties:
+                    Number:
+                      type: string
+                      description: A contact number through which a guest can be reached.
+                      example: "55512345678"
+              DateOfBirth:
+                type: string
+                description: Guest date of birth.
+                format: date
+                example: 1985-05-18
+              Gender:
+                type: string
+                description: Identifies the gender of a guest.
+                example: Male
+                enum:
+                - Female
+                - Male
+                - Unspecified
+              Payments:
+                type: array
+                xml:
+                  name: Payment
+                items:
+                  type: object
+                  properties:
+                    Amount:
+                      type: number
+                      description: Specifies the amount to be applied to the payment
+                        method in a split payment scenario.
+                      example: 125.0
+                    PaymentCard:
+                      $ref: '#/components/schemas/PaymentCardModelResponse'
+                    Type:
+                      type: string
+                      description: Specifies the type of a payment method.
+                      example: CreditCard
+                      enum:
+                      - BankDeposit
+                      - Cash
+                      - Check
+                      - CreditCard
+                      - DirectBill
+                      - eWallet
+                      - LoyaltyCertificate
+                      - LoyaltyPoints
+                      - MailDeposit
+                      - None
+                      - TravelAgent
+                      - Undetermined
+              PersonName:
+                type: object
+                properties:
+                  GivenName:
+                    type: string
+                    description: Specifies the Given/First name of a guest.
+                    example: Larry
+                  MiddleName:
+                    type: string
+                    description: Specifies a middle initial of a guest (maximum of
+                      2 characters).
+                    example: A
+                  Surname:
+                    type: string
+                    description: Specifies the Surname/Lastname of the guest.
+                    example: Walker
+        Hotel:
+          type: object
+          properties:
+            Code:
+              type: string
+              description: Code that uniquely identifies a single hotel property in
+                SynXis CR.
+              example: HOP
+            Id:
+              type: integer
+              description: Unique Id that identifies a hotel in SynXis CR.
+              example: 13098
+            Name:
+              type: string
+              description: Name of a hotel.
+              example: SynXis Hotel
+        RoomPrices:
+          type: object
+          properties:
+            TotalPrice:
+              type: object
+              properties:
+                Price:
+                  $ref: '#/components/schemas/PriceModel'
+        RoomStay:
+          type: object
+          properties:
+            GuestCount:
+              type: array
+              xml:
+                name: Count
+              items:
+                type: object
+                properties:
+                  NumGuests:
+                    type: integer
+                    description: Number of guests associated with the package.
+                    example: 2
+            NumRooms:
+              type: integer
+              description: Specifies how many rooms are requested.
+              example: 1
+            Products:
+              type: array
+              xml:
+                name: Product
+              items:
+                type: object
+                properties:
+                  Product:
+                    type: object
+                    properties:
+                      RoomCode:
+                        type: string
+                        description: Code associated with a room.
+                        example: A1K
+                      RoomName:
+                        type: string
+                        description: Name associated with a room.
+                        example: Standard King
+                      RoomUnit:
+                        type: string
+                        description: Specifies a room unit number associated with
+                          a stay date.  Only applicable for Property Management Systems.
+                        example: "201"
+                  Price:
+                    type: object
+                    properties:
+                      Amount:
+                        type: number
+                        description: Amount is used to specify the applicable amount.
+                        example: 250.0
+                      Points:
+                        type: number
+                        description: Points is used to specify the applicable points
+                          value.
+                        example: 5000.0
+            CheckInDate:
+              type: string
+              description: Defines the check in date.
+              format: date
+            CheckOutDate:
+              type: string
+              description: Defines the check-out date.
+              format: date
+        status:
+          type: string
+          description: Current state of the reservation.
+          example: Confirmed
+          enum:
+          - Booked
+          - Cancelled
+          - Confirmed
+          - Ignored
+          - OnHold
+          - PendingModify
+          - PaymentPending
+          - Requested
+          - Released
+          - Stored
+          - Waitlisted
+    RoomAvailabilityResponse:
+      type: object
+      properties:
+        hotel_id:
+          type: string
+          description: Hotel ID or spirit code
+          example: "HCSF"
+        check_in_date:
+          type: string
+          format: date
+          description: Check-in date
+          example: "2024-03-15"
+        check_out_date:
+          type: string
+          format: date
+          description: Check-out date
+          example: "2024-03-17"
+        num_nights:
+          type: integer
+          description: Number of nights
+          example: 2
+        total_available:
+          type: integer
+          description: Total number of available room types
+          example: 3
+        message:
+          type: string
+          description: Human-readable result message
+          example: "Found 3 room types available"
+        available_rooms:
+          type: array
+          items:
+            $ref: '#/components/schemas/AvailableRoom'
+    AvailableRoom:
+      type: object
+      properties:
+        room_code:
+          type: string
+          description: Room type code
+          example: "A1K"
+        room_name:
+          type: string
+          description: Room type name
+          example: "Standard King"
+        base_rate:
+          type: number
+          format: float
+          description: Base rate per night
+          example: 250.00
+        price_per_night:
+          type: number
+          format: float
+          description: Actual price per night with adjustments
+          example: 275.50
+        price_per_night_usd:
+          type: string
+          description: Formatted price per night
+          example: "$275.50 USD"
+        total_price:
+          type: number
+          format: float
+          description: Total price for the stay
+          example: 551.00
+        total_price_usd:
+          type: string
+          description: Formatted total price
+          example: "$551.00 USD"
+        available_count:
+          type: integer
+          description: Number of rooms available
+          example: 3
+        bed_type:
+          type: string
+          description: Bed configuration
+          example: "One king bed"
+        square_feet:
+          type: integer
+          description: Room size in square feet
+          example: 350
+        max_occupancy:
+          type: integer
+          description: Maximum number of guests
+          example: 2
+        view:
+          type: string
+          description: Room view description
+          example: "City view"
+        amenities:
+          type: string
+          description: Room amenities description
+          example: "Free WiFi, coffee maker, 42-inch flat-screen TV, air conditioning, work desk, luxury bathroom amenities, daily housekeeping"
+        description:
+          type: string
+          description: Room description
+          example: "Comfortable king room perfect for business or leisure travel with essential amenities and city views."
+        pricing_factors:
+          $ref: '#/components/schemas/PricingFactors'
+    PricingFactors:
+      type: object
+      properties:
+        weekend_adjustment:
+          type: boolean
+          description: Whether weekend pricing is applied
+          example: true
+        seasonal_adjustment:
+          type: boolean
+          description: Whether seasonal pricing is applied
+          example: false
+        demand_level:
+          type: string
+          enum: [normal, high]
+          description: Current demand level
+          example: "normal"
+    RoomAvailabilityError:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: "Check-out date must be after check-in date"
+        available_rooms:
+          type: array
+          items:
+            $ref: '#/components/schemas/AvailableRoom'
+          description: Empty array for error responses
+    PaymentValidationRequest:
+      type: object
+      properties:
+        card_number:
+          type: string
+          description: Credit card number (16 digits, spaces allowed)
+          example: "4111111111111111"
+        expiration_month:
+          type: string
+          description: Expiration month (MM format)
+          example: "12"
+        expiration_year:
+          type: string
+          description: Expiration year (YYYY format)
+          example: "2025"
+        cvv:
+          type: string
+          description: CVV security code (3-4 digits)
+          example: "123"
+        cardholder_name:
+          type: string
+          description: Name on the credit card
+          example: "John Doe"
+    PaymentValidationResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Whether validation was successful
+          example: true
+        validation_errors:
+          type: array
+          items:
+            type: string
+          description: List of validation error messages
+          example: []
+        provided_fields:
+          type: object
+          description: Successfully validated fields
+          additionalProperties:
+            type: string
+          example:
+            card_number: "4111111111111111"
+            expiration_month: "12"
+            expiration_year: "2025"
+            cvv: "123"
+            cardholder_name: "John Doe"
+        missing_fields:
+          type: array
+          items:
+            type: string
+          description: List of required fields that are missing
+          example: []
+        is_complete:
+          type: boolean
+          description: Whether all required fields are provided and valid
+          example: true
+        requires_additional_info:
+          type: boolean
+          description: Whether additional information is needed
+          example: false
+        message:
+          type: string
+          description: Human-readable result message
+          example: "Payment details captured and validated successfully"
+  # securitySchemes:
+  #   oauth2_authentication:
+  #     type: oauth2
+  #     flows:
+  #       clientCredentials:
+  #         tokenUrl: https://services-c1.synxis.com/v1/gwauth/token?grant_type=client_credentials&source_ip=127.0.0.1&business_context=WBSVC&user_type=Hotel
+  #         scopes: {}
+  #     x-base64-encode-client-credentials: true
+x-project-id: shsreservationservicesv1
+x-devstudio-disable-autoprovisioned-credentials: true
+x-basePath: /api/v1.0/
+x-original-swagger-version: "2.0"

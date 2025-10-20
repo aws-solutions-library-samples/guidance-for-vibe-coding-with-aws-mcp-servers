@@ -1,0 +1,232 @@
+---
+title: 1. Discovery & Analysis Section
+description: Explore and understand the AgentCore codebase using AI tools
+---
+
+import { Card, CardGrid, Aside, Steps, LinkCard } from "@astrojs/starlight/components";
+
+**Objective**: Use AI tools to explore and understand the AgentCore hotel booking system, practicing AI-powered discovery and analysis techniques.
+
+**Duration**: 20 minutes
+
+## How to Approach This Phase
+
+<Steps>
+1. **Pick and Choose**: You don't need to complete every activity! 
+
+   Select 1-2 prompts from the Core Activities that interest you most, then try one of the AWS MCP server activities, and move on when you feel ready.
+
+2. **Extra Challenges**: If you have additional time, try to tackle the extra challenge.
+
+3. **Save for Later**: Bookmark activities you don't have time for - they make great homework for deeper learning after the workshop.
+
+4. **Move Forward**: Once you have a good understanding of the system, feel free to proceed to the next section.
+</Steps>
+
+## Core Activities
+
+Choose from these AI-powered prompts to explore the AgentCore hotel booking system:
+
+### AgentCore System Exploration Prompts
+
+```
+"Analyze this AgentCore hotel booking system. Explain how the Property Resolution, Reservation Services, and Toxicity Detection APIs work together to create a complete booking experience."
+```
+
+```
+"What are the main AWS services used in this AgentCore implementation and how do they support the hotel booking workflow?"
+```
+
+```
+"Examine the authentication and security patterns across the three hotel booking APIs. How does each service handle API keys, OAuth tokens, and request validation?"
+```
+
+### Hotel Business Logic Analysis Prompts
+
+```
+"Identify the key business logic in the hotel reservation system. How does it handle room availability, pricing, and booking conflicts?"
+```
+
+```
+"Analyze the Property Resolution service. How does it process natural language queries like 'luxury hotels near the beach' and return ranked results?"
+```
+
+```
+"Review the Toxicity Detection implementation. What categories of harmful content does it detect and how are escalation thresholds configured?"
+```
+
+### Code Quality Analysis Prompts
+
+```
+"Review the testing strategy across these AgentCore services. What types of tests exist and what gaps might there be?"
+```
+
+```
+"Analyze the error handling patterns in the hotel booking APIs. How do they provide meaningful feedback to users when things go wrong?"
+```
+
+```
+"What monitoring and observability features are implemented in this AgentCore system? How would you track system health and user experience?"
+```
+
+## AWS MCP Server Activities
+
+Pick one MCP server activity to try (save the other for later exploration):
+
+### 🎨 AWS Diagram MCP Server
+
+**Activity**: Generate architecture diagrams to visualize the system
+
+```
+"Using the AWS Diagram MCP Server, create a diagram showing the AgentCore hotel booking system architecture, including the three APIs, AWS services, and data flow between components."
+```
+
+### 📚 AWS Knowledge MCP Server
+
+**Activity**: Get deeper insights into AWS services and AgentCore
+
+```
+"Using the AWS Knowledge MCP Server, explain what Amazon Bedrock AgentCore is and how it differs from other AI agent frameworks. What are its key capabilities for building intelligent agents?"
+```
+
+## Extra Challenges (Optional)
+
+If you complete the main activities early and want to dive deeper:
+
+### 🧪 Testing the External Mock APIs
+
+#### Manual Testing
+
+Test the deployed mock APIs hands-on using the provided Bruno test suite. This gives you practical understanding of each API's functionality.
+
+<Aside type="note">
+Make sure you installed the [Bruno CLI](/intro/prerequisites/#step-3-install-recommended-tools-optional)
+</Aside>
+
+<Steps>
+
+1. **Configure Bruno Environment Files**
+
+   Update the Bruno environment files with your deployed API URLs and keys:
+
+   <Aside type="tip">
+   Your API URLs and keys were displayed in the CDK deployment output. If you missed them, you can retrieve them with:
+   
+   ```bash
+   # Get stack outputs (includes API IDs, URLs and API Key IDs)
+   aws cloudformation describe-stacks --stack-name AgentCoreTechSummitMockApis --query "Stacks[0].Outputs"
+   ```
+   
+   ```bash
+   # Get actual API key values from the Key IDs
+   aws apigateway get-api-key --api-key YOUR_API_KEY_ID --include-value --query "value"
+   ```
+   
+   Or check the AWS CloudFormation console for outputs and API Gateway console for key values.
+   </Aside>
+
+   **Property Resolution environment:**
+   ```bash title="Updating Bruno Environment file"
+   # Edit the Property Resolution environment file
+   code packages/cdk-infra-python/tests/bruno/booking_mock_apis/environments/PropertyResolution.bru
+   ```
+
+   Replace the placeholder values with your deployed API details:
+   ```js ins="YOUR_PROPERTY_RESOLUTION_API_KEY" ins="YOUR_REGION" ins="YOUR_API_ID" title="PropertyResolution.bru"
+   vars {
+     apiUrl: https://YOUR_API_ID.execute-api.YOUR_REGION.amazonaws.com/dev/api/v1
+     apiKey: YOUR_PROPERTY_RESOLUTION_API_KEY
+     testId: {{$timestamp}}
+   }
+   ```
+
+   **Toxicity Detection environment:**
+   ```bash title="Updating Bruno Environment file"
+   # Edit the Toxicity Detection environment file  
+   code packages/cdk-infra-python/tests/bruno/booking_mock_apis/environments/ToxicityDetection.bru
+   ```
+
+   Replace the placeholder values with your deployed API details:
+   ```js ins="YOUR_API_ID" ins="YOUR_REGION" ins="YOUR_TOXICITY_DETECTION_API_KEY" title="ToxicityDetection.bru"
+   vars {
+     BASE_URL: https://YOUR_API_ID.execute-api.YOUR_REGION.amazonaws.com/dev/api/v1
+     API_KEY: YOUR_TOXICITY_DETECTION_API_KEY
+   }
+   ```
+
+   **Reservations environment:**
+   ```bash title="Updating Bruno Environment file"
+   # Edit the Reservations environment file
+   code packages/cdk-infra-python/tests/bruno/booking_mock_apis/environments/Reservations.bru
+   ```
+
+   Replace the placeholder values with your deployed API details:
+   ```js ins="YOUR_RESERVATIONS_API_ID" ins="YOUR_PROPERTY_API_ID" ins="YOUR_REGION" ins="YOUR_PROPERTY_RESOLUTION_API_KEY" ins="YOUR_RESERVATIONS_API_KEY" title="Reservations.bru"
+   vars {
+     apiUrl: https://YOUR_RESERVATIONS_API_ID.execute-api.YOUR_REGION.amazonaws.com/dev/api/v1
+     apiKey: YOUR_RESERVATIONS_API_KEY
+     propertyResolutionApiUrl: https://YOUR_PROPERTY_API_ID.execute-api.YOUR_REGION.amazonaws.com/dev/api/v1
+     propertyResolutionApiKey: YOUR_PROPERTY_RESOLUTION_API_KEY
+     testId: {{$timestamp}}
+     
+     sfHotel.Id: PLACEHOLDER
+     sfHotel.Code: PLACEHOLDER
+     sfHotel.Name: PLACEHOLDER
+     
+     nyHotel.Id: PLACEHOLDER
+     nyHotel.Code: PLACEHOLDER
+     nyHotel.Name: PLACEHOLDER
+     ...
+   }
+   ```
+
+   <Aside type="note">
+   The Reservations environment includes references to the Property Resolution API because the Setup tests dynamically populate hotel data before running reservation tests. The hotel placeholder values will be filled in automatically by the Setup tests.
+   </Aside>
+
+2. **Run API Tests**
+
+   Navigate to the CDK infrastructure directory and run the test scripts:
+
+   ```bash title="Testing APIs"
+   # Navigate to the CDK directory
+   cd packages/cdk-infra-python
+
+   # Test all APIs at once (recommended first run)
+   pnpm run test:apis:all
+
+   # Or test individual APIs to understand each service:
+   pnpm run test:apis:property-resolution  # Natural language hotel search
+   pnpm run test:apis:reservations         # Complete booking workflow  
+   pnpm run test:apis:toxicity            # Content moderation
+   ```
+
+   <Aside type="caution">
+   If tests fail, double-check that your environment files have the correct API URLs and keys from your CDK deployment output.
+   </Aside>
+
+3. **Analyze Test Results**
+
+   Each test suite validates different aspects:
+
+   - **✅ Property Resolution**: How natural language queries like "chicago hotels" are processed using Amazon Location Services and return ranked results with `hotel_id` fields
+   - **✅ Reservations**: The complete booking lifecycle from creation to cancellation, including complex filtering and pagination  
+   - **✅ Toxicity Detection**: Content moderation with configurable thresholds and whitelisting for hotel-specific terms
+
+   **Understanding the validations:**
+   - **Status codes**: Ensures APIs respond correctly (200 OK, 400 Bad Request, etc.)
+   - **Response structure**: Validates required fields and data types
+   - **Business logic**: Tests hotel search ranking, reservation workflows, and content filtering
+   - **Error handling**: Confirms proper error responses for invalid inputs
+
+</Steps>
+
+#### AI-Assisted Testing
+
+Alternatively, you can first read the manual testing steps above, and then work with your AI assistant, and ask it to update the placeholder values and run the tests on your behalf.
+
+<Aside type="note" title="Did all tests pass?">
+- Carefully review the output of each test suite, notice anything not passing? A few test step failures do not necessarily mean the APIs are not working
+- Try working with your AI assistant into identifying the root cause of any test failure you might find
+- Are the test cases too strict? Should any of them be updated?
+</Aside>

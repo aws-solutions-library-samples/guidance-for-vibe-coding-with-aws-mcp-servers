@@ -1,0 +1,39 @@
+meta {
+  name: Get New York Reservation
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{apiUrl}}/reservation/hotel/{{nyHotel.Id}}/{{nyConfirmationNumber}}
+  body: none
+  auth: none
+
+headers {
+  X-Api-Key: {{apiKey}}
+}
+}
+
+script:pre-request {
+  console.log(`Looking up NY reservation: ${bru.getEnvVar("nyConfirmationNumber")}`);
+  
+  // Validate we have required data before executing
+  if (!bru.getEnvVar("nyConfirmationNumber")) {
+    console.error("❌ Missing confirmation number! Run 01_Create_NY_Reservation.bru first");
+  }
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("Response includes correct hotel ID", function() {
+    expect(res.body).to.have.property("Hotel");
+    expect(res.body.Hotel).to.have.property("Id", parseInt(bru.getEnvVar("nyHotel.Id")));
+  });
+  
+  test("Response includes correct reservation status", function() {
+    expect(res.body).to.have.property("status", "Confirmed");
+  });
+}

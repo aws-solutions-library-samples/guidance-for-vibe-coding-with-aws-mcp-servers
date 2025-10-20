@@ -1,0 +1,181 @@
+---
+title: Setup your own development environment
+description: Instructions on how to setup your own development environment
+---
+
+import { Card, CardGrid, Aside, Steps, LinkCard } from "@astrojs/starlight/components";
+
+## Setup Instructions
+
+### Step 1: Complete Prerequisites
+
+Before deploying the sample application, ensure you have all required tools installed. Review the detailed [Prerequisites Guide](/intro/prerequisites/) which covers:
+
+- AI-Assisted Development Tools (Amazon Q, Cline, Kiro, etc.)
+- Required Software Development Tools (Node.js, Python, uv, pnpm, Docker, AWS CLI, CDK CLI)
+- Optional tools for API testing (Bruno CLI)
+
+If you've already installed these tools, you can proceed directly to Step 2.
+
+### Step 2: Deploy the sample agentic application
+
+<Steps>
+
+1. **Navigate to Workshop Directory**
+
+    Open a terminal and navigate to the workshop repository directory:
+
+    ```bash title="Navigating to workshop directory"
+    cd agentcore-tech-summit-2025
+    ```
+
+    <Aside type="tip">
+      If you don't have the repository yet, you can clone or download it from [GitHub](https://github.com/aws-solutions-library-samples/guidance-for-vibe-coding-with-aws-mcp-servers) before continuing.
+    </Aside>
+
+2. **Install Project Dependencies**
+
+   ```bash title="Installing project dependencies"
+   # Install Node.js dependencies
+   pnpm install
+   ```
+
+   <Aside type="note" title="Python environment management">
+     This project uses `uv` for Python dependency management. 
+     The CDK commands (via `pnpm cdk`) automatically create and manage the Python 
+     virtual environment - no manual setup required!
+   </Aside>
+
+3. **Configure AWS Credentials**
+
+   Ensure your AWS CLI is configured with appropriate permissions:
+
+   ```bash title="Verifying AWS account access"
+   # Verify AWS access
+   aws sts get-caller-identity
+
+   # Set your preferred region (if not already set), we have only tested this workshop using either us-west-2 or us-east-1 regions.
+   export AWS_DEFAULT_REGION=us-west-2
+   ```
+
+4. **Bootstrap CDK (if needed)**
+
+   If this is your first time using CDK in this AWS account/region:
+
+   ```bash title="CDK Bootstrapping" ins="AWS-ACCOUNT-NUMBER"
+   # Bootstrap CDK for your account/region (replace with your actual account number)
+   pnpm cdk bootstrap aws://AWS-ACCOUNT-NUMBER/us-west-2
+   ```
+
+   <Aside type="note" title="Finding your AWS account number">
+     You can find your account number by running `aws sts get-caller-identity`.
+   </Aside>
+
+   <Aside type="caution" title="Troubleshooting">
+     - If you see *Permission Denied* errors with your Python interpreter, try the following:
+      ```bash title="Recreate uv venv"
+      cd /workshop/agentcore-tech-summit-2025/packages/cdk-infra-python
+      rm -rf .venv
+      uv sync
+      ```
+   </Aside>
+
+5. **Deploy the Mock APIs**
+
+   ```bash title="Deploying mock APIs"
+   # Deploy all three hotel booking APIs
+   pnpm cdk deploy --require-approval never AgentCoreTechSummitMockApis
+   ```
+
+   This will deploy:
+   - **Property Resolution API** - Hotel search service
+   - **Reservation Services API** - Booking management service
+   - **Toxicity Detection API** - Content moderation service
+   
+
+
+6. **Retrieve API Configuration**
+
+   After deployment, get your API URLs and keys:
+
+   ```bash title="Getting stack outputs"
+   # Get stack outputs (URLs and API key IDs)
+   aws cloudformation describe-stacks \
+     --stack-name AgentCoreTechSummitMockApis \
+     --query 'Stacks[0].Outputs[*].[OutputKey,OutputValue]' \
+     --output table
+   ```
+
+7. **Deploy the AgentCore Booking Agent Stack**
+
+   ```bash title="Deploying AgentCore Agent Stack"
+   # Deploy the hotel booking agent stack
+   pnpm cdk deploy --require-approval never AgentCoreTechSummitBookingAgent
+   ```
+
+   This will deploy:
+   - **Hotel Booking Agent** - Intelligent agent with memory and conversation capabilities
+   - **AgentCore Infrastructure** - Lambda layers, IAM roles, and shared resources needed for agents
+
+8. **Deploy the AgentCore MCP Server Stack**
+
+   ```bash title="Deploying AgentCore MCP Server Stack"
+   # Deploy the hotel booking MCP server stack
+   pnpm cdk deploy --require-approval never AgentCoreTechSummitMcpServer
+   ```
+
+   This will deploy:
+   - **Hotel Booking MCP Server** - Model Context Protocol server for API integration
+   - **MCP Infrastructure** - Lambda functions and API Gateway endpoints for MCP communication
+
+9. **Verify Stacks Deployment**
+
+    ```bash title="Verifying stacks deployment"
+    # Verify all stacks deployed successfully
+    aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE UPDATE_COMPLETE
+    ```
+
+    You should see all three stacks in the list:
+    - `AgentCoreTechSummitMockApis` - Mock hotel booking APIs
+    - `AgentCoreTechSummitBookingAgent` - Hotel booking agent
+    - `AgentCoreTechSummitMcpServer` - MCP server for API integration
+
+10. **Deploy Agent and MCP Server on Amazon Bedrock AgentCore**
+
+      <Steps>
+         1. Deploy the Agent to Amazon Bedrock AgentCore
+            
+            ```bash title="Deploying Agent to AgentCore"
+            ./packages/agentcore-tools/deploy.sh ./packages/agentcore-agents/hotel-booking-agent/hotel_booking_agent.py hotel_booking_agent
+            ```
+         2. Deploy the MCP Server to Amazon Bedrock AgentCore
+            
+            ```bash title="Deploying MCP Server to AgentCore"
+            ./packages/agentcore-tools/deploy.sh ./packages/agentcore-mcp-servers/hotel-booking/hotel_booking_mcp.py hotel_booking_mcp
+            ```
+         3. Confirm successful deployment
+            - Making sure there are no errors in the output of each script
+            - Verifying that the Agent and the MCP Server are listed on the AWS Console of your account
+      </Steps>
+
+</Steps>
+
+<Aside type="note" title="Deployment Time">
+  The CDK deployment typically takes 5-10 minutes. The stack
+  creates Lambda functions, API Gateway endpoints, DynamoDB tables, and other AWS
+  resources needed for the hotel booking system.
+</Aside>
+
+<Aside type="tip" title="Troubleshooting Deployment">
+  If deployment fails: 
+    1. Check that you have the necessary AWS permissions for creating Lambda functions, API Gateway, DynamoDB tables, and IAM
+    roles.
+    2. Review common issues in our [Troubleshooting Guide](/faq/troubleshooting/)
+    3. Request technical support through the designated Slack channel or in person during the workshop.
+</Aside>
+
+## Configuring your IDE Extensions
+
+Once you get your development environment ready, continue by setting up your IDE extensions:
+
+<LinkCard title="Setup up your IDE Extensions" href="/dev-env/ide-extensions-setup" />

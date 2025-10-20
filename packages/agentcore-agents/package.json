@@ -1,0 +1,14 @@
+{
+  "name": "@agentcore/agents",
+  "version": "1.0.0",
+  "description": "AgentCore agents collection",
+  "type": "module",
+  "keywords": [
+    "agentcore",
+    "agents",
+    "aws",
+    "bedrock"
+  ],
+  "license": "MIT",
+  "private": true
+}

@@ -1,0 +1,141 @@
+---
+title: 2. Implementation Deep Dive Section
+description: Hands-on development with AI tools
+---
+
+import { Card, CardGrid, Aside, Steps, LinkCard } from "@astrojs/starlight/components";
+
+**Objective**: Apply AI-powered development techniques to implement enhancements or solve real problems in the codebase.
+
+**Duration**: 50 minutes
+
+## How to Approach This Phase
+
+<Steps>
+1. **Test the Agent:** Start by testing the Hotel Booking Agent and and **complete all the core activities**.
+
+2. **MCP Server Activity**: Try to complete the activity in the allocated time.
+
+3. **Extra Challenges**: If you have additional time, try to tackle the extra challenge.
+
+4. **Save for Later**: Bookmark activities you don't have time for - they make great homework for deeper learning after the workshop.
+
+5. **Move Forward**: Once you are done, feel free to proceed to the next section.
+</Steps>
+
+## Core Activities
+
+**Your first activity** is to test the hotel booking agent which is deployed on [Amazon Bedrock AgentCore Runtime](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/agents-tools-runtime.html).
+
+### Interactive Chat Test
+
+<Steps>
+1. You can test the agent by running the provided interactive python script to chat with it. 
+
+    Just execute the following commands:
+
+    ```bash title="Testing the Hotel Booking Agent"
+    # Create and activate a virtual environment for the agent
+    uv venv
+    source .venv/bin/activate  # On macOS/Linux
+    # .venv\Scripts\activate   # On Windows
+
+    # Navigate to the agent directory and install dependencies
+    cd packages/agentcore-agents/hotel-booking-agent
+    uv pip install -r requirements.txt
+
+    # Start an interactive chat session with the deployed agent
+    python tests/interactive_chat_test.py
+    ```
+
+2. Then try some of these test conversation starters:
+
+    ```text 
+    Find me a luxury hotel near the beach in Miami
+    ```
+    ```text 
+    Book a room at a Marriott Hotel in San Francisco for next weekend
+    ```
+    ```text
+    What are my reservation options?
+    ```
+</Steps>
+
+Alternatively, you can leverage your agentic coding assistant to understand and test the application on your behalf, you can try using the prompt below:
+
+```text title="Prompt to test the Hotel Booking Agent"
+Understand and test the application by executing the python script `packages/agentcore-agents/hotel-booking-agent/tests/interactive_chat_test.py`, focus on testing with realistic inputs
+```
+
+<Aside type="note" title="AWS Default Region">
+  - If you see *Error setting up connection: You must specify a region.*, make sure you set your default AWS region (`export AWS_DEFAULT_REGION=us-west-2`)
+</Aside>
+
+## AWS MCP Server Activities
+
+### 🖥️ Frontend MCP Server Activity
+
+**Activity**: Build a web frontend based on the interactive chat script
+
+Here's a few tips on how to work on this activity:
+
+<Steps>
+1. **Understand the Requirements** - Based on the information you discovered about how the hotel booking assistant works, try to understand the features you'll need to build
+2. **Plan Your Approach** - Consider creating an implementation plan and breaking the task into smaller steps
+3. **Implement with AI Assistance** - Use Amazon Q Developer, Cline, and the AWS MCP servers
+4. **Test and Validate** - Verify your implementation works correctly
+</Steps>
+
+```text title="Sample prompt"
+Analyze the interactive chat script located at `agentcore-tech-summit-2025/packages/agentcore-agents/hotel-booking-agent/tests/interactive_chat_test.py`, and then use the AWS Frontend MCP Server to create a modern react application that provides the same functionality as the python script, this time through a user-friendly interface.
+```
+
+<Aside type="note" title="Important things to consider">
+- The sample prompt is just that, a sample, feel free to change it and make improvements to it so that you are able to accomplish this activity
+- Study and understand how the interactive chat script works: How does it invoke the hotel booking agent? Does it require authentication? What are the credentials used? How would this work in a web environment?
+- Read more information about the features supported by the [AWS Frontend MCP Server](https://awslabs.github.io/mcp/servers/frontend-mcp-server/), this could be helpful to understand how to work with it effectively.
+</Aside>
+
+
+## Extra Challenges (Optional)
+
+### 🔄 Implement Automated API Key Rotation
+
+**The Challenge**: All three APIs now use API keys stored in SSM Parameter Store, but these keys never rotate. Implement automated key rotation using AWS Secrets Manager for enhanced security.
+
+**Your Mission**: Migrate API keys from SSM to Secrets Manager and implement automatic rotation with zero downtime.
+
+**What You'll Build**:
+
+<Steps>
+1. **Migrate to Secrets Manager** - Move API keys from SSM Parameter Store to Secrets Manager
+2. **Create Rotation Lambda** - Build a Lambda function that:
+   - Generates new API keys in API Gateway
+   - Updates Secrets Manager with new keys
+   - Maintains old keys during transition period
+   - Cleans up old keys after rotation completes
+3. **Configure Rotation Schedule** - Set up automatic rotation (e.g., every 30 days)
+4. **Update MCP Server** - Modify config to read from Secrets Manager instead of SSM
+5. **Test Zero-Downtime Rotation** - Verify the MCP Server continues working during key rotation
+</Steps>
+
+**Implementation Approach**:
+
+- Use AI tools to understand AWS Secrets Manager rotation patterns
+- Analyze the current API key resolution logic in the MCP Server
+- Generate rotation Lambda following AWS best practices
+- Implement graceful key transition (AWSCURRENT and AWSPREVIOUS versions)
+- Create tests to validate rotation works without service interruption
+
+**This challenge teaches you**:
+
+- **Security Automation**: Implementing automated credential rotation
+- **Zero-Downtime Operations**: Handling credential changes without service disruption
+- **AWS Secrets Manager**: Using managed secrets with automatic rotation
+- **Production Best Practices**: Following AWS security recommendations
+
+**Bonus Points**:
+
+- Add CloudWatch alarms for rotation failures
+- Implement rotation notifications via SNS
+- Create a rotation dashboard showing last rotation time and next scheduled rotation

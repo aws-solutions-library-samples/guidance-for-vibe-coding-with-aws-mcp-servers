@@ -1,0 +1,62 @@
+meta {
+  name: Filter By Multiple Confirmation Numbers
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{apiUrl}}/reservation?crsConfirmationNumber={{chicagoConfirmationNumber}},{{chicagoMileConfirmationNumber}}
+  body: none
+  auth: none
+
+headers {
+  X-Api-Key: {{apiKey}}
+}
+}
+
+params:query {
+  crsConfirmationNumber: {{chicagoConfirmationNumber}},{{chicagoMileConfirmationNumber}}
+}
+
+script:pre-request {
+  console.log(`Filtering by two confirmation numbers: ${bru.getEnvVar("chicagoConfirmationNumber")},${bru.getEnvVar("chicagoMileConfirmationNumber")}`);
+  
+  // Validate we have created reservations successfully
+  if (!bru.getEnvVar("chicagoConfirmationNumber") || 
+      !bru.getEnvVar("chicagoMileConfirmationNumber")) {
+    console.error("❌ Chicago confirmation numbers are missing! Run the creation requests first!");
+  }
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("Response includes exactly two reservations", function() {
+    expect(res.body).to.have.property("reservations");
+    expect(res.body.reservations).to.be.an('array');
+    expect(res.body.reservations.length).to.equal(2);
+  });
+  
+  test("Response includes both requested reservations", function() {
+    const chicagoConfirmation = bru.getEnvVar("chicagoConfirmationNumber");
+    const chicagoMileConfirmation = bru.getEnvVar("chicagoMileConfirmationNumber");
+    
+    const confirmationNumbers = res.body.reservations.map(r => r.CrsConfirmationNumber);
+    expect(confirmationNumbers).to.include(chicagoConfirmation);
+    expect(confirmationNumbers).to.include(chicagoMileConfirmation);
+  });
+  
+  test("Mountain View reservation is NOT included", function() {
+    const mvConfirmation = bru.getEnvVar("mvConfirmationNumber");
+    const confirmationNumbers = res.body.reservations.map(r => r.CrsConfirmationNumber);
+    expect(confirmationNumbers).to.not.include(mvConfirmation);
+  });
+  
+  test("Returned reservations have correct hotel IDs", function() {
+    const hotels = res.body.reservations.map(r => r.Hotel.Id);
+    expect(hotels).to.include(50005);
+    expect(hotels).to.include(50006);
+  });
+}

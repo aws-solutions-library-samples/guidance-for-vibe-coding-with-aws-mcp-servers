@@ -1,0 +1,19 @@
+meta {
+  name: Get reservations with arrivals between specific dates
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{apiUrl}}/reservation?arrival=2025-02-14,2025-03-30
+  body: none
+  auth: none
+
+headers {
+  X-Api-Key: {{apiKey}}
+}
+}
+
+params:query {
+  arrival: 2025-02-14,2025-03-30
+}

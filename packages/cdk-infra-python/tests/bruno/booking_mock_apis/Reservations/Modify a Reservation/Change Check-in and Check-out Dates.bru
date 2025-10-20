@@ -1,0 +1,29 @@
+meta {
+  name: Change Check-in and Check-out Dates
+  type: http
+  seq: 1
+}
+
+patch {
+  url: {{apiUrl}}/reservation
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "Reservations": [
+      {
+        "CrsConfirmationNumber": "50001CU9485894",
+        "RoomStay": {
+          "CheckInDate": "2025-06-18",
+          "CheckOutDate": "2025-06-23"
+        }
+      }
+    ]
+  }
+}

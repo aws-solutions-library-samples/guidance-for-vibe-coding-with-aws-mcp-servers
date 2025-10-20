@@ -1,0 +1,66 @@
+meta {
+  name: 04_Whitelist_Filtering
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{BASE_URL}}/toxicity-detection
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  X-Api-Key: {{API_KEY}}
+}
+
+body:json {
+  {
+    "text": "I need a double queen bed room with deluxe suite and extra beds",
+    "region_name": "NA"
+  }
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("Response has all required fields", function() {
+    const json = res.getBody();
+    expect(json).to.have.property('toxic');
+    expect(json).to.have.property('severe_toxic');
+    expect(json).to.have.property('obscene');
+    expect(json).to.have.property('threat');
+    expect(json).to.have.property('insult');
+    expect(json).to.have.property('identity_hate');
+    expect(json).to.have.property('negative_sentiment_score');
+  });
+
+  test("Text with whitelisted hotel terms has low toxicity scores", function() {
+    const json = res.getBody();
+    
+    // Hotel-related terms should be filtered out, resulting in low toxicity
+    expect(json.toxic).to.be.below(0.4);
+    expect(json.severe_toxic).to.be.below(0.4);
+    expect(json.obscene).to.be.below(0.4);
+    expect(json.threat).to.be.below(0.4);
+    expect(json.insult).to.be.below(0.4);
+    expect(json.identity_hate).to.be.below(0.4);
+    
+    // Should have neutral or low negative sentiment
+    expect(json.negative_sentiment_score).to.be.below(0.5);
+  });
+
+  test("All scores are valid numbers between 0 and 1", function() {
+    const json = res.getBody();
+    const fields = ['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate', 'negative_sentiment_score'];
+    
+    fields.forEach(field => {
+      expect(json[field]).to.be.a('number');
+      expect(json[field]).to.be.at.least(0.0);
+      expect(json[field]).to.be.at.most(1.0);
+    });
+  });
+}

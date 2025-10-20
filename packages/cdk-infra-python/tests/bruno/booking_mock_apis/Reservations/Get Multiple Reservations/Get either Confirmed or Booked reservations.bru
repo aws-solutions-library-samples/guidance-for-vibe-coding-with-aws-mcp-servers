@@ -1,0 +1,19 @@
+meta {
+  name: Get either Confirmed or Booked reservations
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{apiUrl}}/reservation?status=Confirmed,Booked
+  body: none
+  auth: none
+
+headers {
+  X-Api-Key: {{apiKey}}
+}
+}
+
+params:query {
+  status: Confirmed,Booked
+}

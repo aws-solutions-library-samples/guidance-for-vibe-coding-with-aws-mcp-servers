@@ -1,0 +1,39 @@
+meta {
+  name: Missing Required Fields
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{apiUrl}}/reservation
+  body: json
+  auth: none
+
+headers {
+  X-Api-Key: {{apiKey}}
+}
+}
+
+body:json {
+  {
+    "Hotel": {
+      "Id": 50001,
+      "Code": "HCSF",
+      "Name": "San Francisco Hotel"
+    },
+    "RoomStay": {
+      "CheckInDate": "2025-06-15",
+      "CheckOutDate": "2025-06-20",
+      "NumRooms": 1
+    },
+    "Guests": [
+      {
+        "PersonName": {
+          "GivenName": "Sarah",
+          "Surname": "Johnson"
+        }
+      }
+    ],
+    "status": "Confirmed"
+  }
+}

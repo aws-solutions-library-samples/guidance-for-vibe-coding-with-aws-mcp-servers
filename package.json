@@ -1,0 +1,71 @@
+{
+  "name": "pnpm-monorepo",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "PNPM Monorepo for the Vibe Coding AI Agents with AWS MCP Servers Repository",
+  "keywords": [],
+  "author": "Amazon Web Services",
+  "license": "MIT",
+  "scripts": {
+    "lint": "pnpm lint:js && pnpm lint:py",
+    "lint:check": "pnpm lint:js:check && pnpm lint:py:check",
+    "format": "pnpm format:js && pnpm format:py",
+    "format:check": "pnpm format:js:check && pnpm format:py:check",
+    "format:js": "prettier --write \"**/*.{js,mjs,jsx,ts,tsx,json,css,scss,md}\"",
+    "format:js:check": "prettier --check \"**/*.{js,mjs,jsx,ts,tsx,json,css,scss,md}\"",
+    "format:py": "uvx ruff format . --config $(pwd)/ruff.toml",
+    "format:py:check": "uvx ruff format . --check --config $(pwd)/ruff.toml",
+    "lint:js:check": "eslint . --config $(pwd)/eslint.config.js",
+    "lint:js": "eslint . --fix --config $(pwd)/eslint.config.js",
+    "lint:py:check": "uvx ruff check . --config $(pwd)/ruff.toml",
+    "lint:py": "uvx ruff check . --fix --config $(pwd)/ruff.toml",
+    "prepare": "husky",
+    "commit": "cz",
+    "pre-commit": "lint-staged",
+    "commit-msg": "pnpm commitlint --edit \"$1\"",
+    "docs:init": "pnpm --filter astro-docs build && pnpm --filter astro-docs preview",
+    "cdk": "pnpm --filter cdk-infra-python cdk",
+    "test:apis:all": "pnpm --filter cdk-infra-python test:apis:all",
+    "test:apis:property-resolution": "pnpm --filter cdk-infra-python test:apis:property-resolution",
+    "test:apis:reservations": "pnpm --filter cdk-infra-python test:apis:reservations",
+    "test:apis:toxicity": "pnpm --filter cdk-infra-python test:apis:toxicity"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "lint-staged": {
+    "**/*.{js,mjs,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write --ignore-unknown",
+      "eslint --fix --config ./eslint.config.js"
+    ],
+    "**/*.{py,pyi,ipynb}": [
+      "uvx ruff format . --config ./ruff.toml",
+      "uvx ruff check . --fix --config ./ruff.toml"
+    ]
+  },
+  "packageManager": "pnpm@10.14.0",
+  "engines": {
+    "node": ">=20.18.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "braces@<3.0.3": ">=3.0.3"
+    }
+  },
+  "devDependencies": {
+    "@commitlint/cli": "19.8.1",
+    "@commitlint/config-conventional": "19.8.1",
+    "@eslint/js": "9.33.0",
+    "@typescript-eslint/eslint-plugin": "8.38.0",
+    "@typescript-eslint/parser": "8.38.0",
+    "commitizen": "4.3.1",
+    "cz-conventional-changelog": "3.3.0",
+    "eslint": "9.33.0",
+    "globals": "16.3.0",
+    "husky": "9.1.7",
+    "lint-staged": "15.5.2",
+    "prettier": "3.4.2"
+  }
+}

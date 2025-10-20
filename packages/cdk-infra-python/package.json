@@ -1,0 +1,25 @@
+{
+  "name": "cdk-infra-python",
+  "version": "0.1.0",
+  "scripts": {
+    "cdk": "uv run cdk",
+    "test:apis:all": "npm run test:apis:property-resolution && npm run test:apis:reservations && npm run test:apis:toxicity",
+    "test:apis:property-resolution": "cd tests/bruno/booking_mock_apis && bru run PropertyResolution/Basic_Flow --env PropertyResolution --delay 200 && bru run PropertyResolution/Error_Flow --env PropertyResolution --delay 200 && bru run PropertyResolution/Location_Flow --env PropertyResolution --delay 200",
+    "test:apis:reservations": "cd tests/bruno/booking_mock_apis && bru run Reservations/Setup --env Reservations --delay 1000 && bru run Reservations/SF_Flow --env Reservations --delay 2000 && bru run Reservations/NY_Flow --env Reservations --delay 2000 && bru run Reservations/Filter_Flow --env Reservations --delay 2000 && bru run Reservations/Error_Flow --env Reservations --delay 2000",
+    "test:apis:toxicity": "cd tests/bruno/booking_mock_apis && bru run ToxicityDetection/Basic_Flow --env ToxicityDetection --delay 200 && bru run ToxicityDetection/Edge_Cases --env ToxicityDetection --delay 200 && bru run ToxicityDetection/Error_Flow --env ToxicityDetection --delay 200"
+  },
+  "devDependencies": {
+    "@types/jest": "29.5.14",
+    "@types/node": "22.7.9",
+    "@usebruno/cli": "2.9.1",
+    "aws-cdk": "2.1023.0",
+    "jest": "29.7.0",
+    "ts-jest": "29.4.1",
+    "ts-node": "10.9.2",
+    "typescript": "5.6.3"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "2.211.0",
+    "constructs": "10.4.2"
+  }
+}

@@ -1,0 +1,56 @@
+# Source and Test files
+/src/
+/test/
+
+# TypeScript Configuration
+/tsconfig.json
+/tsconfig.dev.json
+tsconfig.tsbuildinfo
+
+# Development Configuration
+/.eslintrc.json
+/.prettierrc.json
+/.prettierignore
+
+# IDE/Editor
+/.vscode/
+/.idea/
+
+# Git related
+/.github/
+/.gitattributes
+
+# Build output (except compiled library files)
+/dist/
+!/lib/
+!/lib/**/*.js
+!/lib/**/*.d.ts
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Development files
+*.log
+*.test.js
+*.spec.js
+__tests__/
+__mocks__/
+*.map
+
+# CDK specific
+cdk.out/
+.cdk.staging/
+cdk.context.json
+
+# Package manager files
+pnpm-lock.yaml
+.pnpm-store/
+
+# Misc
+.DS_Store
+.cache/
+coverage/
+.nyc_output/
+*.tgz

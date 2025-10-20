@@ -1,0 +1,15 @@
+meta {
+  name: Get reservations (default pagination)
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{apiUrl}}/reservation
+  body: none
+  auth: none
+
+headers {
+  X-Api-Key: {{apiKey}}
+}
+}

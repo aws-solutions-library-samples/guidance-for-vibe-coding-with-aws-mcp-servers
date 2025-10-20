@@ -1,0 +1,382 @@
+[
+  {
+    "CrsConfirmationNumber": "50001CU000123",
+    "status": "Confirmed",
+    "CreateDateTime": "2024-09-17T14:24:57",
+    "UpdateDateTime": "2024-09-17T14:24:57",
+    "BookingInfo": {
+      "BookedBy": "James Wilson",
+      "BookingDate": "2024-09-17T14:24:57"
+    },
+    "Hotel": {
+      "Code": "SFSF",
+      "Id": 50001,
+      "Name": "San Francisco Hotel"
+    },
+    "Brand": {
+      "Code": "GENE",
+      "Id": 30001,
+      "Name": "Generic Brand"
+    },
+    "Chain": {
+      "Code": "GENE",
+      "Id": 20001,
+      "Name": "Generic Chain"
+    },
+    "RoomStay": {
+      "CheckInDate": "2025-02-15T00:00:00",
+      "CheckOutDate": "2025-02-20T00:00:00",
+      "GuestCount": [
+        {
+          "NumGuests": 2
+        }
+      ],
+      "NumRooms": 1,
+      "Products": [
+        {
+          "Product": {
+            "RoomCode": "A1K",
+            "RoomName": "Standard King",
+            "RoomUnit": "524"
+          },
+          "Price": {
+            "Amount": 250.0
+          }
+        }
+      ]
+    },
+    "Guests": [
+      {
+        "PersonName": {
+          "GivenName": "James",
+          "MiddleName": "R",
+          "Surname": "Wilson"
+        },
+        "EmailAddress": [
+          {
+            "Type": "Primary",
+            "Value": "james.wilson@example.com"
+          }
+        ],
+        "ContactNumbers": [
+          {
+            "Number": "4155557890"
+          }
+        ],
+        "DateOfBirth": "1982-03-18",
+        "Gender": "Male",
+        "Payments": [
+          {
+            "Amount": 1250.0,
+            "Type": "CreditCard",
+            "PaymentCard": {
+              "CardHolder": "James Wilson",
+              "CardNumber": "XXXXXXXXXXXX1234",
+              "CardSecurityCode": "123",
+              "ExpireDate": "0926"
+            }
+          }
+        ]
+      }
+    ],
+    "RoomPrices": {
+      "TotalPrice": {
+        "Price": {
+          "CurrencyCode": "USD",
+          "TotalAmount": 1250.0,
+          "TotalAmountIncludingTaxesFees": 1437.5
+        }
+      }
+    },
+    "Currency": {
+      "Code": "USD",
+      "Name": "US Dollars",
+      "Symbol": "$"
+    }
+  },
+  {
+    "CrsConfirmationNumber": "50002CU000456",
+    "status": "Booked",
+    "CreateDateTime": "2024-11-05T10:32:15",
+    "UpdateDateTime": "2024-11-05T10:32:15",
+    "BookingInfo": {
+      "BookedBy": "Sarah Johnson",
+      "BookingDate": "2024-11-05T10:32:15"
+    },
+    "Hotel": {
+      "Code": "NYNY",
+      "Id": 50002,
+      "Name": "New York Hotel"
+    },
+    "Brand": {
+      "Code": "GENE",
+      "Id": 30001,
+      "Name": "Generic Brand"
+    },
+    "Chain": {
+      "Code": "GENE",
+      "Id": 20001,
+      "Name": "Generic Chain"
+    },
+    "RoomStay": {
+      "CheckInDate": "2025-03-22T00:00:00",
+      "CheckOutDate": "2025-03-25T00:00:00",
+      "GuestCount": [
+        {
+          "NumGuests": 3
+        }
+      ],
+      "NumRooms": 1,
+      "Products": [
+        {
+          "Product": {
+            "RoomCode": "A2Q",
+            "RoomName": "Standard Double Queen",
+            "RoomUnit": "1412"
+          },
+          "Price": {
+            "Amount": 275.0
+          }
+        }
+      ]
+    },
+    "Guests": [
+      {
+        "PersonName": {
+          "GivenName": "Sarah",
+          "MiddleName": "L",
+          "Surname": "Johnson"
+        },
+        "EmailAddress": [
+          {
+            "Type": "Primary",
+            "Value": "sarah.johnson@example.com"
+          }
+        ],
+        "ContactNumbers": [
+          {
+            "Number": "2125559876"
+          }
+        ],
+        "DateOfBirth": "1990-07-24",
+        "Gender": "Female",
+        "Payments": [
+          {
+            "Amount": 825.0,
+            "Type": "CreditCard",
+            "PaymentCard": {
+              "CardHolder": "Sarah Johnson",
+              "CardNumber": "XXXXXXXXXXXX5678",
+              "CardSecurityCode": "456",
+              "ExpireDate": "0825"
+            }
+          }
+        ]
+      }
+    ],
+    "RoomPrices": {
+      "TotalPrice": {
+        "Price": {
+          "CurrencyCode": "USD",
+          "TotalAmount": 825.0,
+          "TotalAmountIncludingTaxesFees": 948.75
+        }
+      }
+    },
+    "Currency": {
+      "Code": "USD",
+      "Name": "US Dollars",
+      "Symbol": "$"
+    }
+  },
+  {
+    "CrsConfirmationNumber": "50005CU000789",
+    "status": "Confirmed",
+    "CreateDateTime": "2024-12-20T16:45:30",
+    "UpdateDateTime": "2024-12-20T16:45:30",
+    "BookingInfo": {
+      "BookedBy": "Michael Thompson",
+      "BookingDate": "2024-12-20T16:45:30"
+    },
+    "Hotel": {
+      "Code": "CHCH",
+      "Id": 50005,
+      "Name": "Chicago Hotel"
+    },
+    "Brand": {
+      "Code": "GENE",
+      "Id": 30001,
+      "Name": "Generic Brand"
+    },
+    "Chain": {
+      "Code": "GENE",
+      "Id": 20003,
+      "Name": "Generic Chain"
+    },
+    "RoomStay": {
+      "CheckInDate": "2025-05-01T00:00:00",
+      "CheckOutDate": "2025-05-05T00:00:00",
+      "GuestCount": [
+        {
+          "NumGuests": 2
+        }
+      ],
+      "NumRooms": 1,
+      "Products": [
+        {
+          "Product": {
+            "RoomCode": "C1K",
+            "RoomName": "Club Level King",
+            "RoomUnit": "2134"
+          },
+          "Price": {
+            "Amount": 350.0
+          }
+        }
+      ]
+    },
+    "Guests": [
+      {
+        "PersonName": {
+          "GivenName": "Michael",
+          "MiddleName": "J",
+          "Surname": "Thompson"
+        },
+        "EmailAddress": [
+          {
+            "Type": "Primary",
+            "Value": "michael.thompson@example.com"
+          }
+        ],
+        "ContactNumbers": [
+          {
+            "Number": "3125551234"
+          }
+        ],
+        "DateOfBirth": "1975-11-30",
+        "Gender": "Male",
+        "Payments": [
+          {
+            "Amount": 1400.0,
+            "Type": "CreditCard",
+            "PaymentCard": {
+              "CardHolder": "Michael Thompson",
+              "CardNumber": "XXXXXXXXXXXX9012",
+              "CardSecurityCode": "789",
+              "ExpireDate": "1126"
+            }
+          }
+        ]
+      }
+    ],
+    "RoomPrices": {
+      "TotalPrice": {
+        "Price": {
+          "CurrencyCode": "USD",
+          "TotalAmount": 1400.0,
+          "TotalAmountIncludingTaxesFees": 1610.0
+        }
+      }
+    },
+    "Currency": {
+      "Code": "USD",
+      "Name": "US Dollars",
+      "Symbol": "$"
+    }
+  },
+  {
+    "CrsConfirmationNumber": "50006CU000987",
+    "status": "Waitlisted",
+    "CreateDateTime": "2025-01-15T09:12:40",
+    "UpdateDateTime": "2025-01-15T09:12:40",
+    "BookingInfo": {
+      "BookedBy": "Jennifer Davis",
+      "BookingDate": "2025-01-15T09:12:40"
+    },
+    "Hotel": {
+      "Code": "CHMI",
+      "Id": 50006,
+      "Name": "Chicago Magnificent Mile Hotel"
+    },
+    "Brand": {
+      "Code": "GENE",
+      "Id": 30001,
+      "Name": "Generic Brand"
+    },
+    "Chain": {
+      "Code": "GENE",
+      "Id": 20001,
+      "Name": "Generic Chain"
+    },
+    "RoomStay": {
+      "CheckInDate": "2025-05-10T00:00:00",
+      "CheckOutDate": "2025-05-14T00:00:00",
+      "GuestCount": [
+        {
+          "NumGuests": 1
+        }
+      ],
+      "NumRooms": 1,
+      "Products": [
+        {
+          "Product": {
+            "RoomCode": "B1S",
+            "RoomName": "Deluxe Suite",
+            "RoomUnit": "1812"
+          },
+          "Price": {
+            "Amount": 450.0
+          }
+        }
+      ]
+    },
+    "Guests": [
+      {
+        "PersonName": {
+          "GivenName": "Jennifer",
+          "MiddleName": "A",
+          "Surname": "Davis"
+        },
+        "EmailAddress": [
+          {
+            "Type": "Primary",
+            "Value": "jennifer.davis@example.com"
+          }
+        ],
+        "ContactNumbers": [
+          {
+            "Number": "3125558765"
+          }
+        ],
+        "DateOfBirth": "1988-04-12",
+        "Gender": "Female",
+        "Payments": [
+          {
+            "Amount": 1800.0,
+            "Type": "CreditCard",
+            "PaymentCard": {
+              "CardHolder": "Jennifer Davis",
+              "CardNumber": "XXXXXXXXXXXX3456",
+              "CardSecurityCode": "321",
+              "ExpireDate": "0727"
+            }
+          }
+        ]
+      }
+    ],
+    "RoomPrices": {
+      "TotalPrice": {
+        "Price": {
+          "CurrencyCode": "USD",
+          "TotalAmount": 1800.0,
+          "TotalAmountIncludingTaxesFees": 2070.0
+        }
+      }
+    },
+    "Currency": {
+      "Code": "USD",
+      "Name": "US Dollars",
+      "Symbol": "$"
+    }
+  }
+]

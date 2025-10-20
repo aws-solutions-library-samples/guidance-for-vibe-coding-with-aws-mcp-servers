@@ -1,0 +1,84 @@
+meta {
+  name: Create Reservation - Invalid Status
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{apiUrl}}/reservation
+  body: json
+  auth: none
+
+headers {
+  X-Api-Key: {{apiKey}}
+}
+}
+
+body:json {
+  {
+    "BookingInfo": {
+      "BookedBy": "Test Invalid",
+      "BookingDate": "2025-05-20"
+    },
+    "Hotel": {
+      "Id": {{sfHotel.Id}},
+      "Code": "{{sfHotel.Code}}",
+      "Name": "{{sfHotel.Name}}"
+    },
+    "RoomStay": {
+      "CheckInDate": "2025-06-15",
+      "CheckOutDate": "2025-06-20",
+      "GuestCount": [
+        {
+          "NumGuests": 2
+        }
+      ],
+      "NumRooms": 1,
+      "Products": [
+        {
+          "Product": {
+            "RoomCode": "{{kingRoom.RoomCode}}",
+            "RoomName": "{{kingRoom.RoomName}}"
+          },
+          "Price": {
+            "Amount": 250.0
+          }
+        }
+      ]
+    },
+    "Guests": [
+      {
+        "PersonName": {
+          "GivenName": "Test",
+          "Surname": "Invalid_{{testId}}"
+        },
+        "EmailAddress": [
+          {
+            "Type": "Primary",
+            "Value": "test_invalid_{{testId}}@example.com"
+          }
+        ]
+      }
+    ],
+    "status": "Incomplete",
+    "Currency": {
+      "Code": "USD"
+    }
+  }
+}
+
+tests {
+  test("Status code is 400", function() {
+    expect(res.status).to.equal(400);
+  });
+  
+  test("Error code is ValidationError", function() {
+    expect(res.body).to.have.property("errorCode", "ValidationError");
+  });
+  
+  test("Error message references invalid status", function() {
+    const errorMsg = res.body.errorMessage;
+    expect(errorMsg).to.include("status");
+    expect(errorMsg).to.include("Incomplete");
+  });
+}

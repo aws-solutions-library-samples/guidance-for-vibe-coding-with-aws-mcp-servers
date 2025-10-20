@@ -1,0 +1,61 @@
+meta {
+  name: Cancel SF Reservation
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{apiUrl}}/reservation/cancel
+  body: json
+  auth: none
+
+headers {
+  X-Api-Key: {{apiKey}}
+}
+}
+
+body:json {
+  {
+    "Hotel": {
+      "Id": {{sfHotel.Id}},
+      "Code": "{{sfHotel.Code}}",
+      "Name": "{{sfHotel.Name}}"
+    },
+    "CrsConfirmationNumber": "{{sfConfirmationNumber}}",
+    "CancellationDetails": {
+      "Comment": "Testing reservation cancellation flow"
+    }
+  }
+}
+
+script:pre-request {
+  console.log(`Cancelling reservation: ${bru.getEnvVar("sfConfirmationNumber")}`);
+  
+  // Validate we have required data before executing
+  if (!bru.getEnvVar("sfConfirmationNumber")) {
+    console.error("❌ Missing confirmation number! Run 01_Create_SF_Reservation.bru first");
+  }
+}
+
+script:post-response {
+  // Store cancellation number if successful
+  try {
+    if (res.status === 200 && res.body && res.body.CrsCancellationNumber) {
+      bru.setEnvVar("sfCancellationNumber", res.body.CrsCancellationNumber);
+      console.log(`✅ Stored cancellation number: ${res.body.CrsCancellationNumber}`);
+    }
+  } catch (error) {
+    console.log(`❌ Error processing response: ${error.message}`);
+  }
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("Response includes a cancellation number", function() {
+    expect(res.body).to.have.property("CrsCancellationNumber");
+    expect(res.body.CrsCancellationNumber).to.be.a('string').that.includes("X");
+  });
+}

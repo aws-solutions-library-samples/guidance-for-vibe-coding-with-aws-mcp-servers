@@ -1,0 +1,91 @@
+meta {
+  name: Add Guest to SF Reservation
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{apiUrl}}/reservation
+  body: json
+  auth: none
+
+headers {
+  X-Api-Key: {{apiKey}}
+}
+}
+
+body:json {
+  {
+    "Reservations": [
+      {
+        "CrsConfirmationNumber": "{{sfConfirmationNumber}}",
+        "Guests": [
+          {
+            "PersonName": {
+              "GivenName": "{{sfGuest.PersonName.GivenName}}",
+              "Surname": "{{sfGuest.PersonName.Surname}}"
+            },
+            "EmailAddress": [
+              {
+                "Type": "{{sfGuest.EmailAddress.0.Type}}",
+                "Value": "{{sfGuest.EmailAddress.0.Value}}"
+              }
+            ],
+            "ContactNumbers": [
+              {
+                "Number": "{{sfGuest.ContactNumbers.0.Number}}"
+              }
+            ]
+          },
+          {
+            "PersonName": {
+              "GivenName": "Emma",
+              "Surname": "Castro_{{testId}}"
+            },
+            "Comments": "Additional guest - Dietary restriction: Vegetarian. Prefers extra pillows.",
+            "EmailAddress": [
+              {
+                "Type": "Primary",
+                "Value": "emma.castro_{{testId}}@example.com"
+              }
+            ],
+            "ContactNumbers": [
+              {
+                "Number": "4155557890"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+
+script:pre-request {
+  console.log(`Modifying reservation: ${bru.getEnvVar("sfConfirmationNumber")}`);
+  
+  // Validate we have required data before executing
+  if (!bru.getEnvVar("sfConfirmationNumber")) {
+    console.error("❌ Missing confirmation number! Run 01_Create_SF_Reservation.bru first");
+  }
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("Response includes updated reservation", function() {
+    expect(res.body).to.have.property("reservations");
+    expect(res.body.reservations).to.be.an('array').that.is.not.empty;
+    expect(res.body.reservations[0]).to.have.property("Guests");
+    expect(res.body.reservations[0].Guests).to.be.an('array').with.lengthOf(2);
+  });
+  
+  test("Response includes additional guest", function() {
+    const additionalGuest = res.body.reservations[0].Guests[1];
+    expect(additionalGuest).to.have.property("PersonName");
+    expect(additionalGuest.PersonName).to.have.property("GivenName", "Emma");
+    expect(additionalGuest).to.have.property("Comments").that.includes("Vegetarian");
+  });
+}

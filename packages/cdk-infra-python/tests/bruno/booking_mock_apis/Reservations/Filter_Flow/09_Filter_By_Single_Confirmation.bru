@@ -1,0 +1,54 @@
+meta {
+  name: Filter By Single Confirmation Number
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{apiUrl}}/reservation?crsConfirmationNumber={{chicagoConfirmationNumber}}
+  body: none
+  auth: none
+
+headers {
+  X-Api-Key: {{apiKey}}
+}
+}
+
+params:query {
+  crsConfirmationNumber: {{chicagoConfirmationNumber}}
+}
+
+script:pre-request {
+  console.log(`Filtering by single confirmation number: ${bru.getEnvVar("chicagoConfirmationNumber")}`);
+  
+  // Validate we have created reservations successfully
+  if (!bru.getEnvVar("chicagoConfirmationNumber")) {
+    console.error("❌ Chicago confirmation number is missing! Run the first request before this one.");
+  }
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("Response includes exactly one reservation", function() {
+    expect(res.body).to.have.property("reservations");
+    expect(res.body.reservations).to.be.an('array');
+    expect(res.body.reservations.length).to.equal(1);
+  });
+  
+  test("Response includes the requested reservation", function() {
+    const chicagoConfirmation = bru.getEnvVar("chicagoConfirmationNumber");
+    expect(res.body.reservations[0]).to.have.property("CrsConfirmationNumber", chicagoConfirmation);
+  });
+  
+  test("Returned reservation has correct details", function() {
+    const reservation = res.body.reservations[0];
+    expect(reservation).to.have.property("Hotel");
+    expect(reservation.Hotel).to.have.property("Id", 50005);
+    expect(reservation).to.have.property("RoomStay");
+    expect(reservation.RoomStay).to.have.property("CheckInDate", "2025-03-15");
+    expect(reservation.RoomStay).to.have.property("CheckOutDate", "2025-03-20");
+  });
+}

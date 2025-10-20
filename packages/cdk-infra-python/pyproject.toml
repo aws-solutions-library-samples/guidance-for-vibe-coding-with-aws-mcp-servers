@@ -1,0 +1,13 @@
+[project]
+name = "cdk-infra-python"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aws-cdk-aws-lambda-python-alpha>=2.211.0a0",
+    "aws-cdk-lib==2.211.0",
+    "cdk-nag>=2.37.39",
+    "constructs>=10.0.0,<11.0.0",
+    "pytest==6.2.5",
+]

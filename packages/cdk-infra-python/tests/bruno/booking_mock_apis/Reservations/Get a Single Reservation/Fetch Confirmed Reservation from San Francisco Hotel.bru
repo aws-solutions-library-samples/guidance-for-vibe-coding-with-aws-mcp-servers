@@ -1,0 +1,15 @@
+meta {
+  name: Fetch Confirmed Reservation from San Francisco Hotel
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{apiUrl}}/reservation/hotel/50001/50001CU000123
+  body: none
+  auth: none
+
+headers {
+  X-Api-Key: {{apiKey}}
+}
+}

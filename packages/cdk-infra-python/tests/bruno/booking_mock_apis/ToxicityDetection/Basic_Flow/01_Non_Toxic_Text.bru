@@ -1,0 +1,62 @@
+meta {
+  name: 01_Non_Toxic_Text
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{BASE_URL}}/toxicity-detection
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  X-Api-Key: {{API_KEY}}
+}
+
+body:json {
+  {
+    "text": "andaz hotels near the beach for less than $500 that have kayaking and a pool",
+    "region_name": "NA"
+  }
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("Response has all required fields", function() {
+    const json = res.getBody();
+    expect(json).to.have.property('toxic');
+    expect(json).to.have.property('severe_toxic');
+    expect(json).to.have.property('obscene');
+    expect(json).to.have.property('threat');
+    expect(json).to.have.property('insult');
+    expect(json).to.have.property('identity_hate');
+    expect(json).to.have.property('negative_sentiment_score');
+  });
+
+  test("All scores are numbers", function() {
+    const json = res.getBody();
+    expect(json.toxic).to.be.a('number');
+    expect(json.severe_toxic).to.be.a('number');
+    expect(json.obscene).to.be.a('number');
+    expect(json.threat).to.be.a('number');
+    expect(json.insult).to.be.a('number');
+    expect(json.identity_hate).to.be.a('number');
+    expect(json.negative_sentiment_score).to.be.a('number');
+  });
+
+  test("Non-toxic text has low scores", function() {
+    const json = res.getBody();
+    expect(json.toxic).to.be.below(0.5);
+    expect(json.severe_toxic).to.be.below(0.5);
+    expect(json.obscene).to.be.below(0.5);
+    expect(json.threat).to.be.below(0.5);
+    expect(json.insult).to.be.below(0.5);
+    expect(json.identity_hate).to.be.below(0.5);
+    expect(json.negative_sentiment_score).to.be.below(0.5);
+  });
+}

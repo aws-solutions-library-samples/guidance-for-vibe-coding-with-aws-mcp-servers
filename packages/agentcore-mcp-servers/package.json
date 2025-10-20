@@ -1,0 +1,15 @@
+{
+  "name": "@agentcore/mcp-servers",
+  "version": "1.0.0",
+  "description": "AgentCore MCP servers collection",
+  "type": "module",
+  "keywords": [
+    "agentcore",
+    "mcp",
+    "servers",
+    "aws",
+    "bedrock"
+  ],
+  "license": "MIT",
+  "private": true
+}

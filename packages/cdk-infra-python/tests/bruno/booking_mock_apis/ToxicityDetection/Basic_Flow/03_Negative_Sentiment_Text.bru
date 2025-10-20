@@ -1,0 +1,46 @@
+meta {
+  name: 03_Negative_Sentiment_Text
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{BASE_URL}}/toxicity-detection
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  X-Api-Key: {{API_KEY}}
+}
+
+body:json {
+  {
+    "text": "This hotel was terrible and the service was awful. I'm extremely disappointed and frustrated.",
+    "region_name": "NA"
+  }
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("Response has all required fields", function() {
+    const json = res.getBody();
+    expect(json).to.have.property('toxic');
+    expect(json).to.have.property('severe_toxic');
+    expect(json).to.have.property('obscene');
+    expect(json).to.have.property('threat');
+    expect(json).to.have.property('insult');
+    expect(json).to.have.property('identity_hate');
+    expect(json).to.have.property('negative_sentiment_score');
+  });
+
+  test("Negative sentiment text has high negative sentiment score", function() {
+    const json = res.getBody();
+    expect(json.negative_sentiment_score).to.be.above(0.6);
+    expect(json.toxic).to.be.below(0.5);  // Should not be toxic, just negative
+  });
+}

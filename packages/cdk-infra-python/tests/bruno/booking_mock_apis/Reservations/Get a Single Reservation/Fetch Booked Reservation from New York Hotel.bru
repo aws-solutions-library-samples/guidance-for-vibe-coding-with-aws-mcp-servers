@@ -1,0 +1,15 @@
+meta {
+  name: Fetch Booked Reservation from New York Hotel
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{apiUrl}}/reservation/hotel/50004/50004CU000456
+  body: none
+  auth: none
+
+headers {
+  X-Api-Key: {{apiKey}}
+}
+}

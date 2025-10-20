@@ -1,0 +1,37 @@
+meta {
+  name: Missing Confirmation Number
+  type: http
+  seq: 7
+}
+
+patch {
+  url: {{apiUrl}}/reservation
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "Reservations": [
+      {
+        "RoomStay": {
+          "CheckInDate": "2025-06-20",
+          "CheckOutDate": "2025-06-25"
+        },
+        "Guests": [
+          {
+            "PersonName": {
+              "GivenName": "Michael",
+              "Surname": "Thompson"
+            },
+            "Comments": "Early check-in requested"
+          }
+        ]
+      }
+    ]
+  }
+}

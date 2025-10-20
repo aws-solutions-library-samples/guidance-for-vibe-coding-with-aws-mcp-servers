@@ -1,0 +1,57 @@
+[
+  {
+    "RoomCode": "A1K",
+    "RoomName": "Standard King",
+    "BaseRate": 250.0,
+    "BedType": "One king bed",
+    "SquareFeet": 350,
+    "MaxOccupancy": 2,
+    "View": "City view",
+    "Amenities": "Free WiFi, coffee maker, 42-inch flat-screen TV, air conditioning, work desk, luxury bathroom amenities, daily housekeeping",
+    "Description": "Comfortable king room perfect for business or leisure travel with essential amenities and city views."
+  },
+  {
+    "RoomCode": "A2Q",
+    "RoomName": "Standard Double Queen",
+    "BaseRate": 275.0,
+    "BedType": "Two queen beds",
+    "SquareFeet": 400,
+    "MaxOccupancy": 4,
+    "View": "City view",
+    "Amenities": "Free WiFi, coffee maker, 42-inch flat-screen TV, air conditioning, spacious work area, luxury bathroom amenities, daily housekeeping",
+    "Description": "Spacious room with two queen beds, ideal for families or groups traveling together."
+  },
+  {
+    "RoomCode": "B1K",
+    "RoomName": "Club Level King",
+    "BaseRate": 350.0,
+    "BedType": "One king bed",
+    "SquareFeet": 450,
+    "MaxOccupancy": 2,
+    "View": "Premium city view",
+    "Amenities": "Club lounge access, complimentary continental breakfast, evening cocktails and hors d'oeuvres, free WiFi, coffee maker, 49-inch flat-screen TV, air conditioning, executive work desk, luxury bathroom amenities, turndown service",
+    "Description": "Elevated experience with club lounge privileges, premium amenities, and exclusive services for discerning travelers."
+  },
+  {
+    "RoomCode": "B1S",
+    "RoomName": "Deluxe Suite",
+    "BaseRate": 450.0,
+    "BedType": "One king bed + sofa bed",
+    "SquareFeet": 650,
+    "MaxOccupancy": 4,
+    "View": "Premium city view",
+    "Amenities": "Separate living area, dining table, kitchenette with mini-fridge, free WiFi, coffee maker, 55-inch flat-screen TV, air conditioning, executive work area, luxury bathroom with soaking tub, daily housekeeping, turndown service",
+    "Description": "Spacious suite with separate living area, perfect for extended stays or entertaining, featuring premium amenities and extra space."
+  },
+  {
+    "RoomCode": "D1P",
+    "RoomName": "Presidential Suite",
+    "BaseRate": 950.0,
+    "BedType": "One king bed + separate bedroom options",
+    "SquareFeet": 1200,
+    "MaxOccupancy": 6,
+    "View": "Panoramic city view",
+    "Amenities": "Multiple bedrooms, grand living area, formal dining room, full kitchen, private balcony, butler service, club lounge access, complimentary breakfast and cocktails, free WiFi, multiple flat-screen TVs, air conditioning, executive office space, marble bathroom with jacuzzi, 24-hour room service, concierge service",
+    "Description": "Luxurious presidential suite offering the ultimate in space, service, and amenities with panoramic views and personalized butler service."
+  }
+]

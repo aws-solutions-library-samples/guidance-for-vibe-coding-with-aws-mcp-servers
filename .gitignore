@@ -1,0 +1,117 @@
+# Files to include (exceptions to ignore rules)
+!/.gitattributes
+!/package.json
+!/.npmignore
+!/.prettierignore
+!/.prettierrc.json
+!/src/
+!/test/
+!/tsconfig.json
+!/tsconfig.dev.json
+!/.eslintrc.json
+!/LICENSE
+!/NOTICE
+!/CHANGELOG
+!/.syncpackrc.json
+!/.projenrc.ts
+!/nx.json
+!/.nxignore
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Dependency directories
+node_modules/
+.pnpm-store/
+
+# Package manager files
+.npm
+.pnpm-debug.log
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional caches
+.eslintcache
+.cache
+.tmp
+
+# Compiled output
+/lib
+/dist/
+dist-ssr
+
+# CDK output
+cdk.out
+.cdk.staging
+cdk.context.json
+
+# Python specific
+*.pyc
+__pycache__/
+*.egg-info
+.ruff_cache
+**/.ruff_cache
+
+# Python Virtual Environments
+.venv/
+.conda/
+
+# OS generated files
+.DS_Store
+**/.DS_Store
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Editor directories and files (Jetbrains IntelliJ IDEA and VSCODE)
+.vscode/*
+!.vscode/extensions.json
+.idea
+
+# Test snapshots
+**/test/__snapshots__/
+
+# Vite specific
+*.local
+.vite/
+
+# React/Frontend specific
+.cache/
+public/hot
+public/storage
+storage/*.key
+
+# Build output
+build
+out
+.output
+dist
+
+# Temporary files
+*.bak
+*.swp
+*.swo
+*~
+
+# Coverage directory used by tools like istanbul
+coverage
+*.lcov
+.nyc_output
+cognito_config.json
+.kiro
+
+# Astro build artifacts
+.astro/
+
+# Bedrock AgentCore specific - keep config but exclude runtime files
+.bedrock_agentcore.yaml
+.dockerignore
+
+# Amazon Q CLI
+.amazonq/

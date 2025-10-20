@@ -1,0 +1,309 @@
+---
+title: Troubleshooting Guide
+description: Solutions for common setup and workshop issues
+---
+
+import { Card, CardGrid, Aside, Tabs, TabItem, LinkCard } from "@astrojs/starlight/components";
+
+Find solutions to common issues you might encounter during setup.
+
+## Tool Installation Issues
+
+### uv Installation Problems
+
+<Aside type="caution">
+If you encounter issues installing uv, try using the official installer script or check the [uv installation guide](https://docs.astral.sh/uv/getting-started/installation/).
+</Aside>
+
+### Command Not Found Errors
+
+**Problem**: `command not found` errors for installed tools
+
+**Solution**:
+
+- Verify the tool is in your PATH
+- Restart your terminal session
+- Check if you need to reload your shell configuration
+
+### uvx Command Not Found Error
+
+**Problem**: `spawn uvx ENOENT` error when MCP servers try to start
+
+**Solution**:
+
+Use the full path to uvx instead of just `uvx` in your MCP configuration:
+
+1. **Find your uvx path**:
+
+   ```bash
+   which uvx
+   ```
+
+2. **Update your MCP configuration** (`.kiro/settings/mcp.json`) to use the full path:
+
+   Instead of:
+
+   ```json
+   {
+     "mcpServers": {
+       "awslabs.aws-pricing-mcp-server": {
+         "command": "uvx",
+         "args": ["awslabs.aws-pricing-mcp-server@latest"]
+       }
+     }
+   }
+   ```
+
+   Use the full path:
+
+   ```json
+   {
+     "mcpServers": {
+       "awslabs.aws-pricing-mcp-server": {
+         "command": "/opt/homebrew/bin/uvx",
+         "args": ["awslabs.aws-pricing-mcp-server@latest"]
+       }
+     }
+   }
+   ```
+
+   Common paths:
+
+   - macOS (Homebrew): `/opt/homebrew/bin/uvx`
+   - Linux/macOS (manual install): `/usr/local/bin/uvx`
+   - Linux (system): `/usr/bin/uvx`
+
+### Permission Errors During Installation
+
+**Problem**: Permission errors during installation
+
+**Solution**:
+
+- Use `sudo` for system-wide installations (if appropriate)
+- Consider using user-local installations
+- Check your user permissions for the installation directory
+
+## AWS Access Issues
+
+### AWS Credentials Not Working
+
+**Problem**: AWS credentials not working or "Could not load credentials from any providers" error
+
+**Solution**:
+
+- **For AWS Internal Users**: Ensure you run `mwinit` with your assigned account before starting the workshop
+- **For External Users**: Verify your AWS CLI is configured with appropriate credentials
+- Check AWS CLI configuration: `aws configure list`
+- Ensure you're using the correct AWS profile
+- Verify your session hasn't expired:
+  ```bash
+  aws sts get-caller-identity
+  ```
+
+### CDK Deployment Permissions Denied
+
+**Problem**: CDK deployment permissions denied
+
+**Solution**:
+
+- Verify your IAM role has necessary CDK permissions
+- Check if you need to assume a specific role for deployment
+- Contact your AWS administrator for permission verification
+
+### Stack Does Not Exist Error
+
+**Problem**: Getting "Stack with id AgentCoreTechSummitMockApis does not exist" when running CloudFormation commands
+
+**Solution**:
+
+This usually means you're using a different AWS profile than the one used for deployment.
+
+- **Check your current profile**: `aws configure list`
+- **List available profiles**: `aws configure list-profiles`
+- **Use the correct profile** in your commands:
+
+  ```bash
+  # For CloudFormation commands
+  aws cloudformation describe-stacks \
+    --stack-name AgentCoreTechSummitMockApis \
+    --profile YOUR_PROFILE_NAME \
+    --query 'Stacks[0].Outputs[*].[OutputKey,OutputValue]' \
+    --output table
+
+  # For CDK commands
+  pnpm cdk deploy AgentCoreTechSummitMockApis --profile YOUR_PROFILE_NAME
+
+  # Or set the profile as default for the session
+  export AWS_PROFILE=YOUR_PROFILE_NAME
+  ```
+
+- **Verify the stack exists** in the correct account/region:
+  ```bash
+  aws cloudformation list-stacks --profile YOUR_PROFILE_NAME
+  ```
+
+## MCP Server Configuration Issues
+
+### MCP Servers Not Appearing in Kiro
+
+**Problem**: MCP servers not appearing in Kiro
+
+**Solution**:
+
+- Verify MCP servers are installed correctly using `uvx list`
+- Check Kiro MCP configuration settings
+- Restart Kiro after configuration changes
+
+### MCP Server Connection Errors
+
+**Problem**: MCP server connection errors
+
+**Solution**:
+
+- Verify network connectivity
+- Check if any corporate firewalls are blocking connections
+- Ensure MCP server processes are running
+
+## AgentCore Deployment Issues
+
+### CDK Deployment Failed
+
+**Problem**: AgentCore CDK deployment failed
+
+**Solution**:
+
+- Check CloudFormation console for detailed error messages
+- Verify you have permissions for Lambda, API Gateway, DynamoDB, and IAM
+- Ensure you're deploying to a supported AWS region
+- Check account limits for AWS services
+
+### API Endpoints Not Accessible
+
+**Problem**: Deployed APIs are not accessible
+
+**Solution**:
+
+- Verify CloudFormation stack completed successfully
+- Check API Gateway endpoints in AWS console
+- Ensure API keys were generated correctly
+- Test with simple curl commands first
+
+### Bruno Tests Failing
+
+**Problem**: Bruno API tests are failing
+
+**Solution**:
+
+- Verify API URLs are correctly configured in Bruno environment
+- Check that API keys are properly set
+- Ensure the APIs are deployed and accessible
+- Test individual endpoints manually first
+
+## Workshop Cleanup Issues
+
+### Stack Deletion Fails
+
+**Problem**: CDK stack deletion fails during cleanup
+
+**Solution**:
+
+- Check stack events for detailed error messages:
+  ```bash
+  aws cloudformation describe-stack-events --stack-name STACK_NAME
+  ```
+- If resources are stuck, try force deletion (use with caution):
+  ```bash
+  aws cloudformation delete-stack --stack-name STACK_NAME --retain-resources
+  ```
+- Delete stacks in the correct order: MCP Server → Booking Agent → Mock APIs
+
+### Resources Not Automatically Deleted
+
+**Problem**: Some AWS resources remain after stack deletion
+
+**Solution**:
+
+Some resources may need manual cleanup:
+
+- **S3 Buckets**: May need manual deletion if they contain objects
+- **CloudWatch Logs**: Log groups are retained by default
+- **IAM Roles**: Custom roles might need manual cleanup
+
+Check for remaining resources:
+
+```bash
+# List S3 buckets created during workshop
+aws s3 ls | grep -i "agentcore\|workshop"
+
+# List CloudWatch log groups
+aws logs describe-log-groups --query 'logGroups[?contains(logGroupName, `agentcore`) || contains(logGroupName, `workshop`)].logGroupName'
+```
+
+### CDK Bootstrap Stack Issues
+
+**Problem**: Unsure whether to delete CDK bootstrap stack
+
+**Solution**:
+
+- **Keep the bootstrap stack** if you plan to use CDK for other projects
+- **Only delete** if you're certain you won't use CDK in this AWS account/region again
+- The bootstrap stack has minimal ongoing costs
+
+---
+
+**Problem**: Permission Denied error with Python Interpreter
+
+<details>
+<summary>Stack Trace Example</summary>
+```text title="Permission Denied Stack Trace"
+participant:/workshop/agentcore-tech-summit-2025$ pnpm cdk bootstrap aws://0000000000/us-west-2
+...
+error: Failed to query Python interpreter
+  Caused by: failed to canonicalize path `/workshop/agentcore-tech-summit-2025/packages/cdk-infra-python/.venv/bin/python3`: Permission denied (os error 13)
+/workshop/agentcore-tech-summit-2025/packages/cdk-infra-python:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  cdk-infra-python@0.1.0 cdk: `uv run cdk bootstrap aws://0000000000/us-west-2`
+Exit status 2
+ ELIFECYCLE  Command failed with exit code 2.
+participant:/workshop/agentcore-tech-summit-2025$
+-----
+python3 from venv is pointing to /root and has no access to read.
+participant:/workshop/agentcore-tech-summit-2025$ ls -ltrh /workshop/agentcore-tech-summit-2025/packages/cdk-infra-python/.venv/bin/python*
+lrwxrwxrwx. 1 participant participant  6 Sep  8 19:04 /workshop/agentcore-tech-summit-2025/packages/cdk-infra-python/.venv/bin/python3.13 -> python
+lrwxrwxrwx. 1 participant participant  6 Sep  8 19:04 /workshop/agentcore-tech-summit-2025/packages/cdk-infra-python/.venv/bin/python3 -> python
+lrwxrwxrwx. 1 participant participant 75 Sep  8 19:04 /workshop/agentcore-tech-summit-2025/packages/cdk-infra-python/.venv/bin/python -> /root/.local/share/uv/python/cpython-3.13.7-linux-x86_64-gnu/bin/python3.13
+```
+</details>
+
+**Solution**:
+- Recreate the uv python virtual environment:
+  ```bash title="Recreate uv venv"
+  cd /workshop/agentcore-tech-summit-2025/packages/cdk-infra-python
+  rm -rf .venv
+  uv sync
+  ```
+
+## Getting Help
+
+### Before the Workshop
+
+- **Technical Setup Issues**: Use the designated Slack channel for pre-workshop support
+- **Access Problems**: Contact workshop organizers for permission and access issues
+- **Tool Installation**: Reach out early if you encounter installation problems
+
+### During the Workshop
+
+- **Immediate Help**: Raise your hand or ask trainers directly
+- **Technical Issues**: Trainers can provide real-time troubleshooting
+- **Conceptual Questions**: Don't hesitate to ask for clarification on any topic
+
+### After the Workshop
+
+- **Follow-up Questions**: Use the workshop Slack channel for ongoing discussions
+- **Implementation Help**: Connect with other participants for continued collaboration
+- **Advanced Topics**: Trainers can provide resources for deeper learning
+
+<Aside type="tip">
+
+**Can't find your issue here?** Don't hesitate to ask during the workshop or reach out through the support channels. We're here to help ensure you have a great learning experience!
+
+</Aside>

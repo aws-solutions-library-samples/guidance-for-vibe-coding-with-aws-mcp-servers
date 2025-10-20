@@ -1,0 +1,68 @@
+meta {
+  name: Invalid Status Value
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{apiUrl}}/reservation
+  body: json
+  auth: none
+
+headers {
+  X-Api-Key: {{apiKey}}
+}
+}
+
+body:json {
+  {
+    "BookingInfo": {
+      "BookedBy": "Sarah Johnson",
+      "BookingDate": "2025-05-20"
+    },
+    "Hotel": {
+      "Id": 50001,
+      "Code": "HCSF",
+      "Name": "San Francisco Hotel"
+    },
+    "RoomStay": {
+      "CheckInDate": "2025-06-15",
+      "CheckOutDate": "2025-06-20",
+      "GuestCount": [
+        {
+          "NumGuests": 2
+        }
+      ],
+      "NumRooms": 1,
+      "Products": [
+        {
+          "Product": {
+            "RoomCode": "A1K",
+            "RoomName": "Standard King"
+          },
+          "Price": {
+            "Amount": 250.0
+          }
+        }
+      ]
+    },
+    "Guests": [
+      {
+        "PersonName": {
+          "GivenName": "Sarah",
+          "Surname": "Johnson"
+        },
+        "EmailAddress": [
+          {
+            "Type": "Primary",
+            "Value": "sarah.johnson@example.com"
+          }
+        ]
+      }
+    ],
+    "status": "Incomplete",
+    "Currency": {
+      "Code": "USD"
+    }
+  }
+}

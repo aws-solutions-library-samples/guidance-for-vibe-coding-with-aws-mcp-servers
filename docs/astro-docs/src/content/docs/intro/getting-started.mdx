@@ -1,0 +1,68 @@
+---
+title: Getting Started
+description: Getting started with the Vibe Coding with AWS MCP Servers Workshop
+---
+
+import { Card, CardGrid, Aside, Steps, LinkCard } from "@astrojs/starlight/components";
+
+## Introduction
+
+Before jumping into this workshop, let's review key technologies that will be used.
+
+### What is Generative AI?
+
+This workshop helps you build and modify a sample Generative AI (GenAI) application. Generative AI is an artificial intelligence capability that creates new content and artifacts such as text, code, images, audio, and video. Unlike traditional AI systems that analyze data, GenAI models can produce (generate) novel human-like outputs.
+
+These models are trained on vast datasets to learn patterns and relationships within the data. They can then use what they have learned to generate entirely new examples similar to the training data but not identical. For instance, a GenAI model trained on images of animals could create convincing images of animals it hasn't seen before.
+
+Potential applications of GenAI include generating conversational agents, translating text, composing music, creating images or videos, automating computer coding, and more. Generative AI promises to open up new possibilities in several domains, enhancing productivity across many industries and disciplines.
+
+For a more detailed dive into GenAI, see [What is Generative AI?](https://aws.amazon.com/what-is/generative-ai/).
+
+### What are MCP Servers?
+
+An MCP Server is a lightweight program that exposes specific capabilities through the standardized [Model Context Protocol](https://modelcontextprotocol.io/introduction). Host applications (such as chatbots, IDEs, and other AI tools) have MCP clients that maintain 1:1 connections with MCP servers. Common MCP clients include Agentic AI coding assistants (like [Amazon Q Developer](https://aws.amazon.com/q/developer/), [Claude Code](http://anthropic.com/claude-code), [Cursor](https://www.cursor.com/), [Cline](https://cline.bot/), and [Windsurf](https://windsurf.com/editor), among others) as well as chatbot applications like [Claude Desktop](https://claude.ai/download). MCP servers can access local data sources and remote services to provide additional context that improves the generated outputs from the models.
+
+The [AWS MCP Servers](https://github.com/awslabs/mcp) use this protocol to provide AI applications access to AWS documentation, contextual guidance, and best practices. Through the standardized MCP client-server architecture, AWS capabilities become an intelligent extension of your development environment or AI application.
+
+<Aside type="note">
+   Keep in mind that not every MCP client supports all MCP servers. You'll want to refer to the documentation of your chosen MCP client and the MCP servers themselves.
+
+   You can find more information on installing the AWS MCP servers on several different MCP clients at our [AWS Labs site on GitHub](https://github.com/awslabs/mcp?tab=readme-ov-file#installation-and-setup).
+</Aside>
+
+### What are Strands Agents?
+
+[Strands Agents](https://strandsagents.com/) is an open source SDK that takes a model-driven approach to building and running AI agents in just a few lines of code. Strands scales from simple to complex agent use cases, and from local development to deployment in production. Multiple teams at AWS already use Strands for their AI agents in production, including Amazon Q Developer, AWS Glue, and VPC Reachability Analyzer.
+
+Compared with frameworks that require developers to define complex workflows for their agents, Strands simplifies agent development by embracing the capabilities of state-of-the-art models to plan, chain thoughts, call tools, and reflect. With Strands, developers can simply define a prompt and a list of tools in code to build an agent, then test it locally and deploy it to the cloud.
+
+Strands connects two core pieces of the agent together: the model and the tools. Strands plans the agent's next steps and executes tools using the advanced reasoning capabilities of models. The SDK supports any model with reasoning and tool use capabilities, including models in Amazon Bedrock, Anthropic, Ollama, Meta, and other providers through LiteLLM.
+
+### What is Amazon Bedrock AgentCore?
+
+[Amazon Bedrock AgentCore](https://aws.amazon.com/bedrock/agentcore/) is a comprehensive platform for deploying and operating highly effective AI agents securely at scale. AgentCore provides enterprise-grade primitives for securely building, deploying, and running agents or tools in production environments.
+
+Amazon Bedrock AgentCore includes modular services that work with popular open-source frameworks and any model, so you don't have to choose between open-source flexibility and enterprise-grade security and reliability. Key services include Runtime for serverless agent deployment, Identity for secure access management, Memory for context-aware agents, Code Interpreter and Browser tools for advanced capabilities, Gateway for tool integration, and Observability for monitoring agent performance.
+
+AgentCore enables developers to accelerate AI agents into production with the scale, reliability, and security critical to real-world deployment, while providing tools and capabilities to make agents more effective and capable.
+
+## Getting Started
+
+The following shows the steps you need to follow in order to be able to go through this workshop effectively:
+
+<Steps>
+1. **Setup your development environment** - Follow the setup instructions to configure your local development environment.
+
+2. **Setup your Agentic Coding Tools** - Install and configure IDE extensions for AI-assisted development.
+
+3. **Read the workshop overview** - Review the workshop structure and follow its next steps.
+</Steps>
+
+### Region Notice
+
+We have tested these labs in the Northern Virginia AWS Region (us-east-1) and Oregon AWS Region (us-west-2). We recommend using one of those regions for this workshop.
+
+<LinkCard title="Setup your development environment" href="/dev-env/development-environment-setup" />
+<LinkCard title="Setup your IDE Extensions" href="/dev-env/ide-extensions-setup" />
+<LinkCard title="Workshop Overview" href="/workshop/overview" />

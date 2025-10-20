@@ -1,0 +1,158 @@
+openapi: 3.0.1
+info:
+  title: Toxicity Detection Service
+  description: API for detecting toxicity in text content using Amazon Comprehend
+  version: 1.0.0
+  
+servers:
+  - url: /api/v1
+    description: Base API path
+
+paths:
+  /toxicity-detection:
+    post:
+      summary: Detect toxicity in text
+      description: Analyzes text content and returns toxicity scores for different categories
+      operationId: detectToxicity
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToxicityDetectionRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToxicityDetectionResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Unsupported region
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    ToxicityDetectionRequest:
+      type: object
+      required:
+        - text
+      properties:
+        text:
+          type: string
+          description: Text content to analyze for toxicity
+          maxLength: 1024
+          example: "andaz hotels near the beach for less than $500 that have kayaking and a pool"
+        region_name:
+          type: string
+          description: Region for toxicity model (currently only NA is supported)
+          enum: ["NA"]
+          default: "NA"
+          example: "NA"
+    
+    ToxicityDetectionResponse:
+      type: object
+      required:
+        - toxic
+        - severe_toxic
+        - obscene
+        - threat
+        - insult
+        - identity_hate
+        - negative_sentiment_score
+      properties:
+        toxic:
+          type: number
+          format: float
+          description: Overall toxicity score
+          minimum: 0.0
+          maximum: 1.0
+          example: 0.0
+        severe_toxic:
+          type: number
+          format: float
+          description: Severe toxicity score (combination of hate speech and graphic content)
+          minimum: 0.0
+          maximum: 1.0
+          example: 0.0
+        obscene:
+          type: number
+          format: float
+          description: Obscene content score (combination of profanity and sexual content)
+          minimum: 0.0
+          maximum: 1.0
+          example: 0.0
+        threat:
+          type: number
+          format: float
+          description: Violence or threat score
+          minimum: 0.0
+          maximum: 1.0
+          example: 0.0
+        insult:
+          type: number
+          format: float
+          description: Insult score
+          minimum: 0.0
+          maximum: 1.0
+          example: 0.0
+        identity_hate:
+          type: number
+          format: float
+          description: Identity-based hate speech score
+          minimum: 0.0
+          maximum: 1.0
+          example: 0.0
+        negative_sentiment_score:
+          type: number
+          format: float
+          description: Negative sentiment score for emotional escalation detection
+          minimum: 0.0
+          maximum: 1.0
+          example: 0.0
+    
+    Error:
+      type: object
+      required:
+        - statusCode
+        - message
+      properties:
+        statusCode:
+          type: integer
+          description: HTTP status code
+        message:
+          type: string
+          description: Error message
+        details:
+          type: object
+          description: Additional error details
+  
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-Api-Key
+      description: API key for authentication

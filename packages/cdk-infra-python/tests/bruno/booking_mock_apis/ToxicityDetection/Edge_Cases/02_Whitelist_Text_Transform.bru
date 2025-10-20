@@ -1,0 +1,69 @@
+meta {
+  name: 02_Whitelist_Text_Transform
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{BASE_URL}}/toxicity-detection
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  X-Api-Key: {{API_KEY}}
+}
+
+body:json {
+  {
+    "text": "Can I book a room with double queen beds in the deluxe suite? I need extra rooms for my family.",
+    "region_name": "NA"
+  }
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("Response has all required fields", function() {
+    const json = res.getBody();
+    expect(json).to.have.property('toxic');
+    expect(json).to.have.property('severe_toxic');
+    expect(json).to.have.property('obscene');
+    expect(json).to.have.property('threat');
+    expect(json).to.have.property('insult');
+    expect(json).to.have.property('identity_hate');
+    expect(json).to.have.property('negative_sentiment_score');
+  });
+
+  test("Complex hotel request with multiple whitelisted terms shows low toxicity", function() {
+    const json = res.getBody();
+    
+    // Text contains: room, double queen, beds, deluxe suite, rooms
+    // After filtering: "Can I book a [FILTERED] with [FILTERED] [FILTERED] in the [FILTERED]? I need extra [FILTERED] for my family."
+    // This should result in very low toxicity scores
+    
+    expect(json.toxic).to.be.below(0.25);
+    expect(json.severe_toxic).to.be.below(0.25);
+    expect(json.obscene).to.be.below(0.25);
+    expect(json.threat).to.be.below(0.25);
+    expect(json.insult).to.be.below(0.25);
+    expect(json.identity_hate).to.be.below(0.25);
+    
+    // Should have neutral sentiment for a booking request
+    expect(json.negative_sentiment_score).to.be.below(0.4);
+  });
+
+  test("All scores are within valid range", function() {
+    const json = res.getBody();
+    const fields = ['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate', 'negative_sentiment_score'];
+    
+    fields.forEach(field => {
+      expect(json[field]).to.be.a('number');
+      expect(json[field]).to.be.at.least(0.0);
+      expect(json[field]).to.be.at.most(1.0);
+    });
+  });
+}

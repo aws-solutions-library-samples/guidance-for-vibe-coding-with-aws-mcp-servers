@@ -1,0 +1,61 @@
+meta {
+  name: Update New York Reservation Dates
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{apiUrl}}/reservation
+  body: json
+  auth: none
+
+headers {
+  X-Api-Key: {{apiKey}}
+}
+}
+
+body:json {
+  {
+    "Reservations": [
+      {
+        "CrsConfirmationNumber": "{{nyConfirmationNumber}}",
+        "RoomStay": {
+          "CheckInDate": "2025-07-12",
+          "CheckOutDate": "2025-07-17",
+          "GuestCount": [
+            {
+              "NumGuests": 2
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+
+script:pre-request {
+  console.log(`Modifying NY reservation: ${bru.getEnvVar("nyConfirmationNumber")}`);
+  
+  // Validate we have required data before executing
+  if (!bru.getEnvVar("nyConfirmationNumber")) {
+    console.error("❌ Missing confirmation number! Run 01_Create_NY_Reservation.bru first");
+  }
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("Response includes updated reservation", function() {
+    expect(res.body).to.have.property("reservations");
+    expect(res.body.reservations).to.be.an('array').that.is.not.empty;
+    expect(res.body.reservations[0]).to.have.property("RoomStay");
+  });
+  
+  test("Response includes updated dates", function() {
+    const roomStay = res.body.reservations[0].RoomStay;
+    expect(roomStay).to.have.property("CheckInDate", "2025-07-12");
+    expect(roomStay).to.have.property("CheckOutDate", "2025-07-17");
+  });
+}

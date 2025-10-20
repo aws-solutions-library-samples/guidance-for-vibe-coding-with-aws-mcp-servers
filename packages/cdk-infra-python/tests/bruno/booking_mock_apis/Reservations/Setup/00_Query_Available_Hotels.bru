@@ -1,0 +1,58 @@
+meta {
+  name: Query Available Hotels (Setup)
+  type: http
+  seq: 0
+}
+
+post {
+  url: {{propertyResolutionApiUrl}}/property-resolution
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  X-Api-Key: {{propertyResolutionApiKey}}
+}
+
+body:json {
+  {
+    "unique_client_id": "AWS_PACE_Agent",
+    "anon_guest_id": "guest_setup",
+    "input": {
+      "query": "san francisco"
+    },
+    "session_context": {
+      "session_id": "session_setup_{{testId}}",
+      "local_ts": "2025-05-21T12:00:00Z",
+      "country_name": "United States",
+      "region_name": "California",
+      "city_name": "San Francisco",
+      "user_agent": "Bruno Setup Client"
+    }
+  }
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("Response includes hotels", function() {
+    expect(res.body).to.have.property("statusCode");
+    expect(res.body.statusCode).to.equal(200);
+    
+    expect(res.body).to.have.property("result");
+    expect(res.body.result).to.be.an("array").that.is.not.empty;
+  });
+  
+  test("Store first hotel for SF tests", function() {
+    if (res.body.result && res.body.result.length > 0) {
+      const sfHotel = res.body.result[0];
+      bru.setEnvVar("sfHotel.Id", sfHotel.hotel_id);
+      bru.setEnvVar("sfHotel.Code", sfHotel.spirit_cd);
+      bru.setEnvVar("sfHotel.Name", sfHotel.metadata.property_name);
+      console.log("SF Hotel stored:", sfHotel.metadata.property_name);
+    }
+  });
+}

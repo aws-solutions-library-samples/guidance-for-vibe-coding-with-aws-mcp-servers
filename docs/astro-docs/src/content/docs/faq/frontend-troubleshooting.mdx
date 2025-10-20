@@ -1,0 +1,131 @@
+---
+title: AWS Frontend MCP Server Troubleshooting
+description: Common issues and solutions when deploying the Frontend React application
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+This page covers common issues encountered when deploying the Frontend React application that integrates with Amazon Bedrock AgentCore.
+
+## Authentication Issues
+
+### I get "Auth UserPool not configured" error
+**Environment**: 💻 **Any environment**
+
+Update your `amplify_outputs.json` with the correct Amplify v6 format:
+
+```json
+{
+  "auth": {
+    "user_pool_id": "us-west-2_XXXXXXXXX",
+    "aws_region": "us-west-2",
+    "user_pool_client_id": "YOUR_CLIENT_ID",
+    "username_attributes": ["username"],
+    "verification_mechanisms": ["username"]
+  },
+  "version": "1"
+}
+```
+
+### I get "USER_SRP_AUTH is not enabled for the client" error
+**Environment**: 💻 **Any environment**
+
+Enable SRP authentication in your Cognito User Pool Client:
+
+```bash
+aws cognito-idp update-user-pool-client \
+  --user-pool-id us-west-2_XXXXXXXXX \
+  --client-id YOUR_CLIENT_ID \
+  --explicit-auth-flows ALLOW_USER_SRP_AUTH ALLOW_REFRESH_TOKEN_AUTH ALLOW_USER_PASSWORD_AUTH
+```
+
+### The login page asks for email but I only have a username
+**Environment**: 💻 **Any environment**
+
+Change the login mechanism in your Authenticator component:
+
+```typescript title="Example Authenticator Component"
+<Authenticator 
+  loginMechanisms={['username']} // Change from ['email']
+```
+
+## Application Runtime Issues
+
+### I get "crypto.randomUUID is not a function" error
+**Environment**: 💻 **Any environment** (older browsers or Node.js versions)
+
+Add a fallback for browsers that don't support `crypto.randomUUID`:
+
+```typescript
+const sessionId = self.crypto?.randomUUID?.() || 
+  Math.random().toString(36).substring(2, 15) + 
+  Math.random().toString(36).substring(2, 15)
+```
+
+### I get "Failed to resolve import" for amplify_outputs.json
+**Environment**: 💻 **Any environment**
+
+Check the import path in `main.tsx`:
+
+```typescript
+// Correct path
+import outputs from "./amplify_outputs.json";
+
+// Not this
+import outputs from "../amplify_outputs.json";
+```
+
+## AgentCore Integration Issues
+
+### I get 404 error when calling the AgentCore API
+**Environment**: 💻 **Any environment**
+
+Ensure you're using the correct Agent ARN from Parameter Store:
+
+```bash
+# Get the real Agent ARN
+aws ssm get-parameter --name "/hotel_booking_agent/runtime/agent_arn"
+```
+
+Update your service with the correct ARN format:
+```typescript
+agentArn: 'arn:aws:bedrock-agentcore:us-west-2:YOUR_ACCOUNT_ID:runtime/hotel_booking_agent-XXXXXXXXXX'
+```
+
+### I get 403 Forbidden when calling the AgentCore API
+**Environment**: 💻 **Any environment**
+
+Use a fresh access token from the current Amplify session instead of hardcoded tokens:
+
+```typescript
+import { fetchAuthSession } from 'aws-amplify/auth'
+
+async setupConnection(): Promise<boolean> {
+  const session = await fetchAuthSession()
+  const accessToken = session.tokens?.accessToken?.toString()
+  
+  if (accessToken && this.config) {
+    this.config.bearerToken = accessToken
+    return true
+  }
+  return false
+}
+```
+
+## Development Environment
+
+### What are the test credentials?
+**Environment**: 💻 **Any environment**
+
+Use these credentials from the Cognito User Pool:
+- **Username**: `testuser`
+- **Password**: `MyPassword123!`
+
+### How do I access the application?
+
+**Local Development:**
+- **Local Access**: `http://localhost:5173`
+
+<Aside type="tip">
+Always check the browser developer console for detailed error messages when troubleshooting issues.
+</Aside>

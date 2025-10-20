@@ -1,0 +1,84 @@
+meta {
+  name: New York City Reservation (Fer July 2025)
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{apiUrl}}/reservation
+  body: json
+  auth: none
+
+headers {
+  X-Api-Key: {{apiKey}}
+}
+}
+
+body:json {
+  {
+    "BookingInfo": {
+      "BookedBy": "Fernanda Morales",
+      "BookingDate": "2025-05-20"
+    },
+    "Hotel": {
+      "Id": 50004,
+      "Code": "HCTS",
+      "Name": "New York Hotel"
+    },
+    "RoomStay": {
+      "CheckInDate": "2025-07-10",
+      "CheckOutDate": "2025-07-15",
+      "GuestCount": [
+        {
+          "NumGuests": 3
+        }
+      ],
+      "NumRooms": 1,
+      "Products": [
+        {
+          "Product": {
+            "RoomCode": "A2Q",
+            "RoomName": "Standard Double Queen"
+          },
+          "Price": {
+            "Amount": 275.0
+          }
+        }
+      ]
+    },
+    "Guests": [
+      {
+        "PersonName": {
+          "GivenName": "Fernanda",
+          "Surname": "Morales"
+        },
+        "EmailAddress": [
+          {
+            "Type": "Primary",
+            "Value": "fernanda.morales@example.com"
+          }
+        ],
+        "ContactNumbers": [
+          {
+            "Number": "2125559876"
+          }
+        ]
+      }
+    ],
+    "status": "Booked",
+    "Currency": {
+      "Code": "USD",
+      "Name": "US Dollars",
+      "Symbol": "$"
+    },
+    "RoomPrices": {
+      "TotalPrice": {
+        "Price": {
+          "CurrencyCode": "USD",
+          "TotalAmount": 1375.0,
+          "TotalAmountIncludingTaxesFees": 1526.25
+        }
+      }
+    }
+  }
+}

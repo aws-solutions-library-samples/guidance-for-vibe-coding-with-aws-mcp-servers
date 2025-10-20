@@ -1,0 +1,137 @@
+---
+title: Workshop Cleanup
+description: Clean up AWS resources and local environment after the workshop
+---
+
+import { Card, CardGrid, Aside, Steps, LinkCard } from "@astrojs/starlight/components";
+
+<Aside type="caution">
+    - Go through this section only if you used your own AWS account and your own development environment (using your own IDE).
+</Aside>
+
+After completing the workshop, it's important to clean up the AWS resources to avoid ongoing charges and reset your local environment.
+
+## AWS Resource Cleanup
+
+### Step 1: Destroy AgentCore Agents
+
+First, destroy the deployed agents using the `destroy.sh` script:
+
+```bash title="AgentCore cleanup"
+# Navigate to your workshop directory
+cd agentcore-tech-summit-2025
+
+# Destroy the hotel booking agent
+./packages/agentcore-tools/destroy.sh packages/agentcore-agents/hotel-booking-agent/hotel_booking_agent.py hotel_booking_agent
+
+# Destroy the hotel booking MCP server
+./packages/agentcore-tools/destroy.sh packages/agentcore-mcp-servers/hotel-booking/hotel_booking_mcp.py hotel_booking_mcp
+```
+
+### Step 2: Clean Up ECR Images
+
+Before destroying CDK stacks, remove ALL Docker images from ECR repositories:
+
+```bash title="ECR cleanup"
+# List ECR repositories created by the workshop
+aws ecr describe-repositories --query 'repositories[?contains(repositoryName, `bedrock-agentcore`)].repositoryName' --output table
+
+# Delete ALL images from the booking agent repository
+AGENT_IMAGES=$(aws ecr list-images --repository-name bedrock-agentcore-hotel_booking_agent --query 'imageIds[*]' --output json)
+if [ "$AGENT_IMAGES" != "[]" ]; then
+  echo "$AGENT_IMAGES" | aws ecr batch-delete-image --repository-name bedrock-agentcore-hotel_booking_agent --image-ids file:///dev/stdin
+  echo "✅ Deleted all images from bedrock-agentcore-hotel_booking_agent"
+else
+  echo "ℹ️ No images found in bedrock-agentcore-hotel_booking_agent"
+fi
+
+# Delete ALL images from the MCP server repository
+MCP_IMAGES=$(aws ecr list-images --repository-name bedrock-agentcore-hotel_booking_mcp --query 'imageIds[*]' --output json)
+if [ "$MCP_IMAGES" != "[]" ]; then
+  echo "$MCP_IMAGES" | aws ecr batch-delete-image --repository-name bedrock-agentcore-hotel_booking_mcp --image-ids file:///dev/stdin
+  echo "✅ Deleted all images from bedrock-agentcore-hotel_booking_mcp"
+else
+  echo "ℹ️ No images found in bedrock-agentcore-hotel_booking_mcp"
+fi
+```
+
+### Step 3: Destroy CDK Stacks
+
+Remove all deployed AWS resources by destroying the CDK stacks in reverse order:
+
+```bash title="CDK cleanup"
+# Destroy the MCP Server stack
+pnpm cdk destroy AgentCoreTechSummitMcpServer
+
+# Destroy the Booking Agent stack
+pnpm cdk destroy AgentCoreTechSummitBookingAgent
+
+# Destroy the Mock APIs stack
+pnpm cdk destroy AgentCoreTechSummitMockApis
+```
+
+### Step 4: Verify Stack Deletion
+
+Confirm all stacks have been removed:
+
+```bash title="Verifying stacks cleanup"
+# Check CloudFormation stacks
+aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE UPDATE_COMPLETE
+
+# Verify no workshop stacks remain
+aws cloudformation describe-stacks --stack-name AgentCoreTechSummitMockApis 2>/dev/null || echo "✅ Mock APIs stack deleted"
+aws cloudformation describe-stacks --stack-name AgentCoreTechSummitBookingAgent 2>/dev/null || echo "✅ Booking Agent stack deleted"
+aws cloudformation describe-stacks --stack-name AgentCoreTechSummitMcpServer 2>/dev/null || echo "✅ MCP Server stack deleted"
+```
+
+### Step 5: Clean Up CDK Bootstrap (Optional)
+
+If you created a CDK bootstrap stack specifically for this workshop and won't use CDK again:
+
+```bash title="CDK bootstrap cleanup"
+# List CDK bootstrap stacks
+aws cloudformation list-stacks --query 'StackSummaries[?contains(StackName, `CDKToolkit`)].{Name:StackName,Status:StackStatus}' --output table
+
+# Delete CDK bootstrap stack (only if you won't use CDK again)
+# aws cloudformation delete-stack --stack-name CDKToolkit
+```
+
+> **Warning**: Only delete the CDK bootstrap stack if you're certain you won't use CDK in this AWS account/region again.
+
+## Local Environment Cleanup
+
+### Step 6: Remove Workshop Files
+
+Clean up your local workspace:
+
+```bash title="Local workspace cleanup"
+# Remove the workshop directory
+cd ..
+rm -rf agentcore-tech-summit-2025
+
+# Or if you want to keep it for reference, just clean build artifacts
+cd agentcore-tech-summit-2025
+rm -rf node_modules/
+rm -rf .venv/
+rm -rf packages/*/node_modules/
+```
+
+### Step 7: Clean Package Caches (Optional)
+
+Remove cached packages to free up disk space:
+
+```bash title="Clear packages cache"
+# Clean pnpm cache
+pnpm store prune
+
+# Clean uv cache
+uv cache clean
+
+# Clean npm cache (if used)
+npm cache clean --force
+```
+
+## Getting Help
+
+If you encounter issues during cleanup, check the [Troubleshooting Guide](/faq/troubleshooting/) for cleanup-specific solutions, or contact workshop support through the designated Slack channel.
+

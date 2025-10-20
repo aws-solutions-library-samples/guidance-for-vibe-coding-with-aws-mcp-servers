@@ -1,0 +1,108 @@
+meta {
+  name: Create New York Reservation
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{apiUrl}}/reservation
+  body: json
+  auth: none
+
+headers {
+  X-Api-Key: {{apiKey}}
+}
+}
+
+body:json {
+  {
+    "BookingInfo": {
+      "BookedBy": "{{nyGuest.PersonName.GivenName}} {{nyGuest.PersonName.Surname}}",
+      "BookingDate": "2025-05-20"
+    },
+    "Hotel": {
+      "Id": {{nyHotel.Id}},
+      "Code": "{{nyHotel.Code}}",
+      "Name": "{{nyHotel.Name}}"
+    },
+    "RoomStay": {
+      "CheckInDate": "2025-07-10",
+      "CheckOutDate": "2025-07-15",
+      "GuestCount": [
+        {
+          "NumGuests": 2
+        }
+      ],
+      "NumRooms": 1,
+      "Products": [
+        {
+          "Product": {
+            "RoomCode": "{{queenRoom.RoomCode}}",
+            "RoomName": "{{queenRoom.RoomName}}"
+          },
+          "Price": {
+            "Amount": 450.0
+          }
+        }
+      ]
+    },
+    "Guests": [
+      {
+        "PersonName": {
+          "GivenName": "{{nyGuest.PersonName.GivenName}}",
+          "Surname": "{{nyGuest.PersonName.Surname}}"
+        },
+        "EmailAddress": [
+          {
+            "Type": "{{nyGuest.EmailAddress.0.Type}}",
+            "Value": "{{nyGuest.EmailAddress.0.Value}}"
+          }
+        ],
+        "ContactNumbers": [
+          {
+            "Number": "{{nyGuest.ContactNumbers.0.Number}}"
+          }
+        ]
+      }
+    ],
+    "status": "Confirmed",
+    "Currency": {
+      "Code": "USD",
+      "Name": "US Dollars",
+      "Symbol": "$"
+    },
+    "RoomPrices": {
+      "TotalPrice": {
+        "Price": {
+          "CurrencyCode": "USD",
+          "TotalAmount": 2250.0,
+          "TotalAmountIncludingTaxesFees": 2587.50
+        }
+      }
+    }
+  }
+}
+
+script:post-response {
+  try {
+    if (res.status === 200 && res.body.reservations && res.body.reservations[0]) {
+      const confirmationNumber = res.body.reservations[0].CrsConfirmationNumber;
+      bru.setEnvVar("nyConfirmationNumber", confirmationNumber);
+      console.log(`✅ Stored NY confirmation number: ${confirmationNumber}`);
+    }
+  } catch (error) {
+    console.log(`❌ Error processing response: ${error.message}`);
+  }
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("Response includes a valid confirmation number", function() {
+    expect(res.body).to.have.property("reservations");
+    expect(res.body.reservations).to.be.an('array').that.is.not.empty;
+    expect(res.body.reservations[0]).to.have.property("CrsConfirmationNumber");
+  });
+}

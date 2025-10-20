@@ -1,0 +1,62 @@
+meta {
+  name: Add Additional Guest with Comment
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{apiUrl}}/reservation
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "Reservations": [
+      {
+        "CrsConfirmationNumber": "50001CU9485894",
+        "Guests": [
+          {
+            "PersonName": {
+              "GivenName": "James",
+              "Surname": "Wilson"
+            },
+            "EmailAddress": [
+              {
+                "Type": "Primary",
+                "Value": "james.wilson@example.com"
+              }
+            ],
+            "ContactNumbers": [
+              {
+                "Number": "4155551234"
+              }
+            ]
+          },
+          {
+            "PersonName": {
+              "GivenName": "Emma",
+              "Surname": "Wilson"
+            },
+            "Comments": "Additional guest - Dietary restriction: Vegetarian. Prefers extra pillows.",
+            "EmailAddress": [
+              {
+                "Type": "Primary",
+                "Value": "emma.wilson@example.com"
+              }
+            ],
+            "ContactNumbers": [
+              {
+                "Number": "4155557890"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

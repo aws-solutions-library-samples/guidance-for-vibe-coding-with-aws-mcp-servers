@@ -1,0 +1,48 @@
+meta {
+  name: Missing Query Parameter
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{apiUrl}}/property-resolution
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  X-Api-Key: {{apiKey}}
+}
+
+body:json {
+  {
+    "unique_client_id": "AWS_PACE_Agent",
+    "anon_guest_id": "guest_12345",
+    "input": {
+      // Missing query parameter
+    },
+    "session_context": {
+      "session_id": "session_test_{{testId}}",
+      "local_ts": "2025-05-21T12:00:00Z",
+      "country_name": "United States",
+      "region_name": "California",
+      "city_name": "San Francisco",
+      "user_agent": "Bruno Test Client"
+    }
+  }
+}
+
+tests {
+  test("Status code is 400", function() {
+    expect(res.status).to.equal(400);
+  });
+  
+  test("Response includes error message about missing query", function() {
+    expect(res.body).to.have.property("statusCode");
+    expect(res.body.statusCode).to.equal(400);
+    
+    expect(res.body).to.have.property("message");
+    expect(res.body.message).to.include("input.query is required");
+  });
+}

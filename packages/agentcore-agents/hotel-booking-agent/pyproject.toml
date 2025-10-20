@@ -1,0 +1,19 @@
+[project]
+name = "hotel-booking-agent"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "mcp",
+    "boto3",
+    "bedrock-agentcore-starter-toolkit",
+    "strands-agents",
+    "strands-agents-tools",
+    "rpds-py",
+    "jsonschema==4.17.3",
+    "pydantic>=2.5.3",
+    "pydantic-core>=2.14.6",
+    "botocore",
+    "starlette"
+    ]

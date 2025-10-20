@@ -1,0 +1,29 @@
+meta {
+  name: Invalid or Non-existent Confirmation Number
+  type: http
+  seq: 6
+}
+
+patch {
+  url: {{apiUrl}}/reservation
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "Reservations": [
+      {
+        "CrsConfirmationNumber": "50001CU999999",
+        "RoomStay": {
+          "CheckInDate": "2025-06-20",
+          "CheckOutDate": "2025-06-25"
+        }
+      }
+    ]
+  }
+}

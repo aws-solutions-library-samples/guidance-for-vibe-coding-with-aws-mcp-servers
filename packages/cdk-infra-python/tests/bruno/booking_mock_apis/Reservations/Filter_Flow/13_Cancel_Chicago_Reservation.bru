@@ -1,0 +1,61 @@
+meta {
+  name: Cancel Chicago Regency Reservation
+  type: http
+  seq: 13
+}
+
+post {
+  url: {{apiUrl}}/reservation/cancel
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "Hotel": {
+      "Id": 50005,
+      "Code": "HRCH",
+      "Name": "Chicago Hotel"
+    },
+    "CrsConfirmationNumber": "{{chicagoConfirmationNumber}}",
+    "CancellationDetails": {
+      "Comment": "Cancelling test reservation via Filter Flow"
+    }
+  }
+}
+
+script:pre-request {
+  console.log(`Cancelling Chicago Regency reservation: ${bru.getEnvVar("chicagoConfirmationNumber")}`);
+  
+  // Validate we have created the reservation successfully
+  if (!bru.getEnvVar("chicagoConfirmationNumber")) {
+    console.error("❌ Chicago confirmation number is missing! Run the creation request first!");
+  }
+}
+
+script:post-response {
+  // Store cancellation number if successful
+  try {
+    if (res.status === 200 && res.body && res.body.CrsCancellationNumber) {
+      bru.setEnvVar("chicagoCancellationNumber", res.body.CrsCancellationNumber);
+      console.log(`✅ Stored Chicago cancellation number: ${res.body.CrsCancellationNumber}`);
+    }
+  } catch (error) {
+    console.log(`❌ Error processing response: ${error.message}`);
+  }
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("Response includes a cancellation number", function() {
+    expect(res.body).to.have.property("CrsCancellationNumber");
+    expect(res.body.CrsCancellationNumber).to.be.a('string').that.includes("X");
+  });
+}

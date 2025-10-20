@@ -1,0 +1,19 @@
+meta {
+  name: Get all reservations (return all)
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{apiUrl}}/reservation?pageSize=0
+  body: none
+  auth: none
+
+headers {
+  X-Api-Key: {{apiKey}}
+}
+}
+
+params:query {
+  pageSize: 0
+}

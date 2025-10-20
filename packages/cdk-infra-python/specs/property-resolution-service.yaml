@@ -1,0 +1,192 @@
+openapi: 3.0.1
+info:
+  title: Property Resolution Service
+  description: API for resolving natural language property queries into ranked hotel property results
+  version: 1.0.0
+  
+servers:
+  - url: /api/v1
+    description: Base API path
+
+paths:
+  /property-resolution:
+    post:
+      summary: Resolve property query
+      description: Takes a natural language query and returns a ranked list of matching hotel properties
+      operationId: resolvePropertyQuery
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropertyResolutionRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PropertyResolutionResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: No properties found matching the query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    PropertyResolutionRequest:
+      type: object
+      required:
+        - unique_client_id
+        - input
+      properties:
+        unique_client_id:
+          type: string
+          description: Client system identifier
+          enum: ["AWS_PACE_Agent", "CXOne"]
+        anon_guest_id:
+          type: string
+          description: Anonymous identifier for the guest
+        input:
+          type: object
+          required:
+            - query
+          properties:
+            query:
+              type: string
+              description: Natural language query string that may contain misspellings or grammatical errors
+        session_context:
+          type: object
+          description: Additional context about the user session
+          properties:
+            session_id:
+              type: string
+              description: Unique identifier for the user session
+            local_ts:
+              type: string
+              format: date-time
+              description: Local timestamp in ISO 8601 format
+            country_name:
+              type: string
+              description: Country from which the request originated
+            region_name:
+              type: string
+              description: Region or state from which the request originated
+            city_name:
+              type: string
+              description: City from which the request originated
+            user_agent:
+              type: string
+              description: Browser or application user agent string
+    
+    PropertyResolutionResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          description: HTTP status code
+          example: 200
+        result:
+          type: array
+          description: List of matching hotel properties ordered by relevance
+          items:
+            $ref: '#/components/schemas/PropertyResult'
+    
+    PropertyResult:
+      type: object
+      required:
+        - spirit_cd
+        - hotel_id
+        - metadata
+        - rank
+      properties:
+        spirit_cd:
+          type: string
+          description: Unique identifier code for the hotel property (similar to Code in hotels data)
+          example: "HCSF"
+        hotel_id:
+          type: integer
+          description: Unique identifier for the hotel from the Hotels table (partition key)
+          example: 10001
+        metadata:
+          type: object
+          required:
+            - property_name
+            - address
+          properties:
+            property_name:
+              type: string
+              description: Name of the hotel property
+              example: "Bai Hotel San Francisco"
+            address:
+              $ref: '#/components/schemas/Address'
+        rank:
+          type: integer
+          description: Relevance ranking (lower number = more relevant)
+          example: 1
+    
+    Address:
+      type: object
+      properties:
+        address_line_1:
+          type: string
+          description: First line of the property address
+          example: "555 North Point St"
+        address_line_2:
+          type: string
+          nullable: true
+          description: Second line of the property address (optional)
+        city:
+          type: string
+          description: City where the property is located
+          example: "San Francisco"
+        zip_code:
+          type: string
+          description: Postal or ZIP code
+          example: "94133"
+        country:
+          type: string
+          description: Country where the property is located
+          example: "United States"
+    
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          description: HTTP status code
+        message:
+          type: string
+          description: Error message
+        details:
+          type: object
+          description: Additional error details
+  
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-Api-Key
+      description: API key for authentication (any value accepted in mock)

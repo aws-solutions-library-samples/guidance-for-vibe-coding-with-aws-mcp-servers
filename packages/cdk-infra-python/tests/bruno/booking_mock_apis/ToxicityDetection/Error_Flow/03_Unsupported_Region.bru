@@ -1,0 +1,36 @@
+meta {
+  name: 03_Unsupported_Region
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{BASE_URL}}/toxicity-detection
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  X-Api-Key: {{API_KEY}}
+}
+
+body:json {
+  {
+    "text": "Test text",
+    "region_name": "EU"
+  }
+}
+
+tests {
+  test("Status code is 422", function() {
+    expect(res.getStatus()).to.equal(422);
+  });
+
+  test("Error message indicates unsupported region", function() {
+    const json = res.getBody();
+    expect(json).to.have.property('statusCode', 422);
+    expect(json).to.have.property('message', 'Unprocessable Entity');
+    expect(json.details.error).to.include('Only region "NA" is currently supported');
+  });
+}

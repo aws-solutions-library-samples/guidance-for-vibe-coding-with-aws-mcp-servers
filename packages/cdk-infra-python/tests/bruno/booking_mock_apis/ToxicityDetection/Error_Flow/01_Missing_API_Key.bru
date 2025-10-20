@@ -1,0 +1,28 @@
+meta {
+  name: 01_Missing_API_Key
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{BASE_URL}}/toxicity-detection
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "text": "Test text",
+    "region_name": "NA"
+  }
+}
+
+tests {
+  test("Status code is 403", function() {
+    expect(res.getStatus()).to.equal(403);
+  });
+}

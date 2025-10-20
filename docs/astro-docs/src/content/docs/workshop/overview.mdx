@@ -1,0 +1,115 @@
+---
+title: Workshop Overview
+description: Understanding the workshop structure, phases, and activities
+---
+
+import { Card, CardGrid, Aside, Tabs, TabItem, LinkCard } from "@astrojs/starlight/components";
+
+<Aside type="caution">
+   - Go through this section only after you are done setting up your development environment
+   - Make sure you have followed the steps outlined in the [Setup up your IDE Extensions](/dev-env/ide-extensions-setup) section.
+</Aside>
+
+## About the sample application
+
+During the activities of this workshop you will be using the **sample generative AI agent** application that was deployed during the environment setup.
+
+This **realistic hotel booking agent** is built on top of [Amazon Bedrock AgentCore](https://aws.amazon.com/bedrock/agentcore/), and its capable of intelligent decision-making. The agent uses an [MCP server](https://modelcontextprotocol.io/docs/learn/server-concepts) that exposes tools to communicate with mocked external APIs, allowing it to:
+
+- **Understand user requests** - Process natural language like *"Find me a luxury hotel near the beach in Miami for next weekend"*
+- **Make intelligent decisions** - Determine which tools to use and how to orchestrate multiple operations
+- **Coordinate API calls** - Use the MCP server to interact with Property Resolution, Reservations, and Toxicity Detection services
+- **Provide intelligent responses** - Synthesize information from multiple sources into helpful user responses
+
+The MCP server acts as a bridge between the agent and the backend hotel booking APIs, enabling seamless integration and intelligent automation.
+
+### External Mocked APIs
+
+The application also has three mock APIs that simulate a production hotel platform:
+
+**Property Resolution Service**
+
+- Handles natural language hotel searches ("find me a luxury hotel near the beach")
+- Uses Amazon Location Service for dynamic hotel discovery
+- Returns ranked results across major hotel brands (Marriott, Hilton, Hyatt, etc.)
+
+**Reservation Services**
+
+- Complete booking management (create, modify, cancel reservations)
+- Guest information and payment processing
+- Room availability and pricing queries
+
+**Toxicity Detection Service**
+
+- Content moderation for user reviews and interactions
+- Multi-category analysis (threats, insults, hate speech, obscenity)
+- Automated escalation when human intervention is needed
+
+## Workshop Activities
+
+The workshop is organized into **progressive sections**, each designed to help you develop your AI-Assisted software development skills.
+
+Each workshop section includes:
+- **Core activities** that you should definitely consider trying
+- **AWS MCP server activities** to experience different ways to leverage these AI tools for an enhanced experience
+- **Extra Challenges** if you want to dive deeper
+
+<Aside type="note" title="Flexible approach">
+Please note that you **don't have to complete every activity** in each section, you can **pick and choose** based on your interests and available time.
+</Aside>
+
+## Workshop Sections
+
+### 1. Discovery & Analysis Section
+
+In this section you will explore and understand the hotel booking agent application using AI coding agents.
+
+<Tabs syncKey="activities">
+  <TabItem label="Core Activities">
+    - Use AI-powered prompts to **analyze system architecture** and business logic
+    - **Explore** AWS services and AgentCore capabilities
+    - Understand **API relationships** and **data flows**
+  </TabItem>
+  <TabItem label="AWS MCP Server Activities">
+    - 🎨 **AWS Diagram MCP Server**: Generate architecture diagrams
+    - 📚 **AWS Knowledge MCP Server**: Research AgentCore and AWS best practices
+  </TabItem>
+  <TabItem label="Extra Challenges">
+    - 🧪 **API Deep Dive**: Hands-on exploration of the mocked external APIs
+  </TabItem>
+</Tabs>
+
+### 2. Implementation Deep Dive Section
+In this section you'll use AI-Assisted development techniques to fix bugs and implement enhancements to the agentic application.
+
+<Tabs syncKey="activities">
+  <TabItem label="Core Activities">
+    - **Test** your the deployed agentic application to identify potential issues
+    - **Fix** broken configuration using AI-powered debugging
+    - Use AI tools for **code analysis**, **solution generation**, and **testing**
+  </TabItem>
+  <TabItem label="AWS MCP Server Activities">
+    - 🖥️ **Frontend MCP Server**: Build a web interface for the chat functionality
+  </TabItem>
+  <TabItem label="Extra Challenges">
+    - 🔄 **API Key Rotation**: Implement automated API key rotation using AWS Secrets Manager
+  </TabItem>
+</Tabs>
+
+### 3. Solution Estimation and Hardening Section
+In this section you'll estimate project costs and secure the solution - essential steps for production readiness
+
+<Tabs syncKey="activities">
+  <TabItem label="AWS MCP Server Activities">
+    - 💰 **AWS Pricing MCP Server**: Comprehensive cost analysis and optimization
+  </TabItem>
+  <TabItem label="Extra Challenges">
+    - 🔐 **Security Audit with CDK Nag**: Review existing security suppressions and improve security posture
+    - 🛡️ **Toxicity Detection Integration**: Connect the toxicity API to the MCP server
+  </TabItem>
+</Tabs>
+
+
+## Next Steps
+
+Begin with the [Discovery and Analysis section](/workshop/phase-1) to explore the solution, then continue with the rest of the sections, in order.

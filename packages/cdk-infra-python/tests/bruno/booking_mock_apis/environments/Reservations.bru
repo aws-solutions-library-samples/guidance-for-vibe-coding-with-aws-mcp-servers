@@ -1,0 +1,33 @@
+vars {
+  apiUrl: https://YOUR_RESERVATIONS_API_ID.execute-api.YOUR_REGION.amazonaws.com/dev/api/v1
+  apiKey: YOUR_RESERVATIONS_API_KEY
+  propertyResolutionApiUrl: https://YOUR_PROPERTY_API_ID.execute-api.YOUR_REGION.amazonaws.com/dev/api/v1
+  propertyResolutionApiKey: YOUR_PROPERTY_RESOLUTION_API_KEY
+  testId: {{$timestamp}}
+  
+  sfHotel.Id: PLACEHOLDER
+  sfHotel.Code: PLACEHOLDER
+  sfHotel.Name: PLACEHOLDER
+  
+  nyHotel.Id: PLACEHOLDER
+  nyHotel.Code: PLACEHOLDER
+  nyHotel.Name: PLACEHOLDER
+  
+  sfGuest.PersonName.GivenName: Test_SF
+  sfGuest.PersonName.Surname: Castro_{{$timestamp}}
+  sfGuest.EmailAddress.0.Type: Primary
+  sfGuest.EmailAddress.0.Value: test_sf_{{$timestamp}}@example.com
+  sfGuest.ContactNumbers.0.Number: 4155551234
+  
+  nyGuest.PersonName.GivenName: Test_NY
+  nyGuest.PersonName.Surname: Thompson_{{$timestamp}}
+  nyGuest.EmailAddress.0.Type: Primary
+  nyGuest.EmailAddress.0.Value: test_ny_{{$timestamp}}@example.com
+  nyGuest.ContactNumbers.0.Number: 2125559876
+  
+  kingRoom.RoomCode: B1K
+  kingRoom.RoomName: Club Level King
+  
+  queenRoom.RoomCode: A2Q
+  queenRoom.RoomName: Standard Double Queen
+}

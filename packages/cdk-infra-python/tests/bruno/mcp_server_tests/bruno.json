@@ -1,0 +1,6 @@
+{
+  "version": "1",
+  "name": "MCP Server Tests",
+  "type": "collection",
+  "ignore": ["node_modules", ".git"]
+}

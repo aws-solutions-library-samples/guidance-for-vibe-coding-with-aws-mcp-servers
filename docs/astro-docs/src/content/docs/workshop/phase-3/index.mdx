@@ -1,0 +1,136 @@
+---
+title: 3. Cost Estimation & Hardening Section
+description: Solution enhancement activities including cost estimation and security hardening
+---
+import { Card, CardGrid, Aside, Steps, LinkCard } from "@astrojs/starlight/components";
+
+**Objective**: Estimate project costs and secure the solution - essential steps for production readiness.
+
+**Duration**: 20 minutes
+
+## How to Approach This Phase
+
+<Steps>
+1.  **Pick and Choose**: Choose one of the AWS MCP Server activities and try to complete it in the allocated time.
+
+2. **Extra Challenges**: If you have additional time, try to tackle the extra challenge.
+
+3. **Save for Later**: Bookmark activities you don't have time for - they make great homework for deeper learning after the workshop.
+
+4. **Move Forward**: Once you are done, feel free to proceed to the next section.
+</Steps>
+
+## AWS MCP Server Activities
+
+Focus on cost analysis using AI tools and MCP servers:
+
+### 💰 Cost Analysis & Optimization
+
+**Using the AWS Pricing MCP Server** to generate comprehensive cost analysis and optimization recommendations.
+
+The idea is to leverage your AI coding assistant to: 
+- Analyze current AWS resource costs
+- Generate cost projections for different usage scenarios
+- Identify cost optimization opportunities
+
+```text title="Sample Cost Estimation Prompt"
+"Using the AWS Pricing MCP Server, analyze the AgentCore hotel booking system and generate a detailed cost report including current AWS resource costs and cost projections for different usage scenarios."
+```
+
+```text title="Sample Cost Estimation Formatting Prompt"
+"Can you put this information into a CSV file for tabular review?"
+```
+
+<Aside type="note" title="About Amazon Bedrock AgentCore Pricing">
+- Amazon Bedrock AgentCore remains free of charge until October 6, 2025.
+- Currently there are no CDK constructs published to create Amazon Bedrock AgentCore resources.
+- Currently, the AWS Pricing MCP Server will not provide pricing for this service, as it uses the CDK constructs to understand the services used in an application and fetch its prices.
+</Aside>
+
+## Extra Challenges (Optional)
+
+If you want to enhance the solution further:
+
+### 🔐 Security Audit with CDK Nag
+
+**The Challenge**: The infrastructure code already has CDK Nag implemented with several security suppressions. Your mission is to audit these suppressions and improve the security posture.
+
+**Your Mission**: Use AI tools to:
+- Identify all CDK Nag suppressions in the codebase
+- Understand what each suppression means and why it was added
+- Generate a security improvement checklist
+- Implement fixes for suppressions that can be resolved
+
+**Implementation Steps**:
+
+1. **Scan for suppressions** - Use AI to find all `NagSuppressions` in `packages/cdk-infra-python/src/`
+2. **Analyze each suppression** - Understand the security rule being suppressed and the justification
+3. **Research best practices** - Use AWS Knowledge MCP Server to learn about each security rule
+4. **Create improvement plan** - Generate a prioritized list of security enhancements
+5. **Implement fixes** - Address suppressions that can be resolved without breaking functionality
+
+**AI Development Approach**:
+
+```text title="Sample Security Audit Prompt"
+"Scan the cdk-infra-python package for all CDK Nag suppressions. For each suppression found:
+1. Identify the rule being suppressed (e.g., AwsSolutions-IAM4, AwsSolutions-L1)
+2. Explain what security concern the rule addresses
+3. Document the justification provided in the code
+4. Assess whether the suppression is necessary or can be resolved
+
+Generate a security improvement checklist prioritized by severity."
+```
+
+```text title="Sample Security Fix Prompt"
+"Using the AWS CDK MCP Server and AWS Knowledge MCP Server:
+1. Research best practices for [specific security rule]
+2. Implement a fix that resolves the suppression while maintaining functionality
+3. Test the changes to ensure they don't break the deployment"
+```
+
+<Aside type="note" title="Understanding CDK Nag">
+- CDK Nag validates infrastructure code against security best practices
+- Suppressions are sometimes necessary for valid architectural reasons
+- The goal is to minimize suppressions while maintaining functionality
+- Check out the [CDK Nag GitHub repository](https://github.com/cdklabs/cdk-nag) for comprehensive documentation
+</Aside>
+
+This challenge gives you experience with:
+- **Security Auditing**: Reviewing existing security decisions
+- **AWS Best Practices**: Understanding Well-Architected Framework principles
+- **Risk Assessment**: Evaluating security trade-offs
+- **Remediation**: Implementing security improvements
+
+### 🛡️ Implement Toxicity Detection Integration
+
+**The Challenge**: The MCP server currently only integrates with Property Resolution and Reservations APIs. The Toxicity Detection API is deployed but not integrated into the MCP server.
+
+**Your Mission**: Add toxicity detection functionality to the MCP server so the agent can:
+
+- Analyze user messages for harmful content
+- Moderate hotel reviews and comments
+- Escalate problematic interactions when thresholds are exceeded
+
+**Implementation Steps**:
+
+1. **Analyze the existing MCP server code** to understand the current API integration patterns
+2. **Review existing MCP tests** in `packages/cdk-infra-python/tests/bruno/mcp_server_tests/` to understand the testing patterns
+3. **Add toxicity detection endpoint** following the same patterns as the other APIs
+4. **Create test files using AI tools** - Generate Bruno test files for the new toxicity detection functionality
+5. **Implement content moderation logic** that the agent can call
+6. **Test the integration** using your generated test files and by having the agent analyze sample text for toxicity
+
+**AI Development Approach**:
+
+- Use AI tools to understand the existing MCP server architecture
+- Analyze the existing Bruno test files in `packages/cdk-infra-python/tests/bruno/mcp_server_tests/` to understand testing patterns
+- Generate new Bruno test files for toxicity detection using AI tools
+- Generate the toxicity detection integration code following established patterns
+- Use your generated tests to validate the implementation
+
+This challenge gives you experience with:
+
+- **MCP Server Development**: Adding new capabilities to MCP servers
+- **API Integration**: Connecting multiple services through a unified interface
+- **Content Moderation**: Implementing safety features in AI systems
+

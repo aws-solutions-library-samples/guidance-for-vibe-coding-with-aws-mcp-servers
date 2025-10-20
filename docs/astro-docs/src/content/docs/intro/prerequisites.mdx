@@ -1,0 +1,205 @@
+---
+title: Prerequisites
+description: Detailed installation and setup instructions for all workshop tools and requirements
+---
+
+import { Card, CardGrid, Aside, Steps } from "@astrojs/starlight/components";
+
+Follow these steps carefully to ensure you're ready for the workshop activities.
+
+## Tools Overview
+
+<CardGrid>
+  <Card title="AI-Assisted Development Tools" icon="rocket">
+    Use one of many AI-assisted development tools with MCP support: 
+    - Amazon Q Developer CLI
+    - VSCode + Amazon Q Developer extension 
+    - VS Code + Cline extension
+    - Kiro IDE  
+    - Or any other MCP-compatible AI tool
+  </Card>
+  <Card title="Required Software Development Tools" icon="setting">
+    - Node.js (v20.18.1+) and Python (v3.12+)
+    - uv (Python package manager) 
+    - pnpm
+    - Docker Desktop or Rancher Desktop
+    - Graphviz
+    - AWS CLI and AWS CDK CLI
+    - An AWS account with admin access
+  </Card>
+  <Card title="Additional Recommended Tools" icon="add-document">
+    - Bruno CLI (Required to test the provided mock APIs) 
+  </Card>
+</CardGrid>
+
+## Detailed Setup Instructions
+
+### Step 1: Installing AI-Assisted Development Tools
+
+<Aside type="note" title="Development Tool Selection">
+  - You must have **at least one AI-Assisted development tool** with MCP support to
+  participate effectively. 
+  - Choose the one that works best for your development
+  environment.
+</Aside>
+
+<Steps>
+
+1. **Install Kiro IDE**
+
+   Download and install [Kiro](https://kiro.dev/downloads/). Ensure you have the latest version that supports MCP integration. 
+   
+   or, 
+
+2. **Install Amazon Q Developer CLI**
+
+   ```bash title="Installing Amazon Q CLI"
+   # Install Amazon Q CLI
+   pip install amazon-q-cli
+
+   # Verify installation
+   q --version
+   ```
+
+   or, 
+
+3. **Install VS Code + Amazon Q Developer Extension**
+
+   - Download and install [Visual Studio Code](https://code.visualstudio.com/)
+   - Install the [Amazon Q Developer IDE extension](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/q-in-IDE-setup.html) from the VS Code marketplace
+
+   or, 
+
+4. **Install VS Code + Cline Extension**
+
+   - Download and install [Visual Studio Code](https://code.visualstudio.com/) (if not already installed)
+   - Install the [Cline extension](https://cline.bot/) from the VS Code marketplace
+   - Configure the extension with your preferred AI model (Claude, GPT, etc.)
+
+</Steps>
+
+### Step 2: Install Required Software Development Tools
+
+<Steps>
+
+1. **Install Node and Python**
+
+    Install the latest LTS version of NodeJS, or at least v20.18.1. We recommend using [NVM](https://github.com/nvm-sh/nvm) to install it.
+
+    Make sure you have python 3.12+ installed. Use your preferred installation method, such as from the [official python website](https://www.python.org/downloads/), using [uv](https://docs.astral.sh/uv/guides/install-python/), or other package managers.
+
+    **Verify installation:**
+
+    ```bash title="Verifying Node and Python"
+    # Ensure Node.js v20.18.1+ is installed
+    node --version
+
+    # Ensure Python v3.12+ is installed
+    python --version
+    ```
+
+2. **Install uv (Python package manager)**
+
+   **Install uv**: Visit [https://docs.astral.sh/uv/getting-started/installation/](https://docs.astral.sh/uv/getting-started/installation/) and select your operating system for installation instructions.
+
+   ```bash title="Verifying uv installation"
+   # Verify installation
+   uv --version
+   ```
+
+3. **Install pnpm (Node.js Package Manager)**
+
+   Visit the official [installation guide](https://pnpm.io/installation), follow the instructions for your operating system (Windows, macOS, or Linux).
+
+   **Verify installation:**
+
+   ```bash title="Verifying pnpm installation"
+   pnpm --version
+   ```
+4. **Install Docker or Rancher Desktop**
+
+   Choose one container runtime:
+
+   - **Option A:** Download and install [Docker Desktop](https://docs.docker.com/desktop/)
+   - **Option B:** Download and install [Rancher Desktop](https://rancherdesktop.io/)
+
+   ```bash title="Verifying container runtime installation"
+   # Verify installation
+   docker --version
+   ```
+
+5. **Install Graphviz**
+    Visit the [graphviz download site](https://graphviz.org/download/) for instructions.
+
+6. **Install AWS CLI**
+
+   Install the AWS CLI following the [official installation guide](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) for your operating system.
+
+   ```bash title="Verifying AWS CLI installation"
+   # Verify installation and configure
+   aws --version
+   aws configure list
+   ```
+
+7. **Install CDK CLI**
+
+   ```bash title="Installing AWS CDK CLI"
+   # Install AWS CDK CLI globally using pnpm
+   pnpm add -g aws-cdk
+
+   # Verify installation
+   cdk --version
+   ```
+
+</Steps>
+
+### Step 3: Install Recommended Tools (Optional)
+
+<Steps>
+
+1. **Install Bruno CLI (for API testing)**
+
+   ```bash title="Installing Bruno CLI"
+   # Install Bruno CLI
+   npm install -g @usebruno/cli
+   ```
+
+</Steps>
+
+## Verification Commands
+
+Run these commands to verify your setup:
+
+```bash title="Verifying setup"
+echo "=== Development Tools ==="
+pnpm --version 2>/dev/null || echo "❌ pnpm not found"
+node --version 2>/dev/null || echo "❌ Node.js not found"
+python --version 2>/dev/null || echo "❌ Python not found"
+aws --version 2>/dev/null || echo "❌ AWS CLI not found"
+uv --version 2>/dev/null || echo "❌ uv not found (required for MCP servers)"
+
+echo "=== Recommended Tools (Optional) ==="
+bru --version 2>/dev/null || echo "ℹ️ Bruno CLI not installed (optional - needed for API testing)"
+
+# Check AWS access and project setup
+echo "=== AWS Access ==="
+aws sts get-caller-identity 2>/dev/null || echo "❌ AWS credentials not configured"
+```
+
+## Getting Help
+
+If you encounter issues during setup:
+
+1. Review common issues in our [Troubleshooting Guide](/faq/troubleshooting/)
+2. Request technical support through the designated Slack channel
+3. Arrive a few minutes early to the workshop session for last-minute setup assistance
+
+<Aside type="tip" title="Pro Tip">
+  Test your complete setup by running through the verification checklist at
+  least 24 hours before the workshop. This gives you time to resolve any issues without
+  rushing.
+</Aside>
+
+## Next Steps
+
+Continue your environment setup by following the [sample agentic application deployment steps](/dev-env/development-environment-setup#step-2-deploy-the-sample-agentic-application)

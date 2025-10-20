@@ -1,0 +1,78 @@
+meta {
+  name: Filter By Status - Multiple
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{apiUrl}}/reservation?status=Confirmed,Booked
+  body: none
+  auth: none
+
+headers {
+  X-Api-Key: {{apiKey}}
+}
+}
+
+params:query {
+  status: Confirmed,Booked
+}
+
+script:pre-request {
+  console.log(`Filtering reservations by multiple statuses: Confirmed,Booked`);
+  
+  // Validate we have created reservations successfully
+  if (!bru.getEnvVar("chicagoConfirmationNumber") || 
+      !bru.getEnvVar("mvConfirmationNumber") ||
+      !bru.getEnvVar("chicagoMileConfirmationNumber")) {
+    console.warn("⚠️ Warning: Not all confirmation numbers are available. Run the creation requests first!");
+  }
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("All returned reservations have either Confirmed or Booked status", function() {
+    expect(res.body).to.have.property("reservations");
+    const reservations = res.body.reservations;
+    expect(reservations).to.be.an('array');
+    
+    // Ensure each reservation has correct status
+    reservations.forEach(reservation => {
+      expect(reservation.status).to.be.oneOf(["Confirmed", "Booked"]);
+    });
+  });
+  
+  test("Chicago Regency (Confirmed) reservation is included", function() {
+    const chicagoConfirmation = bru.getEnvVar("chicagoConfirmationNumber");
+    const confirmationNumbers = res.body.reservations.map(r => r.CrsConfirmationNumber);
+    expect(confirmationNumbers).to.include(chicagoConfirmation);
+  });
+  
+  test("Chicago Magnificent Mile (Confirmed) reservation is included", function() {
+    const chicagoMileConfirmation = bru.getEnvVar("chicagoMileConfirmationNumber");
+    const confirmationNumbers = res.body.reservations.map(r => r.CrsConfirmationNumber);
+    expect(confirmationNumbers).to.include(chicagoMileConfirmation);
+  });
+  
+  test("Mountain View (Booked) reservation is included", function() {
+    const mvConfirmation = bru.getEnvVar("mvConfirmationNumber");
+    const confirmationNumbers = res.body.reservations.map(r => r.CrsConfirmationNumber);
+    expect(confirmationNumbers).to.include(mvConfirmation);
+  });
+  
+  test("All our test reservations are included", function() {
+    const chicagoConfirmation = bru.getEnvVar("chicagoConfirmationNumber");
+    const chicagoMileConfirmation = bru.getEnvVar("chicagoMileConfirmationNumber");
+    const mvConfirmation = bru.getEnvVar("mvConfirmationNumber");
+    
+    const reservations = res.body.reservations;
+    const hasChicago = reservations.some(r => r.CrsConfirmationNumber === chicagoConfirmation);
+    const hasChicagoMile = reservations.some(r => r.CrsConfirmationNumber === chicagoMileConfirmation);
+    const hasMountainView = reservations.some(r => r.CrsConfirmationNumber === mvConfirmation);
+    
+    expect(hasChicago && hasChicagoMile && hasMountainView).to.be.true;
+  });
+}

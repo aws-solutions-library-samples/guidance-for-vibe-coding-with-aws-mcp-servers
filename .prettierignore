@@ -1,0 +1,3 @@
+# Python files (let Ruff handle these)
+*.py
+*.pyi

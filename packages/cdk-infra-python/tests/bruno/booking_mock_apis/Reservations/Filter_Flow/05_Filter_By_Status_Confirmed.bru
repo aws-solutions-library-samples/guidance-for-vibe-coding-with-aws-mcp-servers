@@ -1,0 +1,64 @@
+meta {
+  name: Filter By Status - Confirmed
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{apiUrl}}/reservation?status=Confirmed
+  body: none
+  auth: none
+
+headers {
+  X-Api-Key: {{apiKey}}
+}
+}
+
+params:query {
+  status: Confirmed
+}
+
+script:pre-request {
+  console.log(`Filtering reservations by status: Confirmed`);
+  
+  // Validate we have created reservations successfully
+  if (!bru.getEnvVar("chicagoConfirmationNumber") || 
+      !bru.getEnvVar("chicagoMileConfirmationNumber")) {
+    console.warn("⚠️ Warning: Chicago confirmation numbers are missing. Run the creation requests first!");
+  }
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("All returned reservations have Confirmed status", function() {
+    expect(res.body).to.have.property("reservations");
+    const reservations = res.body.reservations;
+    expect(reservations).to.be.an('array');
+    
+    // Ensure each reservation has "Confirmed" status
+    reservations.forEach(reservation => {
+      expect(reservation).to.have.property("status", "Confirmed");
+    });
+  });
+  
+  test("Chicago Regency reservation is included", function() {
+    const chicagoConfirmation = bru.getEnvVar("chicagoConfirmationNumber");
+    const confirmationNumbers = res.body.reservations.map(r => r.CrsConfirmationNumber);
+    expect(confirmationNumbers).to.include(chicagoConfirmation);
+  });
+  
+  test("Chicago Magnificent Mile reservation is included", function() {
+    const chicagoMileConfirmation = bru.getEnvVar("chicagoMileConfirmationNumber");
+    const confirmationNumbers = res.body.reservations.map(r => r.CrsConfirmationNumber);
+    expect(confirmationNumbers).to.include(chicagoMileConfirmation);
+  });
+  
+  test("Mountain View (Booked) reservation is NOT included", function() {
+    const mvConfirmation = bru.getEnvVar("mvConfirmationNumber");
+    const confirmationNumbers = res.body.reservations.map(r => r.CrsConfirmationNumber);
+    expect(confirmationNumbers).to.not.include(mvConfirmation);
+  });
+}

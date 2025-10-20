@@ -1,0 +1,35 @@
+meta {
+  name: 02_Missing_Text
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{BASE_URL}}/toxicity-detection
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  X-Api-Key: {{API_KEY}}
+}
+
+body:json {
+  {
+    "region_name": "NA"
+  }
+}
+
+tests {
+  test("Status code is 400", function() {
+    expect(res.getStatus()).to.equal(400);
+  });
+
+  test("Error message indicates missing text field", function() {
+    const json = res.getBody();
+    expect(json).to.have.property('statusCode', 400);
+    expect(json).to.have.property('message', 'Bad Request');
+    expect(json.details.error).to.include('Field "text" is required');
+  });
+}

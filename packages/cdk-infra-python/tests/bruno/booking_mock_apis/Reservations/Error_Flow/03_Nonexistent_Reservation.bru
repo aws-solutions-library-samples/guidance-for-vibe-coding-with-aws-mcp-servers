@@ -1,0 +1,41 @@
+meta {
+  name: Cancel Nonexistent Reservation
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{apiUrl}}/reservation/cancel
+  body: json
+  auth: none
+
+headers {
+  X-Api-Key: {{apiKey}}
+}
+}
+
+body:json {
+  {
+    "Hotel": {
+      "Id": {{sfHotel.Id}},
+      "Code": "{{sfHotel.Code}}",
+      "Name": "{{sfHotel.Name}}"
+    },
+    "CrsConfirmationNumber": "50001CU999999"
+  }
+}
+
+tests {
+  test("Status code is 404", function() {
+    expect(res.status).to.equal(404);
+  });
+  
+  test("Error code is ReservationNotFound", function() {
+    expect(res.body).to.have.property("errorCode", "ReservationNotFound");
+  });
+  
+  test("Error message contains confirmation number", function() {
+    expect(res.body).to.have.property("errorMessage");
+    expect(res.body.errorMessage).to.include("50001CU999999");
+  });
+}

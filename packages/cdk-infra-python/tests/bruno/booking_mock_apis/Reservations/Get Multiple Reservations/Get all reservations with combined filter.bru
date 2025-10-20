@@ -1,0 +1,20 @@
+meta {
+  name: Get all reservations with combined filter
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{apiUrl}}/reservation?status=Confirmed,Waitlisted&departure=2025-02-20;2025-03-26
+  body: none
+  auth: none
+
+headers {
+  X-Api-Key: {{apiKey}}
+}
+}
+
+params:query {
+  status: Confirmed,Waitlisted
+  departure: 2025-02-20;2025-03-26
+}

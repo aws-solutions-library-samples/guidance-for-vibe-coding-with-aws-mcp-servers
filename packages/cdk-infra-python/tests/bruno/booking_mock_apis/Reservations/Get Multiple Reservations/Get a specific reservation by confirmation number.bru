@@ -1,0 +1,19 @@
+meta {
+  name: Get a specific reservation by confirmation number
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{apiUrl}}/reservation?crsConfirmationNumber=50001CU000123
+  body: none
+  auth: none
+
+headers {
+  X-Api-Key: {{apiKey}}
+}
+}
+
+params:query {
+  crsConfirmationNumber: 50001CU000123
+}
