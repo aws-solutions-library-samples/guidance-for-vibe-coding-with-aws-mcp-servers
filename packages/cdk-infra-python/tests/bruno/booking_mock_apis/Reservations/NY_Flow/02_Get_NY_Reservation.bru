@@ -8,10 +8,10 @@ get {
   url: {{apiUrl}}/reservation/hotel/{{nyHotel.Id}}/{{nyConfirmationNumber}}
   body: none
   auth: none
+}
 
 headers {
   X-Api-Key: {{apiKey}}
-}
 }
 
 script:pre-request {

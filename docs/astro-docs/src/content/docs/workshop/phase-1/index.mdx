@@ -95,6 +95,14 @@ If you complete the main activities early and want to dive deeper:
 
 ### 🧪 Testing the External Mock APIs
 
+<Aside type="caution" title="Note for Self-Deployment Users">
+**If you deployed using Option 2 (your own AWS account)**, you may see 403 Forbidden errors when running tests from your local machine. This is expected!
+
+The APIs use `aws:SourceAccount` Resource Policies for security, which only allow requests from within the AWS account (not from local machines). This demonstrates real-world API security patterns.
+
+**Workshop Studio users (Option 1)** won't see this issue since the environment runs within AWS.
+</Aside>
+
 #### Manual Testing
 
 Test the deployed mock APIs hands-on using the provided Bruno test suite. This gives you practical understanding of each API's functionality.
