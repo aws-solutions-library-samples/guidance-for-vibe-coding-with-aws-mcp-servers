@@ -214,11 +214,12 @@ class PropertyResolutionConstruct(Construct):
         v1_resource = api_resource.add_resource("v1")
         property_resolution_resource = v1_resource.add_resource("property-resolution")
 
-        # POST /api/v1/property-resolution - Natural language property search (requires API key)
+        # POST /api/v1/property-resolution - Natural language property search (requires API key and IAM auth)
         property_resolution_resource.add_method(
             "POST",
             apigateway.LambdaIntegration(self.property_resolution_function, proxy=True),
             api_key_required=True,
+            authorization_type=apigateway.AuthorizationType.IAM,
             request_validator=self.request_validator,
             request_models={"application/json": self.request_model},
         )
