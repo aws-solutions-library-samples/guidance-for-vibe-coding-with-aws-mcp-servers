@@ -7,7 +7,15 @@ meta {
 get {
   url: {{apiUrl}}/reservation/hotel/50004/50004CU000456
   body: none
-  auth: none
+  auth: awsv4
+}
+
+auth:awsv4 {
+  accessKeyId: {{awsAccessKeyId}}
+  secretAccessKey: {{awsSecretAccessKey}}
+  sessionToken: {{awsSessionToken}}
+  service: execute-api
+  region: {{awsRegion}}
 }
 
 headers {

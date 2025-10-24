@@ -7,7 +7,15 @@ meta {
 get {
   url: {{apiUrl}}/reservation?pageSize=0
   body: none
-  auth: none
+  auth: awsv4
+}
+
+auth:awsv4 {
+  accessKeyId: {{awsAccessKeyId}}
+  secretAccessKey: {{awsSecretAccessKey}}
+  sessionToken: {{awsSessionToken}}
+  service: execute-api
+  region: {{awsRegion}}
 }
 
 headers {

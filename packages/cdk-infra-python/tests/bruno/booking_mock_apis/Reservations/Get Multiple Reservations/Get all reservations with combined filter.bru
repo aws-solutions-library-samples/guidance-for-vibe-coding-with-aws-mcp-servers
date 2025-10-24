@@ -7,7 +7,15 @@ meta {
 get {
   url: {{apiUrl}}/reservation?status=Confirmed,Waitlisted&departure=2025-02-20;2025-03-26
   body: none
-  auth: none
+  auth: awsv4
+}
+
+auth:awsv4 {
+  accessKeyId: {{awsAccessKeyId}}
+  secretAccessKey: {{awsSecretAccessKey}}
+  sessionToken: {{awsSessionToken}}
+  service: execute-api
+  region: {{awsRegion}}
 }
 
 headers {
