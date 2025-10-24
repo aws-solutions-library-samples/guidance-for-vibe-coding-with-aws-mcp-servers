@@ -93,7 +93,7 @@ class PropertyResolutionConstruct(Construct):
             index="app.py",
             handler="handler",
             layers=[self.common_layer],
-            timeout=Duration.seconds(30),
+            timeout=Duration.seconds(60),
             memory_size=256,
             environment={"HOTELS_TABLE_NAME": self.hotels_table.table_name, "LOG_LEVEL": "INFO"},
             # log_retention deprecated - using default log group,

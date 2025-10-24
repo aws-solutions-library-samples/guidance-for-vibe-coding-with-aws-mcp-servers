@@ -95,14 +95,6 @@ If you complete the main activities early and want to dive deeper:
 
 ### 🧪 Testing the External Mock APIs
 
-<Aside type="caution" title="Note for Self-Deployment Users">
-**If you deployed using Option 2 (your own AWS account)**, you may see 403 Forbidden errors when running tests from your local machine. This is expected!
-
-The APIs use `aws:SourceAccount` Resource Policies for security, which only allow requests from within the AWS account (not from local machines). This demonstrates real-world API security patterns.
-
-**Workshop Studio users (Option 1)** won't see this issue since the environment runs within AWS.
-</Aside>
-
 #### Manual Testing
 
 Test the deployed mock APIs hands-on using the provided Bruno test suite. This gives you practical understanding of each API's functionality.
@@ -129,8 +121,6 @@ Make sure you installed the [Bruno CLI](/intro/prerequisites/#step-3-install-rec
    # Get actual API key values from the Key IDs
    aws apigateway get-api-key --api-key YOUR_API_KEY_ID --include-value --query "value"
    ```
-   
-   Or check the AWS CloudFormation console for outputs and API Gateway console for key values.
    </Aside>
 
    **Property Resolution environment:**
@@ -145,6 +135,10 @@ Make sure you installed the [Bruno CLI](/intro/prerequisites/#step-3-install-rec
      apiUrl: https://YOUR_API_ID.execute-api.YOUR_REGION.amazonaws.com/dev/api/v1
      apiKey: YOUR_PROPERTY_RESOLUTION_API_KEY
      testId: {{$timestamp}}
+     awsRegion: YOUR_REGION
+     awsAccessKeyId: {{process.env.AWS_ACCESS_KEY_ID}}
+     awsSecretAccessKey: {{process.env.AWS_SECRET_ACCESS_KEY}}
+     awsSessionToken: {{process.env.AWS_SESSION_TOKEN}}
    }
    ```
 
@@ -159,6 +153,10 @@ Make sure you installed the [Bruno CLI](/intro/prerequisites/#step-3-install-rec
    vars {
      BASE_URL: https://YOUR_API_ID.execute-api.YOUR_REGION.amazonaws.com/dev/api/v1
      API_KEY: YOUR_TOXICITY_DETECTION_API_KEY
+     awsRegion: YOUR_REGION
+     awsAccessKeyId: {{process.env.AWS_ACCESS_KEY_ID}}
+     awsSecretAccessKey: {{process.env.AWS_SECRET_ACCESS_KEY}}
+     awsSessionToken: {{process.env.AWS_SESSION_TOKEN}}
    }
    ```
 
@@ -169,13 +167,16 @@ Make sure you installed the [Bruno CLI](/intro/prerequisites/#step-3-install-rec
    ```
 
    Replace the placeholder values with your deployed API details:
-   ```js ins="YOUR_RESERVATIONS_API_ID" ins="YOUR_PROPERTY_API_ID" ins="YOUR_REGION" ins="YOUR_PROPERTY_RESOLUTION_API_KEY" ins="YOUR_RESERVATIONS_API_KEY" title="Reservations.bru"
+   ```js ins="YOUR_RESERVATIONS_API_ID" ins="YOUR_PROPERTY_API_ID" ins="YOUR_REGION" ins="YOUR_PROPERTY_RESOLUTION_API_KEY" title="Reservations.bru"
    vars {
      apiUrl: https://YOUR_RESERVATIONS_API_ID.execute-api.YOUR_REGION.amazonaws.com/dev/api/v1
-     apiKey: YOUR_RESERVATIONS_API_KEY
      propertyResolutionApiUrl: https://YOUR_PROPERTY_API_ID.execute-api.YOUR_REGION.amazonaws.com/dev/api/v1
      propertyResolutionApiKey: YOUR_PROPERTY_RESOLUTION_API_KEY
      testId: {{$timestamp}}
+     awsRegion: YOUR_REGION
+     awsAccessKeyId: {{process.env.AWS_ACCESS_KEY_ID}}
+     awsSecretAccessKey: {{process.env.AWS_SECRET_ACCESS_KEY}}
+     awsSessionToken: {{process.env.AWS_SESSION_TOKEN}}
      
      sfHotel.Id: PLACEHOLDER
      sfHotel.Code: PLACEHOLDER
@@ -188,13 +189,9 @@ Make sure you installed the [Bruno CLI](/intro/prerequisites/#step-3-install-rec
    }
    ```
 
-   <Aside type="note">
-   The Reservations environment includes references to the Property Resolution API because the Setup tests dynamically populate hotel data before running reservation tests. The hotel placeholder values will be filled in automatically by the Setup tests.
-   </Aside>
-
 2. **Run API Tests**
 
-   Navigate to the CDK infrastructure directory and run the test scripts:
+   The test scripts automatically handle AWS authentication and run the Bruno tests:
 
    ```bash title="Testing APIs"
    # Navigate to the CDK directory
@@ -208,10 +205,6 @@ Make sure you installed the [Bruno CLI](/intro/prerequisites/#step-3-install-rec
    pnpm run test:apis:reservations         # Complete booking workflow  
    pnpm run test:apis:toxicity            # Content moderation
    ```
-
-   <Aside type="caution">
-   If tests fail, double-check that your environment files have the correct API URLs and keys from your CDK deployment output.
-   </Aside>
 
 3. **Analyze Test Results**
 
