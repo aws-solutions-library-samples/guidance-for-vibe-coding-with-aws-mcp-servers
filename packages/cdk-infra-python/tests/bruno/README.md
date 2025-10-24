@@ -11,20 +11,23 @@ This directory contains Bruno API tests for the AgentCore Tech Summit mock APIs.
 pnpm cdk deploy AgentCoreTechSummitMockApis
 ```
 
-### 2. Update Environment Files
+### 2. Set AWS Credentials for Authentication
+
+The APIs require AWS SigV4 authentication. Set up credentials in your terminal session:
+
+```bash
+# Navigate to Bruno tests directory
+cd packages/cdk-infra-python/tests/bruno/
+
+# Source the helper script to export AWS credentials to environment variables
+source ./set-aws-creds.sh
+```
+
+**Important:** The credentials are only available in the terminal session where you run this script. You must run Bruno tests from the same terminal.
+
+### 3. Update Environment Files
 
 After deployment, update the environment files with your actual API URLs and keys:
-
-#### Reservation Services API
-
-Edit `booking_mock_apis/environments/Reservations.bru`:
-
-```
-vars {
-  apiUrl: https://YOUR-ACTUAL-API-ID.execute-api.YOUR-REGION.amazonaws.com/v1/
-  # ... rest of the variables stay the same
-}
-```
 
 #### Property Resolution API
 
@@ -32,9 +35,28 @@ Edit `booking_mock_apis/environments/PropertyResolution.bru`:
 
 ```
 vars {
-  apiUrl: https://YOUR-ACTUAL-API-ID.execute-api.YOUR-REGION.amazonaws.com/v1/
-  apiKey: YOUR-ACTUAL-API-KEY
+  apiUrl: https://YOUR_PROPERTY_API_ID.execute-api.YOUR_REGION.amazonaws.com/dev/api/v1
+  apiKey: YOUR_PROPERTY_RESOLUTION_API_KEY
   testId: {{$timestamp}}
+  awsRegion: YOUR_REGION
+  awsAccessKeyId: {{process.env.AWS_ACCESS_KEY_ID}}
+  awsSecretAccessKey: {{process.env.AWS_SECRET_ACCESS_KEY}}
+  awsSessionToken: {{process.env.AWS_SESSION_TOKEN}}
+}
+```
+
+#### Reservation Services API
+
+Edit `booking_mock_apis/environments/Reservations.bru`:
+
+```
+vars {
+  apiUrl: https://YOUR_RESERVATIONS_API_ID.execute-api.YOUR_REGION.amazonaws.com/v1/
+  awsRegion: YOUR_REGION
+  awsAccessKeyId: {{process.env.AWS_ACCESS_KEY_ID}}
+  awsSecretAccessKey: {{process.env.AWS_SECRET_ACCESS_KEY}}
+  awsSessionToken: {{process.env.AWS_SESSION_TOKEN}}
+  # ... rest of the variables stay the same
 }
 ```
 
@@ -44,12 +66,16 @@ Edit `booking_mock_apis/environments/ToxicityDetection.bru`:
 
 ```
 vars {
-  BASE_URL: https://YOUR-ACTUAL-API-ID.execute-api.YOUR-REGION.amazonaws.com/v1/
-  API_KEY: YOUR-ACTUAL-API-KEY
+  BASE_URL: https://YOUR_TOXICITY_API_ID.execute-api.YOUR_REGION.amazonaws.com/v1/
+  API_KEY: YOUR_TOXICITY_DETECTION_API_KEY
+  awsRegion: YOUR_REGION
+  awsAccessKeyId: {{process.env.AWS_ACCESS_KEY_ID}}
+  awsSecretAccessKey: {{process.env.AWS_SECRET_ACCESS_KEY}}
+  awsSessionToken: {{process.env.AWS_SESSION_TOKEN}}
 }
 ```
 
-### 3. Run Tests
+### 4. Run Tests
 
 From the monorepo root:
 
@@ -63,7 +89,34 @@ pnpm test:apis:reservations
 pnpm test:apis:toxicity
 ```
 
-## Getting API URLs and Keys from Stack Outputs
+## Authentication Requirements
+
+The APIs are protected by AWS resource policies and require:
+
+- **AWS SigV4 signing** (handled automatically by Bruno with credentials)
+- **API keys** (configured in environment files)
+
+### Troubleshooting Authentication
+
+If you get 403 Forbidden errors:
+
+1. **Verify AWS credentials**:
+
+   ```bash
+   aws sts get-caller-identity
+   ```
+
+2. **Check environment variables are set**:
+
+   ```bash
+   echo $AWS_ACCESS_KEY_ID
+   echo $AWS_SECRET_ACCESS_KEY
+   ```
+
+3. **For SSO users, refresh token**:
+   ```bash
+   aws sso login --profile your-profile
+   ```
 
 After deploying, get your API URLs and keys:
 
