@@ -119,7 +119,11 @@ async def agent_invocation(payload, context):  # noqa: ARG001
 
     logger.info(f"MCP URL: {mcp_url}")
 
-    headers = {"authorization": f"Bearer {bearer_token}", "Content-Type": "application/json"}
+    headers = {
+        "authorization": f"Bearer {bearer_token}",
+        "Content-Type": "application/json",
+        "Accept": "application/json, text/event-stream",
+    }
 
     bedrock_model = BedrockModel(model_id="us.anthropic.claude-sonnet-4-20250514-v1:0", client=bedrock_client)
 

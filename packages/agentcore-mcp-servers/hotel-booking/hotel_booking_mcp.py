@@ -11,23 +11,21 @@ logger.setLevel(logging.INFO)
 # Initialize FastMCP server
 mcp = FastMCP(host="0.0.0.0", stateless_http=True)
 
-# Initialize the hotel booking service with real API integration
-try:
-    hotel_service = HotelBookingService()
-    logger.info("✅ Hotel booking service initialized successfully")
-except Exception as e:
-    logger.error(f"❌ Failed to initialize hotel booking service: {e}")
-    # Create a fallback service that will return configuration errors
-    hotel_service = None
+# Lazy initialization of hotel booking service
+hotel_service = None
 
 
-def _get_service_or_error():
-    """Get the hotel service instance or return configuration error."""
+def _get_service():
+    """Get the hotel service instance, initializing it if needed."""
+    global hotel_service
     if hotel_service is None:
-        return {
-            "status": "error",
-            "message": "Hotel booking service not configured. Please check your .env file and API configuration.",
-        }
+        try:
+            logger.info("🔄 Initializing hotel booking service...")
+            hotel_service = HotelBookingService()
+            logger.info("✅ Hotel booking service initialized successfully")
+        except Exception as e:
+            logger.error(f"❌ Failed to initialize hotel booking service: {e}")
+            return {"status": "error", "message": f"Hotel booking service initialization failed: {str(e)}"}
     return hotel_service
 
 
@@ -48,7 +46,7 @@ def search_properties(
     Returns:
         Dictionary containing matching properties with availability and pricing
     """
-    service = _get_service_or_error()
+    service = _get_service()
     if isinstance(service, dict):
         return service
     return service.search_properties(location, check_in_date, check_out_date, guests, min_rating)
@@ -81,7 +79,7 @@ def create_reservation(
     Returns:
         Dictionary containing reservation confirmation details
     """
-    service = _get_service_or_error()
+    service = _get_service()
     if isinstance(service, dict):
         return service
     return service.create_reservation(
@@ -107,7 +105,7 @@ def get_booking_details(booking_id: str) -> dict[str, Any]:
     Returns:
         Dictionary containing booking details
     """
-    service = _get_service_or_error()
+    service = _get_service()
     if isinstance(service, dict):
         return service
     return service.get_booking_details(booking_id)
@@ -125,7 +123,7 @@ def cancel_booking(booking_id: str, reason: str = "") -> dict[str, Any]:
     Returns:
         Dictionary containing cancellation confirmation
     """
-    service = _get_service_or_error()
+    service = _get_service()
     if isinstance(service, dict):
         return service
     return service.cancel_booking(booking_id, reason)
@@ -142,7 +140,7 @@ def get_booking_history(guest_email: str) -> dict[str, Any]:
     Returns:
         Dictionary containing list of bookings for the guest
     """
-    service = _get_service_or_error()
+    service = _get_service()
     if isinstance(service, dict):
         return service
     return service.get_booking_history(guest_email)
@@ -164,7 +162,7 @@ def check_room_availability(
     Returns:
         Dictionary containing availability information
     """
-    service = _get_service_or_error()
+    service = _get_service()
     if isinstance(service, dict):
         return service
     return service.check_room_availability(hotel_id, check_in_date, check_out_date, room_type)
@@ -181,7 +179,7 @@ def validate_payment_details(payment_info: dict[str, Any]) -> dict[str, Any]:
     Returns:
         Dictionary containing validation results
     """
-    service = _get_service_or_error()
+    service = _get_service()
     if isinstance(service, dict):
         return service
     return service.validate_payment_details(payment_info)
@@ -214,7 +212,7 @@ def modify_reservation(
     Returns:
         Dictionary containing modification confirmation details
     """
-    service = _get_service_or_error()
+    service = _get_service()
     if isinstance(service, dict):
         return service
     return service.modify_reservation(

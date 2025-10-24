@@ -6,9 +6,13 @@ for the hotel booking MCP server. It integrates with real AWS APIs
 for property resolution, reservation services, and toxicity detection.
 """
 
+import boto3
+import json
 import logging
 import requests
 from .config import config
+from botocore.auth import SigV4Auth
+from botocore.awsrequest import AWSRequest
 from datetime import datetime
 from typing import Any
 
@@ -33,11 +37,23 @@ class HotelBookingService:
         # Toxicity detection temporarily disabled
         # self.toxicity_config = config.get_toxicity_detection_config()
 
+        # Initialize AWS session and credentials for SigV4 signing
+        try:
+            self.session = boto3.Session()
+            self.credentials = self.session.get_credentials()
+            self.region = self.session.region_name or config.aws_region
+            logger.info(f"Initialized AWS session with region: {self.region}")
+        except Exception as e:
+            logger.warning(f"Could not initialize AWS session: {e}. Will fall back to API key only.")
+            self.session = None
+            self.credentials = None
+            self.region = config.aws_region
+
     def _make_api_request(
         self, method: str, url: str, headers: dict, data: dict | None = None, timeout: int = 30
     ) -> dict:
         """
-        Make an API request with error handling.
+        Make an API request with AWS SigV4 signing and error handling.
 
         Args:
             method: HTTP method (GET, POST, etc.)
@@ -54,13 +70,50 @@ class HotelBookingService:
         """
         try:
             logger.info(f"Making {method} request to {url}")
+            logger.info(f"Headers before signing: {headers.keys()}")
 
+            # Prepare the request body
+            body = None
+            if data:
+                body = json.dumps(data)
+                headers["Content-Type"] = "application/json"
+                logger.info(f"Request body prepared: {len(body)} bytes")
+
+            # If we have AWS credentials, sign the request with SigV4
+            if self.credentials:
+                try:
+                    logger.info(f"Attempting SigV4 signing with credentials for region: {self.region}")
+
+                    # Create AWS request for signing
+                    aws_request = AWSRequest(method=method.upper(), url=url, data=body, headers=headers)
+
+                    # Sign with SigV4 using the IAM role credentials
+                    SigV4Auth(self.credentials, "execute-api", self.region).add_auth(aws_request)
+
+                    # Use the signed headers
+                    signed_headers = dict(aws_request.headers)
+                    logger.info(f"✅ Request signed with AWS SigV4. Headers now include: {signed_headers.keys()}")
+
+                    # Log if Authorization header was added
+                    if "Authorization" in signed_headers:
+                        auth_header = signed_headers["Authorization"]
+                        logger.info(f"Authorization header present: {auth_header[:50]}...")
+                except Exception as e:
+                    logger.warning(f"Failed to sign request with SigV4: {e}. Using API key only.")
+                    logger.exception("SigV4 signing error details:")
+                    signed_headers = headers
+            else:
+                # No AWS credentials, use headers as-is (API key only)
+                logger.warning("No AWS credentials available, using API key only")
+                signed_headers = headers
+
+            # Make the actual HTTP request
             if method.upper() == "GET":
-                response = requests.get(url, headers=headers, timeout=timeout)
+                response = requests.get(url, headers=signed_headers, timeout=timeout)
             elif method.upper() == "POST":
-                response = requests.post(url, headers=headers, json=data, timeout=timeout)
+                response = requests.post(url, headers=signed_headers, data=body, timeout=timeout)
             elif method.upper() == "PATCH":
-                response = requests.patch(url, headers=headers, json=data, timeout=timeout)
+                response = requests.patch(url, headers=signed_headers, data=body, timeout=timeout)
             else:
                 raise APIError(f"Unsupported HTTP method: {method}")
 

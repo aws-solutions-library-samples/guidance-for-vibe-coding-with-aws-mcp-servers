@@ -58,7 +58,11 @@ class HotelBookingChatTester:
             print("🔐 Authentication token retrieved")
 
             # Setup headers
-            self.headers = {"authorization": f"Bearer {self.bearer_token}", "Content-Type": "application/json"}
+            self.headers = {
+                "authorization": f"Bearer {self.bearer_token}",
+                "Content-Type": "application/json, text/event-stream",
+                "Accept": "application/json, text/event-stream",
+            }
 
             # self.url="http://0.0.0.0:8080/invocations"
             # self.headers = {"Content-Type": "application/json"}
