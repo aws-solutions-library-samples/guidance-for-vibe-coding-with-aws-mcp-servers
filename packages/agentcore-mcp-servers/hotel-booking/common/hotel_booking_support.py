@@ -70,7 +70,6 @@ class HotelBookingService:
         """
         try:
             logger.info(f"Making {method} request to {url}")
-            logger.info(f"Headers before signing: {headers.keys()}")
 
             # Prepare the request body
             body = None
@@ -92,12 +91,11 @@ class HotelBookingService:
 
                     # Use the signed headers
                     signed_headers = dict(aws_request.headers)
-                    logger.info(f"✅ Request signed with AWS SigV4. Headers now include: {signed_headers.keys()}")
+                    logger.info("✅ Request signed with AWS SigV4")
 
-                    # Log if Authorization header was added
+                    # Log if Authorization header was added (without showing value)
                     if "Authorization" in signed_headers:
-                        auth_header = signed_headers["Authorization"]
-                        logger.info(f"Authorization header present: {auth_header[:50]}...")
+                        logger.info("Authorization header present")
                 except Exception as e:
                     logger.warning(f"Failed to sign request with SigV4: {e}. Using API key only.")
                     logger.exception("SigV4 signing error details:")

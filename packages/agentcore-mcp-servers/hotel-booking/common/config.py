@@ -111,16 +111,14 @@ class Config:
             # Use API Gateway client to get the actual API key value
             apigateway = boto3.client("apigateway", region_name=self.aws_region)
             response = apigateway.get_api_key(apiKey=api_key_id, includeValue=True)
-            logger.info(f"Successfully resolved API key ID {api_key_id}")
+            logger.info("Successfully resolved API key ID")
             return response["value"]
         except ClientError as e:
             error_code = e.response.get("Error", {}).get("Code", "Unknown")
             if error_code == "AccessDeniedException":
-                logger.error(
-                    f"Access denied resolving API key ID {api_key_id}. Check MCP server IAM permissions for apigateway:GET"
-                )
+                logger.error("Access denied resolving API key ID. Check MCP server IAM permissions for apigateway:GET")
             else:
-                logger.error(f"Failed to resolve API key ID {api_key_id}: {e}")
+                logger.error(f"Failed to resolve API key ID: {e}")
             # Return the ID as fallback - might work if the API expects the ID
             return api_key_id
         except Exception as e:
