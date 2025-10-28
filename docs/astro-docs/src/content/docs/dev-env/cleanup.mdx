@@ -19,7 +19,7 @@ First, destroy the deployed agents using the `destroy.sh` script:
 
 ```bash title="AgentCore cleanup"
 # Navigate to your workshop directory
-cd agentcore-tech-summit-2025
+cd guidance-for-vibe-coding-with-aws-mcp-servers
 
 # Destroy the hotel booking agent
 ./packages/agentcore-tools/destroy.sh packages/agentcore-agents/hotel-booking-agent/hotel_booking_agent.py hotel_booking_agent
@@ -107,10 +107,10 @@ Clean up your local workspace:
 ```bash title="Local workspace cleanup"
 # Remove the workshop directory
 cd ..
-rm -rf agentcore-tech-summit-2025
+rm -rf guidance-for-vibe-coding-with-aws-mcp-servers
 
 # Or if you want to keep it for reference, just clean build artifacts
-cd agentcore-tech-summit-2025
+cd guidance-for-vibe-coding-with-aws-mcp-servers
 rm -rf node_modules/
 rm -rf .venv/
 rm -rf packages/*/node_modules/
@@ -133,5 +133,8 @@ npm cache clean --force
 
 ## Getting Help
 
-If you encounter issues during cleanup, check the [Troubleshooting Guide](/faq/troubleshooting/) for cleanup-specific solutions, or contact workshop support through the designated Slack channel.
+If you encounter issues during cleanup:
 
+1. Check the [Troubleshooting Guide](/faq/troubleshooting/) for cleanup-specific solutions
+2. Review the [GitHub repository issues](https://github.com/aws-solutions-library-samples/guidance-for-vibe-coding-with-aws-mcp-servers/issues) for similar problems
+3. Open a new issue if you discover a bug or need assistance

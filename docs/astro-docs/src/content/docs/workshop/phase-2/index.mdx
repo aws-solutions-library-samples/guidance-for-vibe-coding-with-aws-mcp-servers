@@ -7,7 +7,7 @@ import { Card, CardGrid, Aside, Steps, LinkCard } from "@astrojs/starlight/compo
 
 **Objective**: Apply AI-powered development techniques to implement enhancements or solve real problems in the codebase.
 
-**Duration**: 50 minutes
+**Duration**: 60 minutes
 
 ## How to Approach This Phase
 
@@ -77,6 +77,10 @@ Understand and test the application by executing the python script `packages/age
 
 **Activity**: Build a web frontend based on the interactive chat script
 
+<Aside type="tip" title="Enhanced Visuals with Nova Canvas">
+The AWS Frontend MCP Server can leverage the Nova Canvas MCP Server to generate custom graphics and visual elements (like hero banners, icons, or promotional images) that enhance your web interface with engaging imagery.
+</Aside>
+
 Here's a few tips on how to work on this activity:
 
 <Steps>
@@ -87,7 +91,7 @@ Here's a few tips on how to work on this activity:
 </Steps>
 
 ```text title="Sample prompt"
-Analyze the interactive chat script located at `agentcore-tech-summit-2025/packages/agentcore-agents/hotel-booking-agent/tests/interactive_chat_test.py`, and then use the AWS Frontend MCP Server to create a modern react application that provides the same functionality as the python script, this time through a user-friendly interface.
+Analyze the interactive chat script located at `packages/agentcore-agents/hotel-booking-agent/tests/interactive_chat_test.py`, and then use the AWS Frontend MCP Server to create a modern react application that provides the same functionality as the python script, this time through a user-friendly interface.
 ```
 
 <Aside type="note" title="Important things to consider">
@@ -96,6 +100,17 @@ Analyze the interactive chat script located at `agentcore-tech-summit-2025/packa
 - Read more information about the features supported by the [AWS Frontend MCP Server](https://awslabs.github.io/mcp/servers/frontend-mcp-server/), this could be helpful to understand how to work with it effectively.
 </Aside>
 
+<Aside type="tip" title="Workshop Studio Users: Accessing Your Vite Dev Server">
+If you're using an AWS-furnished VS Code environment, the Vite dev server (port 5173) isn't accessible by default. This helper script updates the security group to allow access from your IP address.
+
+Run the script with your public IP address (find it at [ifconfig.me](https://ifconfig.me)):
+
+```bash
+./tools/workshop-studio/scripts/open-vite-access.sh YOUR_PUBLIC_IP
+```
+
+For detailed troubleshooting, see [Frontend Development Environment Setup](/faq/frontend-troubleshooting/#workshop-studio-environment-setup).
+</Aside>
 
 ## Extra Challenges (Optional)
 
