@@ -27,7 +27,7 @@ def create_account_restricted_policy(account_id: str) -> dict:
                 "Principal": "*",
                 "Action": "execute-api:Invoke",
                 "Resource": "execute-api:/*",
-                "Condition": {"StringEquals": {"aws:SourceAccount": account_id}},
+                "Condition": {"StringEquals": {"aws:PrincipalAccount": account_id}},
             }
         ],
     }

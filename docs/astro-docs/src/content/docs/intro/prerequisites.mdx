@@ -5,6 +5,12 @@ description: Detailed installation and setup instructions for all workshop tools
 
 import { Card, CardGrid, Aside, Steps } from "@astrojs/starlight/components";
 
+<Aside type="note" title="Environment-Specific Instructions">
+**Workshop Studio Users**: Your environment is pre-configured with all tools installed, MCP servers configured, and infrastructure deployed. You can **skip installation sections** and review the "AI-Assisted Development Tools" overview to understand your environment. Then proceed to [IDE Extensions Setup](/dev-env/ide-extensions-setup).
+
+**Self-Deployment Users**: Follow all installation and configuration steps below.
+</Aside>
+
 Follow these steps carefully to ensure you're ready for the workshop activities.
 
 ## Tools Overview
@@ -37,10 +43,7 @@ Follow these steps carefully to ensure you're ready for the workshop activities.
 ### Step 1: Installing AI-Assisted Development Tools
 
 <Aside type="note" title="Development Tool Selection">
-  - You must have **at least one AI-Assisted development tool** with MCP support to
-  participate effectively. 
-  - Choose the one that works best for your development
-  environment.
+  You need to install **at least ONE** AI-assisted development tool with MCP support (though you can use multiple if preferred). Choose the one that works best for your development environment.
 </Aside>
 
 <Steps>
@@ -191,8 +194,10 @@ aws sts get-caller-identity 2>/dev/null || echo "❌ AWS credentials not configu
 If you encounter issues during setup:
 
 1. Review common issues in our [Troubleshooting Guide](/faq/troubleshooting/)
-2. Request technical support through the designated Slack channel
-3. Arrive a few minutes early to the workshop session for last-minute setup assistance
+2. Search for similar issues in the [GitHub repository](https://github.com/aws-solutions-library-samples/guidance-for-vibe-coding-with-aws-mcp-servers/issues)
+3. Open a GitHub issue if you need assistance or discover a bug
+
+**Workshop Participants**: If you're attending an in-person or virtual workshop event, arrive early for last-minute setup assistance from trainers.
 
 <Aside type="tip" title="Pro Tip">
   Test your complete setup by running through the verification checklist at

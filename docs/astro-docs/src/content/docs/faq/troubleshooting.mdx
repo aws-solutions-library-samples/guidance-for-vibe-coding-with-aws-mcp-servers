@@ -5,9 +5,11 @@ description: Solutions for common setup and workshop issues
 
 import { Card, CardGrid, Aside, Tabs, TabItem, LinkCard } from "@astrojs/starlight/components";
 
-Find solutions to common issues you might encounter during setup.
+Find solutions to common issues organized by workshop phase. Jump to the section matching where you encountered the problem.
 
-## Tool Installation Issues
+## Setup Phase Issues
+
+### Tool Installation
 
 ### uv Installation Problems
 
@@ -83,6 +85,30 @@ Use the full path to uvx instead of just `uvx` in your MCP configuration:
 - Consider using user-local installations
 - Check your user permissions for the installation directory
 
+### Python Virtual Environment Permission Errors
+
+**Problem**: Permission denied error with Python interpreter during CDK operations
+
+<details>
+<summary>Stack Trace Example</summary>
+```text title="Permission Denied Stack Trace"
+error: Failed to query Python interpreter
+  Caused by: failed to canonicalize path `packages/cdk-infra-python/.venv/bin/python3`: Permission denied (os error 13)
+packages/cdk-infra-python:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  cdk-infra-python@0.1.0 cdk: `uv run cdk bootstrap aws://0000000000/us-west-2`
+Exit status 2
+ ELIFECYCLE  Command failed with exit code 2.
+```
+</details>
+
+**Solution**:
+- Recreate the uv python virtual environment:
+  ```bash title="Recreate uv venv"
+  cd packages/cdk-infra-python
+  rm -rf .venv
+  uv sync
+  ```
+
 ## AWS Access Issues
 
 ### AWS Credentials Not Working
@@ -142,29 +168,7 @@ This usually means you're using a different AWS profile than the one used for de
   aws cloudformation list-stacks --profile YOUR_PROFILE_NAME
   ```
 
-## MCP Server Configuration Issues
-
-### MCP Servers Not Appearing in Kiro
-
-**Problem**: MCP servers not appearing in Kiro
-
-**Solution**:
-
-- Verify MCP servers are installed correctly using `uvx list`
-- Check Kiro MCP configuration settings
-- Restart Kiro after configuration changes
-
-### MCP Server Connection Errors
-
-**Problem**: MCP server connection errors
-
-**Solution**:
-
-- Verify network connectivity
-- Check if any corporate firewalls are blocking connections
-- Ensure MCP server processes are running
-
-## AgentCore Deployment Issues
+## Deployment Phase Issues
 
 ### CDK Deployment Failed
 
@@ -188,16 +192,52 @@ This usually means you're using a different AWS profile than the one used for de
 - Ensure API keys were generated correctly
 - Test with simple curl commands first
 
-### Bruno Tests Failing
+## Configuration Phase Issues
 
-**Problem**: Bruno API tests are failing
+### MCP Server Configuration Issues
+
+### MCP Servers Not Appearing in Kiro
+
+**Problem**: MCP servers not appearing in Kiro
 
 **Solution**:
 
-- Verify API URLs are correctly configured in Bruno environment
-- Check that API keys are properly set
-- Ensure the APIs are deployed and accessible
-- Test individual endpoints manually first
+- Verify MCP servers are installed correctly using `uvx list`
+- Check Kiro MCP configuration settings
+- Restart Kiro after configuration changes
+
+### MCP Server Connection Errors
+
+**Problem**: MCP server connection errors
+
+**Solution**:
+
+- Verify network connectivity
+- Check if any corporate firewalls are blocking connections
+- Ensure MCP server processes are running
+
+## Workshop Activity Issues
+
+### API Testing Issues
+
+**Problem**: Bruno API tests are failing
+
+**Common Causes**:
+
+1. **Configuration Issues**
+   - Verify API URLs are correctly configured in Bruno environment files
+   - Check that API keys are properly set
+   - Ensure you're using the correct AWS region
+
+2. **Lambda Timeout Errors**
+   - Some API tests may experience timeouts (HTTP 504 Gateway Timeout)
+   - Check CloudWatch Logs to review Lambda execution times and identify slow operations
+   - Use your AI assistant to analyze logs and diagnose which AWS service calls are taking the most time
+
+3. **Deployment Issues**
+   - Ensure the APIs are fully deployed and accessible
+   - Verify CloudFormation stacks completed successfully
+   - Test individual endpoints manually first with curl
 
 ## Workshop Cleanup Issues
 
@@ -249,61 +289,15 @@ aws logs describe-log-groups --query 'logGroups[?contains(logGroupName, `agentco
 - **Only delete** if you're certain you won't use CDK in this AWS account/region again
 - The bootstrap stack has minimal ongoing costs
 
----
-
-**Problem**: Permission Denied error with Python Interpreter
-
-<details>
-<summary>Stack Trace Example</summary>
-```text title="Permission Denied Stack Trace"
-participant:/workshop/agentcore-tech-summit-2025$ pnpm cdk bootstrap aws://0000000000/us-west-2
-...
-error: Failed to query Python interpreter
-  Caused by: failed to canonicalize path `/workshop/agentcore-tech-summit-2025/packages/cdk-infra-python/.venv/bin/python3`: Permission denied (os error 13)
-/workshop/agentcore-tech-summit-2025/packages/cdk-infra-python:
- ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  cdk-infra-python@0.1.0 cdk: `uv run cdk bootstrap aws://0000000000/us-west-2`
-Exit status 2
- ELIFECYCLE  Command failed with exit code 2.
-participant:/workshop/agentcore-tech-summit-2025$
------
-python3 from venv is pointing to /root and has no access to read.
-participant:/workshop/agentcore-tech-summit-2025$ ls -ltrh /workshop/agentcore-tech-summit-2025/packages/cdk-infra-python/.venv/bin/python*
-lrwxrwxrwx. 1 participant participant  6 Sep  8 19:04 /workshop/agentcore-tech-summit-2025/packages/cdk-infra-python/.venv/bin/python3.13 -> python
-lrwxrwxrwx. 1 participant participant  6 Sep  8 19:04 /workshop/agentcore-tech-summit-2025/packages/cdk-infra-python/.venv/bin/python3 -> python
-lrwxrwxrwx. 1 participant participant 75 Sep  8 19:04 /workshop/agentcore-tech-summit-2025/packages/cdk-infra-python/.venv/bin/python -> /root/.local/share/uv/python/cpython-3.13.7-linux-x86_64-gnu/bin/python3.13
-```
-</details>
-
-**Solution**:
-- Recreate the uv python virtual environment:
-  ```bash title="Recreate uv venv"
-  cd /workshop/agentcore-tech-summit-2025/packages/cdk-infra-python
-  rm -rf .venv
-  uv sync
-  ```
-
 ## Getting Help
 
-### Before the Workshop
+If you encounter issues not covered in this guide:
 
-- **Technical Setup Issues**: Use the designated Slack channel for pre-workshop support
-- **Access Problems**: Contact workshop organizers for permission and access issues
-- **Tool Installation**: Reach out early if you encounter installation problems
-
-### During the Workshop
-
-- **Immediate Help**: Raise your hand or ask trainers directly
-- **Technical Issues**: Trainers can provide real-time troubleshooting
-- **Conceptual Questions**: Don't hesitate to ask for clarification on any topic
-
-### After the Workshop
-
-- **Follow-up Questions**: Use the workshop Slack channel for ongoing discussions
-- **Implementation Help**: Connect with other participants for continued collaboration
-- **Advanced Topics**: Trainers can provide resources for deeper learning
+1. **Review the Documentation**: Check related sections in the workshop documentation for additional context
+2. **Search GitHub Issues**: Look for similar issues in the [GitHub repository](https://github.com/aws-solutions-library-samples/guidance-for-vibe-coding-with-aws-mcp-servers/issues)
+3. **Create a GitHub Issue**: If you find a bug or have a question, open an issue in the repository
+4. **AWS Support**: For AWS-specific service issues, consult [AWS Support](https://aws.amazon.com/support/) or the relevant service documentation
 
 <Aside type="tip">
-
-**Can't find your issue here?** Don't hesitate to ask during the workshop or reach out through the support channels. We're here to help ensure you have a great learning experience!
-
+**Workshop Participants**: If you're attending an in-person or virtual workshop event, trainers are available to provide real-time troubleshooting and answer questions directly.
 </Aside>

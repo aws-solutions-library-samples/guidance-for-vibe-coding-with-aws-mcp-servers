@@ -7,7 +7,15 @@ meta {
 post {
   url: {{apiUrl}}/reservation
   body: json
-  auth: none
+  auth: awsv4
+}
+
+auth:awsv4 {
+  accessKeyId: {{awsAccessKeyId}}
+  secretAccessKey: {{awsSecretAccessKey}}
+  sessionToken: {{awsSessionToken}}
+  service: execute-api
+  region: {{awsRegion}}
 }
 
 headers {

@@ -1,0 +1,8 @@
+vars {
+  BASE_URL: https://YOUR_TOXICITY_API_ID.execute-api.YOUR_REGION.amazonaws.com/dev/api/v1
+  API_KEY: YOUR_TOXICITY_DETECTION_API_KEY
+  awsRegion: YOUR_REGION
+  awsAccessKeyId: {{process.env.AWS_ACCESS_KEY_ID}}
+  awsSecretAccessKey: {{process.env.AWS_SECRET_ACCESS_KEY}}
+  awsSessionToken: {{process.env.AWS_SESSION_TOKEN}}
+}

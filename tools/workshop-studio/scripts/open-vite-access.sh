@@ -69,9 +69,13 @@ if ! command -v aws &> /dev/null; then
     exit 1
 fi
 
+# Detect AWS region from environment or AWS CLI configuration
+REGION=${AWS_DEFAULT_REGION:-$(aws configure get region 2>/dev/null || echo "us-west-2")}
+log_msg "INFO" "Using AWS region: $REGION"
+
 # Get instance details using AWS CLI (metadata endpoint doesn't work in this environment)
 log_msg "INFO" "Detecting instance information..."
-INSTANCE_INFO=$(aws ec2 describe-instances --region us-west-2 \
+INSTANCE_INFO=$(aws ec2 describe-instances --region "$REGION" \
   --filters "Name=tag:Name,Values=$INSTANCE_NAME" "Name=instance-state-name,Values=running" \
   --query 'Reservations[0].Instances[0].[InstanceId,PublicIpAddress,SecurityGroups[0].GroupId,Placement.AvailabilityZone]' \
   --output text 2>/dev/null)

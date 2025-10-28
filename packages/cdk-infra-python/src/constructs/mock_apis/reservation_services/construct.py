@@ -405,7 +405,10 @@ class ReservationServicesConstruct(Construct):
 
         # GET /api/v1/reservation - Query reservations
         reservation_resource.add_method(
-            "GET", apigateway.LambdaIntegration(self.get_reservations_function, proxy=True), api_key_required=True
+            "GET",
+            apigateway.LambdaIntegration(self.get_reservations_function, proxy=True),
+            api_key_required=True,
+            authorization_type=apigateway.AuthorizationType.IAM,
         )
 
         # POST /api/v1/reservation - Create reservation
@@ -413,6 +416,7 @@ class ReservationServicesConstruct(Construct):
             "POST",
             apigateway.LambdaIntegration(self.create_reservation_function, proxy=True),
             api_key_required=True,
+            authorization_type=apigateway.AuthorizationType.IAM,
             request_validator=self.request_validator,
             request_models={"application/json": self.request_model},
         )
@@ -422,6 +426,7 @@ class ReservationServicesConstruct(Construct):
             "PATCH",
             apigateway.LambdaIntegration(self.modify_reservation_function, proxy=True),
             api_key_required=True,
+            authorization_type=apigateway.AuthorizationType.IAM,
             request_validator=self.request_validator,
             request_models={"application/json": self.request_model},
         )
@@ -432,6 +437,7 @@ class ReservationServicesConstruct(Construct):
             "POST",
             apigateway.LambdaIntegration(self.cancel_reservation_function, proxy=True),
             api_key_required=True,
+            authorization_type=apigateway.AuthorizationType.IAM,
             request_validator=self.request_validator,
             request_models={"application/json": self.request_model},
         )
@@ -441,7 +447,10 @@ class ReservationServicesConstruct(Construct):
         hotel_id_resource = hotel_resource.add_resource("{hotelId}")
         reservation_id_resource = hotel_id_resource.add_resource("{id}")
         reservation_id_resource.add_method(
-            "GET", apigateway.LambdaIntegration(self.fetch_reservation_function, proxy=True), api_key_required=True
+            "GET",
+            apigateway.LambdaIntegration(self.fetch_reservation_function, proxy=True),
+            api_key_required=True,
+            authorization_type=apigateway.AuthorizationType.IAM,
         )
 
         # GET /api/v1/reservation/availability - Check room availability
@@ -450,6 +459,7 @@ class ReservationServicesConstruct(Construct):
             "GET",
             apigateway.LambdaIntegration(self.check_room_availability_function, proxy=True),
             api_key_required=True,
+            authorization_type=apigateway.AuthorizationType.IAM,
         )
 
         # POST /api/v1/reservation/payment/validate - Validate payment details
@@ -459,6 +469,7 @@ class ReservationServicesConstruct(Construct):
             "POST",
             apigateway.LambdaIntegration(self.validate_payment_function, proxy=True),
             api_key_required=True,
+            authorization_type=apigateway.AuthorizationType.IAM,
             request_validator=self.request_validator,
             request_models={"application/json": self.request_model},
         )

@@ -93,7 +93,7 @@ class PropertyResolutionConstruct(Construct):
             index="app.py",
             handler="handler",
             layers=[self.common_layer],
-            timeout=Duration.seconds(30),
+            timeout=Duration.seconds(60),
             memory_size=256,
             environment={"HOTELS_TABLE_NAME": self.hotels_table.table_name, "LOG_LEVEL": "INFO"},
             # log_retention deprecated - using default log group,
@@ -214,11 +214,12 @@ class PropertyResolutionConstruct(Construct):
         v1_resource = api_resource.add_resource("v1")
         property_resolution_resource = v1_resource.add_resource("property-resolution")
 
-        # POST /api/v1/property-resolution - Natural language property search (requires API key)
+        # POST /api/v1/property-resolution - Natural language property search (requires API key and IAM auth)
         property_resolution_resource.add_method(
             "POST",
             apigateway.LambdaIntegration(self.property_resolution_function, proxy=True),
             api_key_required=True,
+            authorization_type=apigateway.AuthorizationType.IAM,
             request_validator=self.request_validator,
             request_models={"application/json": self.request_model},
         )

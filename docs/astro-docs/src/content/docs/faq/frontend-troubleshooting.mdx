@@ -123,8 +123,50 @@ Use these credentials from the Cognito User Pool:
 
 ### How do I access the application?
 
-**Local Development:**
-- **Local Access**: `http://localhost:5173`
+**Self-Deployment (Local Machine)**:
+- Access at `http://localhost:5173`
+- No additional configuration needed
+
+**Workshop Studio (AWS-furnished environment)**:
+- Access at `http://EC2_PUBLIC_IP:5173`
+- Requires running the security group helper script first (see below)
+
+## Workshop Studio Environment Setup
+
+### Setting Up Vite Dev Server Access
+
+**Problem**: Can't access Vite dev server (port 5173) from your browser in Workshop Studio environment
+
+**Why**: The EC2 instance's security group blocks inbound traffic on port 5173 by default
+
+**Solution**: Run the helper script to update security group rules:
+
+```bash
+# Get your public IP from https://ifconfig.me
+./tools/workshop-studio/scripts/open-vite-access.sh YOUR_PUBLIC_IP
+```
+
+This script will:
+1. Detect your EC2 instance and security group automatically
+2. Add a rule allowing port 5173 access from your IP address
+3. Configure CloudFront access for proxied connections
+
+<Aside type="caution" title="Check Your Vite Port">
+Vite defaults to port 5173, but if that port is already in use, it will automatically use a different port (5174, 5175, etc.). 
+
+**Check your terminal output** when starting the dev server to see which port Vite is actually using, then either:
+- Access the application on that port: `http://EC2_PUBLIC_IP:PORT_NUMBER`
+- Or run the script again with the correct port if needed
+
+The script currently only opens port 5173. For other ports, you may need to manually add security group rules or modify the script.
+</Aside>
+
+<Aside type="note" title="Region Detection">
+The script automatically detects your AWS region from:
+1. `AWS_DEFAULT_REGION` environment variable
+2. AWS CLI configuration
+3. Falls back to us-west-2 if neither is set
+</Aside>
 
 <Aside type="tip">
 Always check the browser developer console for detailed error messages when troubleshooting issues.

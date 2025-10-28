@@ -5,6 +5,12 @@ description: Instructions on how to setup your own development environment
 
 import { Card, CardGrid, Aside, Steps, LinkCard } from "@astrojs/starlight/components";
 
+<Aside type="note" title="For Self-Deployment Users Only">
+**Workshop Studio Users**: Your infrastructure is already deployed. You can **skip this entire page** and proceed directly to [Setup IDE Extensions](/dev-env/ide-extensions-setup).
+
+**Self-Deployment Users**: Follow all steps below to deploy the AWS infrastructure to your own account.
+</Aside>
+
 ## Setup Instructions
 
 ### Step 1: Complete Prerequisites
@@ -26,7 +32,7 @@ If you've already installed these tools, you can proceed directly to Step 2.
     Open a terminal and navigate to the workshop repository directory:
 
     ```bash title="Navigating to workshop directory"
-    cd agentcore-tech-summit-2025
+    cd guidance-for-vibe-coding-with-aws-mcp-servers
     ```
 
     <Aside type="tip">
@@ -74,7 +80,7 @@ If you've already installed these tools, you can proceed directly to Step 2.
    <Aside type="caution" title="Troubleshooting">
      - If you see *Permission Denied* errors with your Python interpreter, try the following:
       ```bash title="Recreate uv venv"
-      cd /workshop/agentcore-tech-summit-2025/packages/cdk-infra-python
+      cd packages/cdk-infra-python
       rm -rf .venv
       uv sync
       ```
@@ -171,7 +177,7 @@ If you've already installed these tools, you can proceed directly to Step 2.
     1. Check that you have the necessary AWS permissions for creating Lambda functions, API Gateway, DynamoDB tables, and IAM
     roles.
     2. Review common issues in our [Troubleshooting Guide](/faq/troubleshooting/)
-    3. Request technical support through the designated Slack channel or in person during the workshop.
+    3. For AgentCore-specific deployment issues, see [AgentCore Deployment Troubleshooting](/faq/troubleshooting/#agentcore-deployment-issues)
 </Aside>
 
 ## Configuring your IDE Extensions

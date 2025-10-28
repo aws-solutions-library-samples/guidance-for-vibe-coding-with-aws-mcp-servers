@@ -5,7 +5,8 @@
 - [Guidance for Vibe Coding AI Agents with AWS MCP Servers](#guidance-for-vibe-coding-ai-agents-with-aws-mcp-servers)
   - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
-    - [Architecture](#architecture)
+    - [AWS MCP Servers](#aws-mcp-servers)
+    - [Architecture (In Review)](#architecture-in-review)
     - [Cost](#cost)
     - [Sample Cost Table](#sample-cost-table)
   - [Deployment Options](#deployment-options)
@@ -14,10 +15,9 @@
   - [Repository Structure](#repository-structure)
     - [System Components](#system-components)
   - [Prerequisites](#prerequisites)
+    - [Workshop Studio Users](#workshop-studio-users)
+    - [Self-Deployment Users](#self-deployment-users)
     - [Operating System](#operating-system)
-    - [Third-party Tools](#third-party-tools)
-    - [AWS Account Requirements](#aws-account-requirements)
-    - [Supported Regions](#supported-regions)
   - [Deployment Steps](#deployment-steps)
     - [Step 1: Clone the Repository](#step-1-clone-the-repository)
     - [Step 2: Install Dependencies and Start Workshop Documentation](#step-2-install-dependencies-and-start-workshop-documentation)
@@ -42,7 +42,17 @@ The Guidance is designed as an interactive workshop where participants learn to:
 
 Participants deploy a realistic hotel booking agent using Amazon Bedrock AgentCore and gain hands-on experience with AI development tools including Kiro, Amazon Q, and AWS MCP Servers. The skills learned can be immediately applied to production projects and shared across development teams.
 
-### Architecture
+### AWS MCP Servers
+
+This workshop leverages [AWS MCP Servers](https://github.com/awslabs/mcp), specialized MCP servers that enhance foundation model capabilities through the Model Context Protocol (MCP). MCP is an open protocol that enables seamless integration between LLM applications and external data sources and tools.
+
+The workshop demonstrates these capabilities across three practical scenarios:
+
+- **Discovery & Analysis**: Automated architecture visualization and service expertise
+- **Frontend Development**: Modern React applications with AWS Amplify integration
+- **Production Readiness**: Real-time cost analysis and security assessment
+
+### Architecture (In Review)
 
 The solution implements a multi-tier architecture combining Amazon Bedrock AgentCore with serverless AWS services:
 
@@ -96,9 +106,9 @@ This Guidance can be deployed in two ways:
 
 ### Option 1: AWS Workshop Studio (Recommended for Workshop Participants)
 
-If you're participating in an AWS-hosted workshop event, use Workshop Studio for a pre-configured environment with all prerequisites and infrastructure already set up:
+If you're participating in an AWS-hosted workshop event, use Workshop Studio for a pre-configured environment with all prerequisites and infrastructure already set up.
 
-**Access Workshop Studio:** Visit [https://studio.us-east-1.prod.workshops.aws/workshops/public/33b9f640-2cab-47f0-bfdd-d3aab3c38eee](https://studio.us-east-1.prod.workshops.aws/workshops/public/33b9f640-2cab-47f0-bfdd-d3aab3c38eee)
+**Access the Workshop**: [Vibe Coding AI Agents with AWS MCP Servers](https://catalog.us-east-1.prod.workshops.aws/workshops/dd13f372-393c-4015-b082-a42f2abaf77a/en-US)
 
 The Workshop Studio environment includes:
 
@@ -145,99 +155,29 @@ This repository contains a complete Amazon Bedrock AgentCore hotel booking syste
 
 ## Prerequisites
 
-### Operating System
+### Workshop Studio Users
 
-These deployment instructions are optimized to work on **macOS, Linux, and Windows** operating systems. Deployment on other operating systems may require additional steps.
+Your environment is **completely pre-configured** with all tools, dependencies, and infrastructure already deployed. Simply run `pnpm docs:init` to access the workshop documentation.
 
-### Third-party Tools
+### Self-Deployment Users
 
-The following tools must be installed before deploying this Guidance:
+**Minimum requirements to get started:**
 
-- **Node.js** (v20.18.1 or later) - JavaScript runtime
-
-  ```bash
-  node --version
-  ```
-
-- **Python** (v3.12 or later) - Required for AWS CDK infrastructure
-
-  ```bash
-  python --version
-  ```
-
-- **pnpm** - Fast, disk space efficient package manager
-
+- **Node.js** (v20.18.1+) and **pnpm** - Required to run documentation
   ```bash
   npm install -g pnpm
-  pnpm --version
   ```
+- **An AWS account** with appropriate IAM permissions
 
-- **uv** - Fast Python package installer and resolver
+**After running `pnpm docs:init`**, follow the comprehensive [Prerequisites Guide](http://localhost:4321/intro/prerequisites) for step-by-step installation of:
 
-  ```bash
-  # Install uv (macOS/Linux)
-  curl -LsSf https://astral.sh/uv/install.sh | sh
-  uv --version
-  ```
+- Python, uv, AWS CLI, AWS CDK CLI, Docker, Graphviz
+- AI Assistant tools (Amazon Q Developer, Cline, Kiro, etc.) - **at least one required**
+- All other required development tools
 
-- **Docker Desktop or Rancher Desktop** - Container runtime for local development
+### Operating System
 
-  ```bash
-  docker --version
-  ```
-
-- **Graphviz** - Graph visualization software (required for CDK diagrams)
-
-  - Visit [graphviz.org/download](https://graphviz.org/download/) for installation instructions
-
-- **AWS CLI** (v2) - Command line interface for AWS services
-
-  ```bash
-  aws --version
-  aws configure list
-  ```
-
-- **AWS CDK CLI** - Infrastructure as Code toolkit
-
-  ```bash
-  pnpm add -g aws-cdk
-  cdk --version
-  ```
-
-- **Bruno CLI** - API testing tool for validating deployments
-  ```bash
-  npm install -g @usebruno/cli
-  bru --version
-  ```
-
-### AWS Account Requirements
-
-This Guidance requires an AWS account with the following:
-
-- **AWS CDK Bootstrap** - If using AWS CDK for the first time in your account/region, you must bootstrap your environment:
-
-  ```bash
-  cdk bootstrap aws://ACCOUNT-NUMBER/REGION
-  ```
-
-- **IAM Permissions** - Your AWS credentials must have permissions to create and manage:
-  - AWS Lambda functions
-  - Amazon API Gateway REST APIs
-  - Amazon DynamoDB tables
-  - Amazon Cognito user pools
-  - IAM roles and policies
-  - Amazon Bedrock AgentCore agents
-  - Amazon Location Service resources
-  - Amazon Comprehend API access
-
-### Supported Regions
-
-This Guidance has been tested and validated in the following AWS Regions:
-
-- **us-west-2** (US West - Oregon)
-- **us-east-1** (US East - N. Virginia)
-
-While the solution may work in other regions, these two regions are officially supported and recommended for deployment.
+These deployment instructions are optimized to work on **macOS, Linux, and Windows** operating systems.
 
 ## Deployment Steps
 
@@ -259,14 +199,15 @@ pnpm install
 pnpm docs:init
 ```
 
-The documentation will be available at `http://localhost:4321`. **Open this URL and follow the detailed setup instructions** in the participant guide for prerequisites installation and environment configuration.
+The documentation will be available at `http://localhost:4321`. **Open this URL and follow the detailed setup instructions** in the participant guide.
 
 **Important:** After starting the documentation server, navigate to:
 
-1. **"Setup your own development environment"** - Follow the complete deployment instructions
-2. **"Setup up your IDE Extensions"** - Configure your AI development tools
+1. **"Prerequisites"** - Complete installation of all required tools (Python, uv, AWS CLI, CDK CLI, Docker, AI assistants, etc.)
+2. **"Setup your own development environment"** - Deploy AWS infrastructure (Mock APIs, AgentCore Agent, MCP Server)
+3. **"Setup up your IDE Extensions"** - Configure your AI development tools and MCP servers
 
-These sections provide comprehensive guidance for deploying the infrastructure and configuring your development environment. Once complete, you'll be ready to begin the workshop activities.
+These sections provide comprehensive step-by-step guidance for prerequisites installation, infrastructure deployment, and environment configuration. Once complete, you'll be ready to begin the workshop activities.
 
 ## Deployment Validation
 

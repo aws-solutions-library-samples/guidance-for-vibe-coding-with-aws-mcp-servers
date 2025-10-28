@@ -5,18 +5,14 @@ description: Instructions on how to setup your agentic coding extensions on your
 
 import { Card, CardGrid, Aside, Steps, LinkCard } from "@astrojs/starlight/components";
 
-## Enable Bedrock Model Access
+<Aside type="tip" title="Choose Your AI Assistant">
+You only need to set up **ONE** AI assistant tool with MCP support. Choose the one that best fits your workflow:
 
-Whether you're using a temporary AWS Event Account or working in your own AWS account, you **must enable access to the foundation models** within Amazon Bedrock via the **AWS Management Console**.
+- [**Amazon Q Developer**](#setting-up-amazon-q-developer-ide-extension-and-cli) (IDE Extension and/or CLI)
+- [**Cline**](#setting-up-cline) (VS Code Extension)
+- [**Kiro IDE**](#setting-up-kiro-ide)
 
-<Aside type="caution" title="Don't Skip this part">
-You must explicitly enable access to third-party models before they can be used with the Amazon Bedrock service. Follow the steps in the [Amazon Bedrock User Guide](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) to enable access to models from the providers below:
-
-- Amazon (all models since they are first-party)
-- Anthropic Claude models (**ONLY** enable Claude 3.5 Sonnet v2, Claude 3.7 Sonnet and Claude Sonnet 4)
-- If you wish to use [cross-Region inference](https://docs.aws.amazon.com/bedrock/latest/userguide/cross-region-inference.html) as part of the workshop (and we suggest you do if the model supports it), then you'll need to enable the models in Bedrock not just in the Region in which you're working but also in a different Region. In this workshop, we have tested doing this in us-west-2 with the models also enabled in us-east-1 as the additional Region for inference.
-
-You may also find the steps in [this introductory workshop](https://catalog.workshops.aws/building-with-amazon-bedrock/en-US/prerequisites/bedrock-setup) helpful.
+Follow the setup instructions only for your chosen tool. You do NOT need to set up all of them.
 </Aside>
 
 ## Setting up Amazon Q Developer (IDE Extension and CLI)
@@ -113,8 +109,15 @@ Kiro is currently in Public Preview, and access to the IDE might be limited. If 
 
 ## Configuring MCP Servers
 
-<Aside type="note">
-- **Depending on your development environment**, you can follow the configuration and verification steps for your tool of choice.
+<Aside type="caution" title="Configure Only Your Chosen Tool">
+The sections below provide MCP configuration for **Amazon Q**, **Cline**, and **Kiro**. 
+
+**You only need to configure MCP servers for the ONE AI assistant you chose above.** Skip the sections for tools you're not using.
+
+Jump to your chosen tool:
+- If you're using Amazon Q → [Configuring MCP Servers in Amazon Q](#configuring-mcp-servers-in-amazon-q)
+- If you're using Cline → [Configuring MCP Servers in Cline](#configuring-mcp-servers-in-cline)
+- If you're using Kiro → [MCP Servers in Kiro](#mcp-servers-in-kiro)
 </Aside>
 
 ### Configuring MCP Servers in Amazon Q
@@ -467,7 +470,7 @@ After you copied and save the contents of your `cline_mcp_settings.json` file, y
 
     ![Cline Settings Account Access Setup](../../../assets/images/cline/cline-settings-6.png)
 
-3. At the bottom of the Cline extension pane, toggle Cline to "Plan" mode. Plan mode allows the LLM to explain what it will do without making any changes to your code or environment. If you want to test that the extension is working correctly with Amazon Bedrock, simply type "hi" in the box where it says "Type your task here..." You should get a response via Bedrock. (If you don't, you may want to make sure the model you selected is enabled as described in Enable Bedrock Model Access](/dev-env/ide-extensions-setup#enable-bedrock-model-access).)
+3. At the bottom of the Cline extension pane, toggle Cline to "Plan" mode. Plan mode allows the LLM to explain what it will do without making any changes to your code or environment. If you want to test that the extension is working correctly with Amazon Bedrock, simply type "hi" in the box where it says "Type your task here..." You should get a response via Bedrock.
     
     ![Cline Settings Account Access Setup](../../../assets/images/cline/cline-settings-7.png)
 

@@ -194,6 +194,7 @@ class ToxicityDetectionConstruct(Construct):
             "POST",
             apigateway.LambdaIntegration(self.toxicity_detection_function, proxy=True),
             api_key_required=True,
+            authorization_type=apigateway.AuthorizationType.IAM,
             request_validator=self.request_validator,
             request_models={"application/json": self.request_model},
         )

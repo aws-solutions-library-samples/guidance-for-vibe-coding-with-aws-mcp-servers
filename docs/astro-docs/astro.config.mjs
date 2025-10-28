@@ -71,7 +71,7 @@ export default defineConfig({
               link: "/workshop/phase-2/",
             },
             {
-              label: "3. Cost Estimation & Hardening Section",
+              label: "3. Production Readiness Assessment Section",
               link: "/workshop/phase-3/",
             },
             { label: "Wrap-up", link: "/workshop/wrap-up/" },

@@ -7,7 +7,7 @@ import { Card, CardGrid, Aside, Steps, LinkCard } from "@astrojs/starlight/compo
 
 **Objective**: Use AI tools to explore and understand the AgentCore hotel booking system, practicing AI-powered discovery and analysis techniques.
 
-**Duration**: 20 minutes
+**Duration**: 30 minutes
 
 ## How to Approach This Phase
 
@@ -107,7 +107,7 @@ Make sure you installed the [Bruno CLI](/intro/prerequisites/#step-3-install-rec
 
 1. **Configure Bruno Environment Files**
 
-   Update the Bruno environment files with your deployed API URLs and keys:
+   Create your local Bruno environment files from templates with your deployed API URLs and keys:
 
    <Aside type="tip">
    Your API URLs and keys were displayed in the CDK deployment output. If you missed them, you can retrieve them with:
@@ -121,14 +121,16 @@ Make sure you installed the [Bruno CLI](/intro/prerequisites/#step-3-install-rec
    # Get actual API key values from the Key IDs
    aws apigateway get-api-key --api-key YOUR_API_KEY_ID --include-value --query "value"
    ```
-   
-   Or check the AWS CloudFormation console for outputs and API Gateway console for key values.
    </Aside>
 
    **Property Resolution environment:**
-   ```bash title="Updating Bruno Environment file"
-   # Edit the Property Resolution environment file
-   code packages/cdk-infra-python/tests/bruno/booking_mock_apis/environments/PropertyResolution.bru
+   ```bash title="Creating Bruno Environment file from template"
+   # Copy template to create your local environment file
+   cd packages/cdk-infra-python/tests/bruno/booking_mock_apis/environments
+   cp PropertyResolution.bru.template PropertyResolution.bru
+   
+   # Edit the file with your API details
+   code PropertyResolution.bru
    ```
 
    Replace the placeholder values with your deployed API details:
@@ -137,13 +139,20 @@ Make sure you installed the [Bruno CLI](/intro/prerequisites/#step-3-install-rec
      apiUrl: https://YOUR_API_ID.execute-api.YOUR_REGION.amazonaws.com/dev/api/v1
      apiKey: YOUR_PROPERTY_RESOLUTION_API_KEY
      testId: {{$timestamp}}
+     awsRegion: YOUR_REGION
+     awsAccessKeyId: {{process.env.AWS_ACCESS_KEY_ID}}
+     awsSecretAccessKey: {{process.env.AWS_SECRET_ACCESS_KEY}}
+     awsSessionToken: {{process.env.AWS_SESSION_TOKEN}}
    }
    ```
 
    **Toxicity Detection environment:**
-   ```bash title="Updating Bruno Environment file"
-   # Edit the Toxicity Detection environment file  
-   code packages/cdk-infra-python/tests/bruno/booking_mock_apis/environments/ToxicityDetection.bru
+   ```bash title="Creating Bruno Environment file from template"
+   # Copy template to create your local environment file
+   cp ToxicityDetection.bru.template ToxicityDetection.bru
+   
+   # Edit the file with your API details
+   code ToxicityDetection.bru
    ```
 
    Replace the placeholder values with your deployed API details:
@@ -151,23 +160,33 @@ Make sure you installed the [Bruno CLI](/intro/prerequisites/#step-3-install-rec
    vars {
      BASE_URL: https://YOUR_API_ID.execute-api.YOUR_REGION.amazonaws.com/dev/api/v1
      API_KEY: YOUR_TOXICITY_DETECTION_API_KEY
+     awsRegion: YOUR_REGION
+     awsAccessKeyId: {{process.env.AWS_ACCESS_KEY_ID}}
+     awsSecretAccessKey: {{process.env.AWS_SECRET_ACCESS_KEY}}
+     awsSessionToken: {{process.env.AWS_SESSION_TOKEN}}
    }
    ```
 
    **Reservations environment:**
-   ```bash title="Updating Bruno Environment file"
-   # Edit the Reservations environment file
-   code packages/cdk-infra-python/tests/bruno/booking_mock_apis/environments/Reservations.bru
+   ```bash title="Creating Bruno Environment file from template"
+   # Copy template to create your local environment file
+   cp Reservations.bru.template Reservations.bru
+   
+   # Edit the file with your API details
+   code Reservations.bru
    ```
 
    Replace the placeholder values with your deployed API details:
-   ```js ins="YOUR_RESERVATIONS_API_ID" ins="YOUR_PROPERTY_API_ID" ins="YOUR_REGION" ins="YOUR_PROPERTY_RESOLUTION_API_KEY" ins="YOUR_RESERVATIONS_API_KEY" title="Reservations.bru"
+   ```js ins="YOUR_RESERVATIONS_API_ID" ins="YOUR_PROPERTY_API_ID" ins="YOUR_REGION" ins="YOUR_PROPERTY_RESOLUTION_API_KEY" title="Reservations.bru"
    vars {
      apiUrl: https://YOUR_RESERVATIONS_API_ID.execute-api.YOUR_REGION.amazonaws.com/dev/api/v1
-     apiKey: YOUR_RESERVATIONS_API_KEY
      propertyResolutionApiUrl: https://YOUR_PROPERTY_API_ID.execute-api.YOUR_REGION.amazonaws.com/dev/api/v1
      propertyResolutionApiKey: YOUR_PROPERTY_RESOLUTION_API_KEY
      testId: {{$timestamp}}
+     awsRegion: YOUR_REGION
+     awsAccessKeyId: {{process.env.AWS_ACCESS_KEY_ID}}
+     awsSecretAccessKey: {{process.env.AWS_SECRET_ACCESS_KEY}}
+     awsSessionToken: {{process.env.AWS_SESSION_TOKEN}}
      
      sfHotel.Id: PLACEHOLDER
      sfHotel.Code: PLACEHOLDER
@@ -180,13 +199,9 @@ Make sure you installed the [Bruno CLI](/intro/prerequisites/#step-3-install-rec
    }
    ```
 
-   <Aside type="note">
-   The Reservations environment includes references to the Property Resolution API because the Setup tests dynamically populate hotel data before running reservation tests. The hotel placeholder values will be filled in automatically by the Setup tests.
-   </Aside>
-
 2. **Run API Tests**
 
-   Navigate to the CDK infrastructure directory and run the test scripts:
+   The test scripts automatically handle AWS authentication and run the Bruno tests:
 
    ```bash title="Testing APIs"
    # Navigate to the CDK directory
@@ -200,10 +215,6 @@ Make sure you installed the [Bruno CLI](/intro/prerequisites/#step-3-install-rec
    pnpm run test:apis:reservations         # Complete booking workflow  
    pnpm run test:apis:toxicity            # Content moderation
    ```
-
-   <Aside type="caution">
-   If tests fail, double-check that your environment files have the correct API URLs and keys from your CDK deployment output.
-   </Aside>
 
 3. **Analyze Test Results**
 

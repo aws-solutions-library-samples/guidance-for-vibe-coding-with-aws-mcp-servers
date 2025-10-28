@@ -30,4 +30,8 @@ vars {
   
   queenRoom.RoomCode: A2Q
   queenRoom.RoomName: Standard Double Queen
+  awsRegion: YOUR_REGION
+  awsAccessKeyId: {{process.env.AWS_ACCESS_KEY_ID}}
+  awsSecretAccessKey: {{process.env.AWS_SECRET_ACCESS_KEY}}
+  awsSessionToken: {{process.env.AWS_SESSION_TOKEN}}
 }
