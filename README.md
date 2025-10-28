@@ -317,7 +317,7 @@ To avoid ongoing charges, delete all deployed resources:
    pnpm cdk destroy AgentCoreTechSummitMockApis
    ```
 
-For detailed cleanup instructions including ECR cleanup, verification steps, and local environment cleanup, see the [Cleanup Guide](http://localhost:4321/dev-env/cleanup).
+For detailed cleanup instructions including CodeBuild cleanup, ECR cleanup, verification steps, and local environment cleanup, see the [Cleanup Guide](http://localhost:4321/dev-env/cleanup).
 
 ## FAQ and Known Issues
 
