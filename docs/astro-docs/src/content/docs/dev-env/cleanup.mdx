@@ -55,7 +55,25 @@ else
 fi
 ```
 
-### Step 3: Destroy CDK Stacks
+### Step 3: Delete CodeBuild Projects
+
+The destroy script does not automatically delete CodeBuild projects. Remove them manually:
+
+```bash title="CodeBuild cleanup"
+# List CodeBuild projects created by the workshop
+aws codebuild list-projects --query 'projects[?contains(@, `bedrock-agentcore`)]' --output table
+
+# Delete the booking agent CodeBuild project
+aws codebuild delete-project --name bedrock-agentcore-hotel_booking_agent-builder
+
+# Delete the MCP server CodeBuild project
+aws codebuild delete-project --name bedrock-agentcore-hotel_booking_mcp-builder
+
+# Verify deletion
+aws codebuild list-projects --query 'projects[?contains(@, `bedrock-agentcore`)]' --output table
+```
+
+### Step 4: Destroy CDK Stacks
 
 Remove all deployed AWS resources by destroying the CDK stacks in reverse order:
 
@@ -70,7 +88,7 @@ pnpm cdk destroy AgentCoreTechSummitBookingAgent
 pnpm cdk destroy AgentCoreTechSummitMockApis
 ```
 
-### Step 4: Verify Stack Deletion
+### Step 5: Verify Stack Deletion
 
 Confirm all stacks have been removed:
 
@@ -84,7 +102,7 @@ aws cloudformation describe-stacks --stack-name AgentCoreTechSummitBookingAgent 
 aws cloudformation describe-stacks --stack-name AgentCoreTechSummitMcpServer 2>/dev/null || echo "✅ MCP Server stack deleted"
 ```
 
-### Step 5: Clean Up CDK Bootstrap (Optional)
+### Step 6: Clean Up CDK Bootstrap (Optional)
 
 If you created a CDK bootstrap stack specifically for this workshop and won't use CDK again:
 
@@ -100,7 +118,7 @@ aws cloudformation list-stacks --query 'StackSummaries[?contains(StackName, `CDK
 
 ## Local Environment Cleanup
 
-### Step 6: Remove Workshop Files
+### Step 7: Remove Workshop Files
 
 Clean up your local workspace:
 
@@ -116,7 +134,7 @@ rm -rf .venv/
 rm -rf packages/*/node_modules/
 ```
 
-### Step 7: Clean Package Caches (Optional)
+### Step 8: Clean Package Caches (Optional)
 
 Remove cached packages to free up disk space:
 
