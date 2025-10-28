@@ -142,8 +142,8 @@ This repository contains a complete Amazon Bedrock AgentCore hotel booking syste
 │   └── cdk-infra-python/      # AWS CDK infrastructure
 │       ├── src/stacks/        # CDK stack definitions
 │       └── app.py             # CDK application entry point
-├── docs/                      # Workshop documentation
-│   ├── astro-docs/            # Participant documentation site
+└── docs/                       # Workshop documentation
+    └── astro-docs/             # Participant documentation site
 ```
 
 ### System Components
