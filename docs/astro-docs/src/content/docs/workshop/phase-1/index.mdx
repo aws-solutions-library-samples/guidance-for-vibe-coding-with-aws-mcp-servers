@@ -7,7 +7,7 @@ import { Card, CardGrid, Aside, Steps, LinkCard } from "@astrojs/starlight/compo
 
 **Objective**: Use AI tools to explore and understand the AgentCore hotel booking system, practicing AI-powered discovery and analysis techniques.
 
-**Duration**: 20 minutes
+**Duration**: 30 minutes
 
 ## How to Approach This Phase
 
@@ -107,7 +107,7 @@ Make sure you installed the [Bruno CLI](/intro/prerequisites/#step-3-install-rec
 
 1. **Configure Bruno Environment Files**
 
-   Update the Bruno environment files with your deployed API URLs and keys:
+   Create your local Bruno environment files from templates with your deployed API URLs and keys:
 
    <Aside type="tip">
    Your API URLs and keys were displayed in the CDK deployment output. If you missed them, you can retrieve them with:
@@ -124,9 +124,13 @@ Make sure you installed the [Bruno CLI](/intro/prerequisites/#step-3-install-rec
    </Aside>
 
    **Property Resolution environment:**
-   ```bash title="Updating Bruno Environment file"
-   # Edit the Property Resolution environment file
-   code packages/cdk-infra-python/tests/bruno/booking_mock_apis/environments/PropertyResolution.bru
+   ```bash title="Creating Bruno Environment file from template"
+   # Copy template to create your local environment file
+   cd packages/cdk-infra-python/tests/bruno/booking_mock_apis/environments
+   cp PropertyResolution.bru.template PropertyResolution.bru
+   
+   # Edit the file with your API details
+   code PropertyResolution.bru
    ```
 
    Replace the placeholder values with your deployed API details:
@@ -143,9 +147,12 @@ Make sure you installed the [Bruno CLI](/intro/prerequisites/#step-3-install-rec
    ```
 
    **Toxicity Detection environment:**
-   ```bash title="Updating Bruno Environment file"
-   # Edit the Toxicity Detection environment file  
-   code packages/cdk-infra-python/tests/bruno/booking_mock_apis/environments/ToxicityDetection.bru
+   ```bash title="Creating Bruno Environment file from template"
+   # Copy template to create your local environment file
+   cp ToxicityDetection.bru.template ToxicityDetection.bru
+   
+   # Edit the file with your API details
+   code ToxicityDetection.bru
    ```
 
    Replace the placeholder values with your deployed API details:
@@ -161,9 +168,12 @@ Make sure you installed the [Bruno CLI](/intro/prerequisites/#step-3-install-rec
    ```
 
    **Reservations environment:**
-   ```bash title="Updating Bruno Environment file"
-   # Edit the Reservations environment file
-   code packages/cdk-infra-python/tests/bruno/booking_mock_apis/environments/Reservations.bru
+   ```bash title="Creating Bruno Environment file from template"
+   # Copy template to create your local environment file
+   cp Reservations.bru.template Reservations.bru
+   
+   # Edit the file with your API details
+   code Reservations.bru
    ```
 
    Replace the placeholder values with your deployed API details:

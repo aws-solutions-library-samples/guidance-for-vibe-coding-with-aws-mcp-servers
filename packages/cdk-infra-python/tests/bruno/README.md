@@ -1,6 +1,6 @@
 # Bruno API Testing Setup
 
-This directory contains Bruno API tests for the AgentCore Tech Summit mock APIs.
+This directory contains Bruno API tests for the sample mock APIs.
 
 ## Quick Start
 

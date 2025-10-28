@@ -1,0 +1,9 @@
+vars {
+  apiUrl: https://YOUR_PROPERTY_API_ID.execute-api.YOUR_REGION.amazonaws.com/dev/api/v1
+  apiKey: YOUR_PROPERTY_RESOLUTION_API_KEY
+  testId: {{$timestamp}}
+  awsRegion: YOUR_REGION
+  awsAccessKeyId: {{process.env.AWS_ACCESS_KEY_ID}}
+  awsSecretAccessKey: {{process.env.AWS_SECRET_ACCESS_KEY}}
+  awsSessionToken: {{process.env.AWS_SESSION_TOKEN}}
+}

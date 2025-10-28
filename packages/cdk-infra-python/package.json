@@ -6,7 +6,7 @@
     "test:apis:all": "npm run test:apis:property-resolution && npm run test:apis:reservations && npm run test:apis:toxicity",
     "test:apis:property-resolution": "cd tests/bruno && source ./set-aws-creds.sh && cd booking_mock_apis && bru run PropertyResolution/Basic_Flow/01_Basic_Query.bru --env PropertyResolution",
     "test:apis:reservations": "cd tests/bruno && source ./set-aws-creds.sh && cd booking_mock_apis && bru run Reservations/Setup --env Reservations",
-    "test:apis:toxicity": "cd tests/bruno && source ./set-aws-creds.sh && cd booking_mock_apis && bru run ToxicityDetection/Basic_Flow/01_Basic_Check.bru --env ToxicityDetection"
+    "test:apis:toxicity": "cd tests/bruno && source ./set-aws-creds.sh && cd booking_mock_apis && bru run ToxicityDetection/Basic_Flow/01_Non_Toxic_Text.bru --env ToxicityDetection"
   },
   "devDependencies": {
     "@types/jest": "29.5.14",
