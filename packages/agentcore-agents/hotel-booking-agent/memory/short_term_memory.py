@@ -98,7 +98,7 @@ class ShortTermMemoryHooks(HookProvider):
                 self.logger.info("No conversation messages found in recent turns")
 
         except Exception as e:
-            self.logger.warn(f"❌ Error loading conversation history: {e}", "error")
+            self.logger.warning(f"❌ Error loading conversation history: {str(e)}")
             # Don't fail the agent initialization if memory loading fails
 
     def on_message_added(self, event: MessageAddedEvent):

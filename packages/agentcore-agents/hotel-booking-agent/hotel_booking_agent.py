@@ -109,7 +109,7 @@ async def agent_invocation(payload, context):  # noqa: ARG001
         return {
             "statusCode": 500,
             "headers": {"Content-Type": "application/json"},
-            "body": json.dumps({"error": f"Setup error: {e}"}),
+            "body": json.dumps({"error": f"Setup error: {str(e)}"}),
         }
 
     encoded_arn = agent_arn.replace(":", "%3A").replace("/", "%2F")
@@ -196,7 +196,7 @@ async def agent_invocation(payload, context):  # noqa: ARG001
             response = {
                 "statusCode": 500,
                 "headers": {"Content-Type": "application/json"},
-                "body": json.dumps({"error": f"Error in MCP tool connection: {e}"}),
+                "body": json.dumps({"error": f"Error in MCP tool connection: {str(e)}"}),
             }
             return response
 
