@@ -13,22 +13,7 @@ After completing the workshop, it's important to clean up the AWS resources to a
 
 ## AWS Resource Cleanup
 
-### Step 1: Destroy AgentCore Agents
-
-First, destroy the deployed agents using the `destroy.sh` script:
-
-```bash title="AgentCore cleanup"
-# Navigate to your workshop directory
-cd guidance-for-vibe-coding-with-aws-mcp-servers
-
-# Destroy the hotel booking agent
-./packages/agentcore-tools/destroy.sh packages/agentcore-agents/hotel-booking-agent/hotel_booking_agent.py hotel_booking_agent
-
-# Destroy the hotel booking MCP server
-./packages/agentcore-tools/destroy.sh packages/agentcore-mcp-servers/hotel-booking/hotel_booking_mcp.py hotel_booking_mcp
-```
-
-### Step 2: Clean Up ECR Images
+### Step 1: Clean Up ECR Images
 
 Before destroying CDK stacks, remove ALL Docker images from ECR repositories:
 
@@ -55,40 +40,22 @@ else
 fi
 ```
 
-### Step 3: Delete CodeBuild Projects
+### Step 2: Destroy CDK Stacks
 
-The destroy script does not automatically delete CodeBuild projects. Remove them manually:
-
-```bash title="CodeBuild cleanup"
-# List CodeBuild projects created by the workshop
-aws codebuild list-projects --query 'projects[?contains(@, `bedrock-agentcore`)]' --output table
-
-# Delete the booking agent CodeBuild project
-aws codebuild delete-project --name bedrock-agentcore-hotel_booking_agent-builder
-
-# Delete the MCP server CodeBuild project
-aws codebuild delete-project --name bedrock-agentcore-hotel_booking_mcp-builder
-
-# Verify deletion
-aws codebuild list-projects --query 'projects[?contains(@, `bedrock-agentcore`)]' --output table
-```
-
-### Step 4: Destroy CDK Stacks
-
-Remove all deployed AWS resources by destroying the CDK stacks in reverse order:
+Remove all deployed AWS resources by destroying the CDK stacks in reverse order. The AgentCore agents and MCP server will be automatically destroyed as part of their respective stacks:
 
 ```bash title="CDK cleanup"
-# Destroy the MCP Server stack
+# Destroy the MCP Server stack (includes MCP server AgentCore runtime)
 pnpm cdk destroy AgentCoreTechSummitMcpServer
 
-# Destroy the Booking Agent stack
+# Destroy the Booking Agent stack (includes booking agent AgentCore runtime)
 pnpm cdk destroy AgentCoreTechSummitBookingAgent
 
 # Destroy the Mock APIs stack
 pnpm cdk destroy AgentCoreTechSummitMockApis
 ```
 
-### Step 5: Verify Stack Deletion
+### Step 3: Verify Stack Deletion
 
 Confirm all stacks have been removed:
 
@@ -102,7 +69,7 @@ aws cloudformation describe-stacks --stack-name AgentCoreTechSummitBookingAgent 
 aws cloudformation describe-stacks --stack-name AgentCoreTechSummitMcpServer 2>/dev/null || echo "✅ MCP Server stack deleted"
 ```
 
-### Step 6: Clean Up CDK Bootstrap (Optional)
+### Step 4: Clean Up CDK Bootstrap (Optional)
 
 If you created a CDK bootstrap stack specifically for this workshop and won't use CDK again:
 

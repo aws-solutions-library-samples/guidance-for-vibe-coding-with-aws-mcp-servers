@@ -143,39 +143,25 @@ If you've already installed these tools, you can proceed directly to Step 2.
 
     You should see all three stacks in the list:
     - `AgentCoreTechSummitMockApis` - Mock hotel booking APIs
-    - `AgentCoreTechSummitBookingAgent` - Hotel booking agent
-    - `AgentCoreTechSummitMcpServer` - MCP server for API integration
+    - `AgentCoreTechSummitBookingAgent` - Hotel booking agent with AgentCore runtime
+    - `AgentCoreTechSummitMcpServer` - MCP server with AgentCore runtime
 
-10. **Deploy Agent and MCP Server on Amazon Bedrock AgentCore**
-
-      <Steps>
-         1. Deploy the Agent to Amazon Bedrock AgentCore
-            
-            ```bash title="Deploying Agent to AgentCore"
-            ./packages/agentcore-tools/deploy.sh ./packages/agentcore-agents/hotel-booking-agent/hotel_booking_agent.py hotel_booking_agent
-            ```
-         2. Deploy the MCP Server to Amazon Bedrock AgentCore
-            
-            ```bash title="Deploying MCP Server to AgentCore"
-            ./packages/agentcore-tools/deploy.sh ./packages/agentcore-mcp-servers/hotel-booking/hotel_booking_mcp.py hotel_booking_mcp
-            ```
-         3. Confirm successful deployment
-            - Making sure there are no errors in the output of each script
-            - Verifying that the Agent and the MCP Server are listed on the AWS Console of your account
-      </Steps>
+    <Aside type="note" title="AgentCore Deployment">
+      The `AgentCoreTechSummitBookingAgent` and `AgentCoreTechSummitMcpServer` CDK stacks automatically deploy the AgentCore runtimes. No additional deployment steps are needed.
+    </Aside>
 
 </Steps>
 
 <Aside type="note" title="Deployment Time">
-  The CDK deployment typically takes 5-10 minutes. The stack
-  creates Lambda functions, API Gateway endpoints, DynamoDB tables, and other AWS
+  The CDK deployment typically takes 5-10 minutes. The stacks
+  create Lambda functions, API Gateway endpoints, DynamoDB tables, AgentCore runtimes, and other AWS
   resources needed for the hotel booking system.
 </Aside>
 
 <Aside type="tip" title="Troubleshooting Deployment">
   If deployment fails: 
-    1. Check that you have the necessary AWS permissions for creating Lambda functions, API Gateway, DynamoDB tables, and IAM
-    roles.
+    1. Check that you have the necessary AWS permissions for creating Lambda functions, API Gateway, DynamoDB tables, IAM
+    roles, and Bedrock AgentCore resources.
     2. Review common issues in our [Troubleshooting Guide](/faq/troubleshooting/)
     3. For AgentCore-specific deployment issues, see [AgentCore Deployment Troubleshooting](/faq/troubleshooting/#agentcore-deployment-issues)
 </Aside>
