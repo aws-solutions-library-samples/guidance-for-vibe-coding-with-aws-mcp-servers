@@ -2,7 +2,6 @@
 Hotel Booking MCP Server Stack
 
 This stack deploys the Hotel Booking MCP Server using Amazon Bedrock AgentCore.
-It replaces the manual deploy.sh script approach with native CDK constructs.
 """
 
 from aws_cdk import (

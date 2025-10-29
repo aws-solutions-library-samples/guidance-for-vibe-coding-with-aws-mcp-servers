@@ -136,9 +136,6 @@ This repository contains a complete Amazon Bedrock AgentCore hotel booking syste
 │   │   └── hotel-booking-agent/    # Intelligent hotel booking assistant
 │   ├── agentcore-mcp-servers/  # Model Context Protocol servers
 │   │   └── hotel-booking/      # Hotel booking MCP server
-│   ├── agentcore-tools/        # AgentCore deployment utilities
-│   │   ├── deploy.sh          # Agent/MCP server deployment script
-│   │   └── destroy.sh         # Cleanup and removal script
 │   └── cdk-infra-python/      # AWS CDK infrastructure
 │       ├── src/stacks/        # CDK stack definitions
 │       └── app.py             # CDK application entry point
@@ -300,15 +297,7 @@ After completing the workshop, consider these enhancements:
 
 To avoid ongoing charges, delete all deployed resources:
 
-1. **Destroy AgentCore Deployments**
-
-   ```bash
-   # Remove Agent and MCP Server from AgentCore
-   ./packages/agentcore-tools/destroy.sh ./packages/agentcore-agents/hotel-booking-agent/hotel_booking_agent.py hotel_booking_agent
-   ./packages/agentcore-tools/destroy.sh ./packages/agentcore-mcp-servers/hotel-booking/hotel_booking_mcp.py hotel_booking_mcp
-   ```
-
-2. **Delete CDK Stacks**
+**Delete CDK Stacks**
 
    ```bash
    # Delete all stacks in reverse order
