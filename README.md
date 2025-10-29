@@ -142,8 +142,8 @@ This repository contains a complete Amazon Bedrock AgentCore hotel booking syste
 │   └── cdk-infra-python/      # AWS CDK infrastructure
 │       ├── src/stacks/        # CDK stack definitions
 │       └── app.py             # CDK application entry point
-├── docs/                      # Workshop documentation
-│   ├── astro-docs/            # Participant documentation site
+└── docs/                       # Workshop documentation
+    └── astro-docs/             # Participant documentation site
 ```
 
 ### System Components
@@ -304,8 +304,8 @@ To avoid ongoing charges, delete all deployed resources:
 
    ```bash
    # Remove Agent and MCP Server from AgentCore
-   ./packages/agentcore-tools/destroy.sh hotel_booking_agent
-   ./packages/agentcore-tools/destroy.sh hotel_booking_mcp
+   ./packages/agentcore-tools/destroy.sh ./packages/agentcore-agents/hotel-booking-agent/hotel_booking_agent.py hotel_booking_agent
+   ./packages/agentcore-tools/destroy.sh ./packages/agentcore-mcp-servers/hotel-booking/hotel_booking_mcp.py hotel_booking_mcp
    ```
 
 2. **Delete CDK Stacks**
@@ -317,23 +317,7 @@ To avoid ongoing charges, delete all deployed resources:
    pnpm cdk destroy AgentCoreTechSummitMockApis
    ```
 
-3. **Manual Cleanup (if needed)**
-
-   Some resources may require manual deletion:
-
-   - **S3 Buckets** - Empty and delete any S3 buckets created by the stacks
-   - **CloudWatch Logs** - Delete log groups if you want to remove all traces
-   - **DynamoDB Tables** - Verify tables are deleted (should be automatic with stack deletion)
-
-   Check for remaining resources:
-
-   ```bash
-   # List S3 buckets
-   aws s3 ls | grep -i "agentcore\|workshop"
-
-   # List CloudWatch log groups
-   aws logs describe-log-groups --query 'logGroups[?contains(logGroupName, `agentcore`) || contains(logGroupName, `workshop`)].logGroupName'
-   ```
+For detailed cleanup instructions including CodeBuild cleanup, ECR cleanup, verification steps, and local environment cleanup, see the [Cleanup Guide](http://localhost:4321/dev-env/cleanup).
 
 ## FAQ and Known Issues
 
