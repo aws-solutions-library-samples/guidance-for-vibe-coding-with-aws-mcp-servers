@@ -90,7 +90,7 @@ If you've already installed these tools, you can proceed directly to Step 2.
 
    ```bash title="Deploying mock APIs"
    # Deploy all three hotel booking APIs
-   pnpm cdk deploy --require-approval never AgentCoreTechSummitMockApis
+   pnpm cdk deploy --require-approval never VibeCodingWorkshopMockApis
    ```
 
    This will deploy:
@@ -107,7 +107,7 @@ If you've already installed these tools, you can proceed directly to Step 2.
    ```bash title="Getting stack outputs"
    # Get stack outputs (URLs and API key IDs)
    aws cloudformation describe-stacks \
-     --stack-name AgentCoreTechSummitMockApis \
+     --stack-name VibeCodingWorkshopMockApis \
      --query 'Stacks[0].Outputs[*].[OutputKey,OutputValue]' \
      --output table
    ```
@@ -116,7 +116,7 @@ If you've already installed these tools, you can proceed directly to Step 2.
 
    ```bash title="Deploying AgentCore Agent Stack"
    # Deploy the hotel booking agent stack
-   pnpm cdk deploy --require-approval never AgentCoreTechSummitBookingAgent
+   pnpm cdk deploy --require-approval never VibeCodingWorkshopBookingAgent
    ```
 
    This will deploy:
@@ -127,7 +127,7 @@ If you've already installed these tools, you can proceed directly to Step 2.
 
    ```bash title="Deploying AgentCore MCP Server Stack"
    # Deploy the hotel booking MCP server stack
-   pnpm cdk deploy --require-approval never AgentCoreTechSummitMcpServer
+   pnpm cdk deploy --require-approval never VibeCodingWorkshopMcpServer
    ```
 
    This will deploy:
@@ -142,12 +142,12 @@ If you've already installed these tools, you can proceed directly to Step 2.
     ```
 
     You should see all three stacks in the list:
-    - `AgentCoreTechSummitMockApis` - Mock hotel booking APIs
-    - `AgentCoreTechSummitBookingAgent` - Hotel booking agent with AgentCore runtime
-    - `AgentCoreTechSummitMcpServer` - MCP server with AgentCore runtime
+    - `VibeCodingWorkshopMockApis` - Mock hotel booking APIs
+    - `VibeCodingWorkshopBookingAgent` - Hotel booking agent with AgentCore runtime
+    - `VibeCodingWorkshopMcpServer` - MCP server with AgentCore runtime
 
     <Aside type="note" title="AgentCore Deployment">
-      The `AgentCoreTechSummitBookingAgent` and `AgentCoreTechSummitMcpServer` CDK stacks automatically deploy the AgentCore runtimes. No additional deployment steps are needed.
+      The `VibeCodingWorkshopBookingAgent` and `VibeCodingWorkshopMcpServer` CDK stacks automatically deploy the AgentCore runtimes. No additional deployment steps are needed.
     </Aside>
 
 </Steps>

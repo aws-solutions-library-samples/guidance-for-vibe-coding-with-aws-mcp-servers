@@ -138,7 +138,7 @@ Exit status 2
 
 ### Stack Does Not Exist Error
 
-**Problem**: Getting "Stack with id AgentCoreTechSummitMockApis does not exist" when running CloudFormation commands
+**Problem**: Getting "Stack with id VibeCodingWorkshopMockApis does not exist" when running CloudFormation commands
 
 **Solution**:
 
@@ -151,13 +151,13 @@ This usually means you're using a different AWS profile than the one used for de
   ```bash
   # For CloudFormation commands
   aws cloudformation describe-stacks \
-    --stack-name AgentCoreTechSummitMockApis \
+    --stack-name VibeCodingWorkshopMockApis \
     --profile YOUR_PROFILE_NAME \
     --query 'Stacks[0].Outputs[*].[OutputKey,OutputValue]' \
     --output table
 
   # For CDK commands
-  pnpm cdk deploy AgentCoreTechSummitMockApis --profile YOUR_PROFILE_NAME
+  pnpm cdk deploy VibeCodingWorkshopMockApis --profile YOUR_PROFILE_NAME
 
   # Or set the profile as default for the session
   export AWS_PROFILE=YOUR_PROFILE_NAME

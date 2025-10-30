@@ -46,13 +46,13 @@ Remove all deployed AWS resources by destroying the CDK stacks in reverse order.
 
 ```bash title="CDK cleanup"
 # Destroy the MCP Server stack (includes MCP server AgentCore runtime)
-pnpm cdk destroy AgentCoreTechSummitMcpServer
+pnpm cdk destroy VibeCodingWorkshopMcpServer
 
 # Destroy the Booking Agent stack (includes booking agent AgentCore runtime)
-pnpm cdk destroy AgentCoreTechSummitBookingAgent
+pnpm cdk destroy VibeCodingWorkshopBookingAgent
 
 # Destroy the Mock APIs stack
-pnpm cdk destroy AgentCoreTechSummitMockApis
+pnpm cdk destroy VibeCodingWorkshopMockApis
 ```
 
 ### Step 3: Verify Stack Deletion
@@ -64,9 +64,9 @@ Confirm all stacks have been removed:
 aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE UPDATE_COMPLETE
 
 # Verify no workshop stacks remain
-aws cloudformation describe-stacks --stack-name AgentCoreTechSummitMockApis 2>/dev/null || echo "✅ Mock APIs stack deleted"
-aws cloudformation describe-stacks --stack-name AgentCoreTechSummitBookingAgent 2>/dev/null || echo "✅ Booking Agent stack deleted"
-aws cloudformation describe-stacks --stack-name AgentCoreTechSummitMcpServer 2>/dev/null || echo "✅ MCP Server stack deleted"
+aws cloudformation describe-stacks --stack-name VibeCodingWorkshopMockApis 2>/dev/null || echo "✅ Mock APIs stack deleted"
+aws cloudformation describe-stacks --stack-name VibeCodingWorkshopBookingAgent 2>/dev/null || echo "✅ Booking Agent stack deleted"
+aws cloudformation describe-stacks --stack-name VibeCodingWorkshopMcpServer 2>/dev/null || echo "✅ MCP Server stack deleted"
 ```
 
 ### Step 4: Clean Up CDK Bootstrap (Optional)

@@ -12,6 +12,7 @@ from aws_cdk import (
     Stack,
     aws_bedrock_agentcore_alpha as agentcore,
     aws_cognito as cognito,
+    aws_ecr_assets as ecr_assets,
     aws_iam as iam,
     aws_lambda as lambda_,
     aws_logs as logs,
@@ -276,7 +277,10 @@ def handler(event, context):
         """Create AgentCore Runtime"""
         agent_path = Path(__file__).parent.parent.parent.parent / "agentcore-agents" / "hotel-booking-agent"
 
-        agent_runtime_artifact = agentcore.AgentRuntimeArtifact.from_asset(str(agent_path))
+        agent_runtime_artifact = agentcore.AgentRuntimeArtifact.from_asset(
+            str(agent_path),
+            platform=ecr_assets.Platform.LINUX_ARM64
+        )
 
         runtime = agentcore.Runtime(
             self,

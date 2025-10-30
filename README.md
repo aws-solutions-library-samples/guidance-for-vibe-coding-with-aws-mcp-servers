@@ -219,16 +219,16 @@ Verify your deployment was successful:
 
    You should see these stacks:
 
-   - `AgentCoreTechSummitMockApis`
-   - `AgentCoreTechSummitBookingAgent`
-   - `AgentCoreTechSummitMcpServer`
+   - `VibeCodingWorkshopMockApis`
+   - `VibeCodingWorkshopBookingAgent`
+   - `VibeCodingWorkshopMcpServer`
 
 2. **Verify API Endpoints**
 
    ```bash
    # Get stack outputs (API URLs and keys)
    aws cloudformation describe-stacks \
-     --stack-name AgentCoreTechSummitMockApis \
+     --stack-name VibeCodingWorkshopMockApis \
      --query 'Stacks[0].Outputs[*].[OutputKey,OutputValue]' \
      --output table
    ```
@@ -301,9 +301,9 @@ To avoid ongoing charges, delete all deployed resources:
 
    ```bash
    # Delete all stacks in reverse order
-   pnpm cdk destroy AgentCoreTechSummitMcpServer
-   pnpm cdk destroy AgentCoreTechSummitBookingAgent
-   pnpm cdk destroy AgentCoreTechSummitMockApis
+   pnpm cdk destroy VibeCodingWorkshopMcpServer
+   pnpm cdk destroy VibeCodingWorkshopBookingAgent
+   pnpm cdk destroy VibeCodingWorkshopMockApis
    ```
 
 For detailed cleanup instructions including CodeBuild cleanup, ECR cleanup, verification steps, and local environment cleanup, see the [Cleanup Guide](http://localhost:4321/dev-env/cleanup).

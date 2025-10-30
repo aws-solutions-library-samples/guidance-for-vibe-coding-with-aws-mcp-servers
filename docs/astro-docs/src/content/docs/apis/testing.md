@@ -80,7 +80,7 @@ vars {
 ```bash
 # Get all stack outputs
 aws cloudformation describe-stacks \
-  --stack-name AgentCoreTechSummitMockApis \
+  --stack-name VibeCodingWorkshopMockApis \
   --query 'Stacks[0].Outputs[*].[OutputKey,OutputValue]' \
   --output table
 
@@ -421,7 +421,7 @@ aws cloudwatch get-metric-statistics \
 aws cloudwatch get-metric-statistics \
   --namespace AWS/Lambda \
   --metric-name Duration \
-  --dimensions Name=FunctionName,Value=AgentCoreTechSummitMockApis-PropertyResolution-PropertyResolutionFunction \
+  --dimensions Name=FunctionName,Value=VibeCodingWorkshopMockApis-PropertyResolution-PropertyResolutionFunction \
   --start-time 2024-01-15T10:00:00Z \
   --end-time 2024-01-15T11:00:00Z \
   --period 300 \
@@ -490,12 +490,12 @@ Check Lambda logs for detailed error information:
 
 ```bash
 # View recent logs for Property Resolution
-aws logs tail /aws/lambda/AgentCoreTechSummitMockApis-PropertyResolution-PropertyResolutionFunction \
+aws logs tail /aws/lambda/VibeCodingWorkshopMockApis-PropertyResolution-PropertyResolutionFunction \
   --follow --format short
 
 # Search for errors in logs
 aws logs filter-log-events \
-  --log-group-name /aws/lambda/AgentCoreTechSummitMockApis-PropertyResolution-PropertyResolutionFunction \
+  --log-group-name /aws/lambda/VibeCodingWorkshopMockApis-PropertyResolution-PropertyResolutionFunction \
   --filter-pattern "ERROR"
 ```
 

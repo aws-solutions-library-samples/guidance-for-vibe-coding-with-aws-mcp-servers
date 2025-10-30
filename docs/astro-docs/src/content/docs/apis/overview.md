@@ -262,9 +262,9 @@ curl -X GET "https://your-reservations-api-url/api/v1/reservation"
 
 All Lambda functions log to CloudWatch with 1-week retention:
 
-- `/aws/lambda/AgentCoreTechSummitMockApis-ReservationServices-*`
-- `/aws/lambda/AgentCoreTechSummitMockApis-PropertyResolution-*`
-- `/aws/lambda/AgentCoreTechSummitMockApis-ToxicityDetection-*`
+- `/aws/lambda/VibeCodingWorkshopMockApis-ReservationServices-*`
+- `/aws/lambda/VibeCodingWorkshopMockApis-PropertyResolution-*`
+- `/aws/lambda/VibeCodingWorkshopMockApis-ToxicityDetection-*`
 
 ### Common Issues
 
