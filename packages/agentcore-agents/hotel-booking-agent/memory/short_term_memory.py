@@ -140,7 +140,7 @@ class ShortTermMemoryHooks(HookProvider):
             self.logger.info(f"✅ Stored {role} message {content_text} in short-term memory")
 
         except Exception as e:
-            self.logger.warn(f"❌ Error storing message in memory: {e}", "error")
+            self.logger.warning(f"❌ Error storing message in memory: {e}")
             # Don't fail the conversation if memory storage fails
 
     def register_hooks(self, registry: HookRegistry) -> None:
@@ -218,10 +218,10 @@ def create_short_term_memory(
         return memory_id, client
 
     except ClientError as e:
-        logger.warn(f"❌ Error accessing memory service: {e}", "error")
+        logger.warning(f"❌ Error accessing memory service: {e}")
         raise
     except Exception as e:
-        logger.warn(f"❌ Unexpected error: {e}", "error")
+        logger.warning(f"❌ Unexpected error: {e}")
         raise
 
 
@@ -252,7 +252,7 @@ def get_conversation_history(
         return conversation_history
 
     except Exception as e:
-        logger.warn(f"❌ Error retrieving conversation history: {e}", "error")
+        logger.warning(f"❌ Error retrieving conversation history: {e}")
         return []
 
 

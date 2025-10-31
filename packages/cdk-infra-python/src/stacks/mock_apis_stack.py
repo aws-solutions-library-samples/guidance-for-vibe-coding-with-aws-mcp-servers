@@ -1,5 +1,5 @@
 """
-Mock APIs Stack for AgentCore Tech Summit 2025
+Mock APIs Stack for AgentCore Vibe Coding Workshop
 
 This stack contains three mock API services:
 1. Property Resolution Service - Hotel search and discovery
@@ -26,7 +26,7 @@ from constructs import Construct
 
 class MockApisStack(Stack):
     """
-    CDK Stack containing all three mock API services for the AgentCore Tech Summit.
+    CDK Stack containing all three mock API services for the AgentCore Vibe Coding.
 
     This stack provides modular deployment options allowing trainers to deploy
     all APIs or select specific ones based on workshop requirements.

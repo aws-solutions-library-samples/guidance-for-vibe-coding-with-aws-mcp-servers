@@ -1,6 +1,6 @@
 ---
 title: Mock APIs Overview
-description: Comprehensive guide to the three mock API services that support the AgentCore Tech Summit workshop.
+description: Comprehensive guide to the three mock API services that support the AgentCore Vibe Coding workshop.
 ---
 
 This guide covers the three mock API services that provide backend functionality for the workshop. These services simulate real hotel industry APIs and provide realistic data for training purposes.

@@ -331,7 +331,10 @@ def handler(event, context):
                 f"https://cognito-idp.{self.region}.amazonaws.com/{self.user_pool.user_pool_id}/.well-known/openid-configuration",
                 [self.user_pool_client.user_pool_client_id],
             ),
-            environment_variables={"AWS_REGION": self.region},
+            environment_variables={
+                "AWS_REGION": self.region,
+                "AWS_DEFAULT_REGION": self.region,
+            },
         )
 
         # Ensure IAM policy is attached before runtime is created

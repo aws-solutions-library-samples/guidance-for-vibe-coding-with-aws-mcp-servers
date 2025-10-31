@@ -1,1 +1,1 @@
-"""Shared constructs for the AgentCore Tech Summit project."""
+"""Shared constructs for the AgentCore Vibe Coding project."""

@@ -1,6 +1,6 @@
 ---
 title: Testing Guide
-description: Comprehensive guide for testing the mock APIs during the AgentCore Tech Summit workshop.
+description: Comprehensive guide for testing the mock APIs during the AgentCore Vibe Coding workshop.
 ---
 
 This guide provides detailed instructions for testing and validating the mock APIs functionality during the workshop.
