@@ -58,7 +58,9 @@ The solution implements a multi-tier architecture combining Amazon Bedrock Agent
 
 ![Architecture Diagram - Overview](assets/images/guidance-vibe-coding-aws-mcp-1.png)
 
-![Architecture Diagram - Detailed Components](assets/images/guidance-vibe-coding-aws-mcp-2.png)
+![Hotel Booking System – Sample Application 1](assets/images/guidance-vibe-coding-aws-mcp-2.png)
+
+![Hotel Booking System – Sample Application 2](assets/images/guidance-vibe-coding-aws-mcp-3.png)
 
 **Architecture Flow:**
 
@@ -175,6 +177,8 @@ Your environment is **completely pre-configured** with all tools, dependencies, 
 ### Operating System
 
 These deployment instructions are optimized to work on **macOS, Linux, and Windows** operating systems.
+
+> **Note:** Amazon Bedrock AgentCore requires ARM64 container images ([AWS Documentation](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/runtime-troubleshooting.html#troubleshoot-runtime-requirements)). Docker Desktop includes built-in ARM64 emulation. For Docker Engine users, run `docker run --privileged --rm tonistiigi/binfmt --install all` to enable ARM64 support.
 
 ## Deployment Steps
 
