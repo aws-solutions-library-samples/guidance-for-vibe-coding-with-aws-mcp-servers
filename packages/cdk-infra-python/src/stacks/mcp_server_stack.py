@@ -316,8 +316,10 @@ def handler(event, context):
         # Get path to MCP server directory
         mcp_server_path = Path(__file__).parent.parent.parent.parent / "agentcore-mcp-servers" / "hotel-booking"
 
-        # Create runtime artifact from local asset
-        agent_runtime_artifact = agentcore.AgentRuntimeArtifact.from_asset(str(mcp_server_path))
+        agent_runtime_artifact = agentcore.AgentRuntimeArtifact.from_asset(
+            str(mcp_server_path),
+            platform=ecr_assets.Platform.LINUX_ARM64
+        )
 
         # Create runtime
         runtime = agentcore.Runtime(

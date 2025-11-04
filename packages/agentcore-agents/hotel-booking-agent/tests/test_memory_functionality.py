@@ -23,7 +23,7 @@ def test_memory_setup():
     """Test memory setup and seeding with sample data"""
 
     # Configuration
-    REGION = AWS_REGION or "us-west-2"  # Use detected region or fallback
+    REGION = AWS_REGION  # Use detected region or fallback
     CUSTOMER_ID = "customer_test_001"
 
     print("🧠 Testing Hotel Booking Agent Memory Setup")
