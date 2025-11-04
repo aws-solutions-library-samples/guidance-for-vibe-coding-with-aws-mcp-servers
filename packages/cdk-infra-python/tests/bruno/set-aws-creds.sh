@@ -7,6 +7,15 @@ echo "==================================================================="
 echo "AWS Credential Helper for Bruno Testing"
 echo "==================================================================="
 
+# Check if credentials are already in environment (Workshop Studio case)
+if [ -n "$AWS_ACCESS_KEY_ID" ] && [ -n "$AWS_SECRET_ACCESS_KEY" ]; then
+    echo "✓ Using existing AWS credentials from environment"
+    echo ""
+    echo "You can now run Bruno tests with AWS SigV4 authentication!"
+    echo "==================================================================="
+    return 0
+fi
+
 # Get the AWS profile from environment or use default
 PROFILE="${AWS_PROFILE:-default}"
 echo "Using AWS Profile: $PROFILE"
@@ -60,7 +69,7 @@ if [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
         echo "Please ensure you are logged in to AWS:"
         echo "  - For SSO: aws sso login --profile $PROFILE"
         echo "  - For IAM: Check your credentials in ~/.aws/credentials"
-        exit 1
+        return 1
     fi
 fi
 
@@ -96,5 +105,5 @@ else
     echo "✗ Failed to set AWS credentials"
     echo ""
     echo "Please check your AWS configuration and try again."
-    exit 1
+    return 1
 fi

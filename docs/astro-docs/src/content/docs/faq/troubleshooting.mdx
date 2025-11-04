@@ -126,6 +126,40 @@ Exit status 2
   aws sts get-caller-identity
   ```
 
+### API Testing Credentials
+
+**Problem**: API tests fail with credential-related errors
+
+**How Credentials Work**:
+
+The API tests require these environment variables to be set:
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`  
+- `AWS_SESSION_TOKEN` (for temporary credentials)
+
+A helper script (`set-aws-creds.sh`) is provided to automatically export these from your AWS CLI configuration.
+
+**Workshop Studio Participants**:
+- Find credentials in your Workshop Studio dashboard (see Workshop Studio guide)
+- Set them as environment variables before running tests
+- The helper script will detect and use them automatically
+
+**Self-Deployment - macOS/Linux/Git Bash**:
+- Use the optional helper script to export credentials:
+  ```bash
+  cd packages/cdk-infra-python/tests/bruno
+  . ./set-aws-creds.sh
+  ```
+- Or ensure AWS CLI is configured and variables will be auto-detected: `aws configure list`
+
+**Self-Deployment - Windows cmd/PowerShell**:
+- Manually set environment variables before running tests:
+  ```powershell
+  $env:AWS_ACCESS_KEY_ID="your_key_here"
+  $env:AWS_SECRET_ACCESS_KEY="your_secret_here"
+  $env:AWS_SESSION_TOKEN="your_token_here"
+  ```
+
 ### CDK Deployment Permissions Denied
 
 **Problem**: CDK deployment permissions denied
