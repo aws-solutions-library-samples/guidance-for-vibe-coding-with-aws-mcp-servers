@@ -5,14 +5,14 @@ vars {
   propertyResolutionApiKey: YOUR_PROPERTY_RESOLUTION_API_KEY
   testId: {{$timestamp}}
   
-  sfHotel.Id: PLACEHOLDER
-  sfHotel.Code: PLACEHOLDER
-  sfHotel.Name: PLACEHOLDER
+  sfHotel.Id: 50007
+  sfHotel.Code: DOSF
+  sfHotel.Name: Donnelly Hotel
   
-  nyHotel.Id: PLACEHOLDER
-  nyHotel.Code: PLACEHOLDER
-  nyHotel.Name: PLACEHOLDER
-  
+  nyHotel.Id: 50048
+  nyHotel.Code: FONY
+  nyHotel.Name: Four Seasons-Hotel New York Downtown
+
   sfGuest.PersonName.GivenName: Test_SF
   sfGuest.PersonName.Surname: Castro_{{$timestamp}}
   sfGuest.EmailAddress.0.Type: Primary

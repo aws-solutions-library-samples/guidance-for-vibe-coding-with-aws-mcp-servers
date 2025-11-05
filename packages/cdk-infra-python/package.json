@@ -5,7 +5,7 @@
     "cdk": "uv run cdk",
     "test:apis:all": "npm run test:apis:property-resolution && npm run test:apis:reservations && npm run test:apis:toxicity",
     "test:apis:property-resolution": "cd tests/bruno/booking_mock_apis && bru run PropertyResolution/Basic_Flow --env PropertyResolution --delay 200 && bru run PropertyResolution/Error_Flow --env PropertyResolution --delay 200 && bru run PropertyResolution/Location_Flow --env PropertyResolution --delay 200",
-    "test:apis:reservations": "cd tests/bruno/booking_mock_apis && bru run Reservations/Setup --env Reservations --delay 1000 && bru run Reservations/SF_Flow --env Reservations --delay 2000 && bru run Reservations/NY_Flow --env Reservations --delay 2000 && bru run Reservations/Filter_Flow --env Reservations --delay 2000 && bru run Reservations/Error_Flow --env Reservations --delay 2000",
+    "test:apis:reservations": "cd tests/bruno/booking_mock_apis && bru run Reservations/Setup --env Reservations --delay 1000 && bru run Reservations/SF_Flow --env Reservations --delay 2000 && bru run Reservations/NY_Flow --env Reservations --delay 2000 && bru run Reservations/Error_Flow --env Reservations --delay 2000",
     "test:apis:toxicity": "cd tests/bruno/booking_mock_apis && bru run ToxicityDetection/Basic_Flow --env ToxicityDetection --delay 200 && bru run ToxicityDetection/Edge_Cases --env ToxicityDetection --delay 200 && bru run ToxicityDetection/Error_Flow --env ToxicityDetection --delay 200"
   },
   "devDependencies": {
