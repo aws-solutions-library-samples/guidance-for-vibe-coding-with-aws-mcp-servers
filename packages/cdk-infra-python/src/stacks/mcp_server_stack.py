@@ -10,6 +10,7 @@ from aws_cdk import (
     Duration,
     RemovalPolicy,
     Stack,
+    aws_ecr_assets as ecr_assets,
     aws_bedrock_agentcore_alpha as agentcore,
     aws_cognito as cognito,
     aws_iam as iam,
@@ -86,6 +87,11 @@ class HotelBookingMCPStack(Stack):
                     sid="BedrockPermissions",
                     actions=["bedrock:InvokeModel", "bedrock:InvokeModelWithResponseStream"],
                     resources=["arn:aws:bedrock:*::foundation-model/*", "arn:aws:bedrock:*:*:inference-profile/*"],
+                ),
+                iam.PolicyStatement(
+                    sid="MarketplaceModelAccess",
+                    actions=["aws-marketplace:Subscribe", "aws-marketplace:ViewSubscriptions"],
+                    resources=["*"],
                 ),
                 iam.PolicyStatement(
                     sid="ECRImageAccess",
@@ -426,7 +432,7 @@ def handler(event, context):
             [
                 {
                     "id": "AwsSolutions-IAM5",
-                    "reason": "Wildcard permissions required for X-Ray tracing, CloudWatch metrics, Bedrock model access, and ECR authorization.",
+                    "reason": "Wildcard permissions required for X-Ray tracing, CloudWatch metrics, Bedrock model access, AWS Marketplace model enablement, and ECR authorization.",
                     "appliesTo": [
                         "Resource::*",
                         "Resource::arn:aws:bedrock:*::foundation-model/*",

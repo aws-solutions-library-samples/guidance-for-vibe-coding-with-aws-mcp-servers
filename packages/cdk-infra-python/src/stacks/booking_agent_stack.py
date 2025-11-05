@@ -68,6 +68,11 @@ class HotelBookingAgentStack(Stack):
                     resources=["arn:aws:bedrock:*::foundation-model/*", "arn:aws:bedrock:*:*:inference-profile/*"],
                 ),
                 iam.PolicyStatement(
+                    sid="MarketplaceModelAccess",
+                    actions=["aws-marketplace:Subscribe", "aws-marketplace:ViewSubscriptions"],
+                    resources=["*"],
+                ),
+                iam.PolicyStatement(
                     sid="ECRImageAccess",
                     actions=["ecr:BatchGetImage", "ecr:GetDownloadUrlForLayer", "ecr:GetAuthorizationToken"],
                     resources=["*"],
@@ -369,7 +374,7 @@ def handler(event, context):
             [
                 {
                     "id": "AwsSolutions-IAM5",
-                    "reason": "Wildcard permissions required for AgentCore services.",
+                    "reason": "Wildcard permissions required for AgentCore services and AWS Marketplace model access.",
                     "appliesTo": [
                         "Resource::*",
                         "Resource::arn:aws:bedrock:*::foundation-model/*",
