@@ -66,21 +66,6 @@ importers:
         specifier: 0.10.1
         version: 0.10.1(@astrojs/starlight@0.35.2(astro@5.13.2(@types/node@22.7.9)(jiti@2.6.1)(rollup@4.52.4)(typescript@5.6.3)(yaml@2.8.1)))
 
-  docs/astro-docs-trainers:
-    dependencies:
-      '@astrojs/starlight':
-        specifier: 0.35.2
-        version: 0.35.2(astro@5.13.2(@types/node@22.7.9)(jiti@2.6.1)(rollup@4.52.4)(typescript@5.6.3)(yaml@2.8.1))
-      astro:
-        specifier: 5.13.2
-        version: 5.13.2(@types/node@22.7.9)(jiti@2.6.1)(rollup@4.52.4)(typescript@5.6.3)(yaml@2.8.1)
-      sharp:
-        specifier: 0.34.3
-        version: 0.34.3
-      starlight-image-zoom:
-        specifier: 0.10.1
-        version: 0.10.1(@astrojs/starlight@0.35.2(astro@5.13.2(@types/node@22.7.9)(jiti@2.6.1)(rollup@4.52.4)(typescript@5.6.3)(yaml@2.8.1)))
-
   packages/agentcore-agents: {}
 
   packages/agentcore-mcp-servers: {}

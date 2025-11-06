@@ -8,7 +8,7 @@ This directory contains Bruno API tests for the sample mock APIs.
 
 ```bash
 # From the monorepo root
-pnpm cdk deploy AgentCoreTechSummitMockApis
+pnpm cdk deploy VibeCodingWorkshopMockApis
 ```
 
 ### 2. Set AWS Credentials for Authentication
@@ -122,7 +122,7 @@ After deploying, get your API URLs and keys:
 
 ```bash
 aws cloudformation describe-stacks \
-  --stack-name AgentCoreTechSummitMockApis \
+  --stack-name VibeCodingWorkshopMockApis \
   --query 'Stacks[0].Outputs[*].[OutputKey,OutputValue]' \
   --output table
 ```

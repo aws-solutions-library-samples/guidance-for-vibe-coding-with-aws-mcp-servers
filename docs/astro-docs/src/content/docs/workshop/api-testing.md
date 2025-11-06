@@ -66,7 +66,7 @@ The workshop includes pre-configured Bruno test files that let you interact with
    ```bash
    # Get your API URLs from CloudFormation outputs
    aws cloudformation describe-stacks \
-     --stack-name AgentCoreTechSummitMockApis \
+     --stack-name VibeCodingWorkshopMockApis \
      --query 'Stacks[0].Outputs[*].[OutputKey,OutputValue]' \
      --output table
    ```

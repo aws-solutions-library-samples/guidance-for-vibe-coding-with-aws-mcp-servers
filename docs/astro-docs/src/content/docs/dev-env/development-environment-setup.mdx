@@ -13,6 +13,10 @@ import { Card, CardGrid, Aside, Steps, LinkCard } from "@astrojs/starlight/compo
 
 ## Setup Instructions
 
+<Aside type="note" title="Docker Architecture Requirement">
+Amazon Bedrock AgentCore requires ARM64 container images ([AWS Documentation](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/runtime-troubleshooting.html#troubleshoot-runtime-requirements)). Docker Desktop includes built-in ARM64 emulation. For Docker Engine users, run `docker run --privileged --rm tonistiigi/binfmt --install all` to enable ARM64 support.
+</Aside>
+
 ### Step 1: Complete Prerequisites
 
 Before deploying the sample application, ensure you have all required tools installed. Review the detailed [Prerequisites Guide](/intro/prerequisites/) which covers:
@@ -39,7 +43,19 @@ If you've already installed these tools, you can proceed directly to Step 2.
       If you don't have the repository yet, you can clone or download it from [GitHub](https://github.com/aws-solutions-library-samples/guidance-for-vibe-coding-with-aws-mcp-servers) before continuing.
     </Aside>
 
-2. **Install Project Dependencies**
+2. **Enable ARM64 Docker Support (Optional)**
+
+   <Aside type="tip">
+     **Docker Desktop users**: Skip this step - ARM64 emulation is built-in.
+     
+     **Docker Engine users**: Run the command below to enable ARM64 support.
+   </Aside>
+
+   ```bash title="Enable ARM64 emulation"
+   docker run --privileged --rm tonistiigi/binfmt --install all
+   ```
+
+3. **Install Project Dependencies**
 
    ```bash title="Installing project dependencies"
    # Install Node.js dependencies
@@ -52,7 +68,7 @@ If you've already installed these tools, you can proceed directly to Step 2.
      virtual environment - no manual setup required!
    </Aside>
 
-3. **Configure AWS Credentials**
+4. **Configure AWS Credentials**
 
    Ensure your AWS CLI is configured with appropriate permissions:
 
@@ -64,7 +80,7 @@ If you've already installed these tools, you can proceed directly to Step 2.
    export AWS_DEFAULT_REGION=us-west-2
    ```
 
-4. **Bootstrap CDK (if needed)**
+5. **Bootstrap CDK (if needed)**
 
    If this is your first time using CDK in this AWS account/region:
 
@@ -86,11 +102,11 @@ If you've already installed these tools, you can proceed directly to Step 2.
       ```
    </Aside>
 
-5. **Deploy the Mock APIs**
+6. **Deploy the Mock APIs**
 
    ```bash title="Deploying mock APIs"
    # Deploy all three hotel booking APIs
-   pnpm cdk deploy --require-approval never AgentCoreTechSummitMockApis
+   pnpm cdk deploy --require-approval never VibeCodingWorkshopMockApis
    ```
 
    This will deploy:
@@ -100,41 +116,41 @@ If you've already installed these tools, you can proceed directly to Step 2.
    
 
 
-6. **Retrieve API Configuration**
+7. **Retrieve API Configuration**
 
    After deployment, get your API URLs and keys:
 
    ```bash title="Getting stack outputs"
    # Get stack outputs (URLs and API key IDs)
    aws cloudformation describe-stacks \
-     --stack-name AgentCoreTechSummitMockApis \
+     --stack-name VibeCodingWorkshopMockApis \
      --query 'Stacks[0].Outputs[*].[OutputKey,OutputValue]' \
      --output table
    ```
 
-7. **Deploy the AgentCore Booking Agent Stack**
+8. **Deploy the AgentCore Booking Agent Stack**
 
    ```bash title="Deploying AgentCore Agent Stack"
    # Deploy the hotel booking agent stack
-   pnpm cdk deploy --require-approval never AgentCoreTechSummitBookingAgent
+   pnpm cdk deploy --require-approval never VibeCodingWorkshopBookingAgent
    ```
 
    This will deploy:
    - **Hotel Booking Agent** - Intelligent agent with memory and conversation capabilities
    - **AgentCore Infrastructure** - Lambda layers, IAM roles, and shared resources needed for agents
 
-8. **Deploy the AgentCore MCP Server Stack**
+9. **Deploy the AgentCore MCP Server Stack**
 
    ```bash title="Deploying AgentCore MCP Server Stack"
    # Deploy the hotel booking MCP server stack
-   pnpm cdk deploy --require-approval never AgentCoreTechSummitMcpServer
+   pnpm cdk deploy --require-approval never VibeCodingWorkshopMcpServer
    ```
 
    This will deploy:
    - **Hotel Booking MCP Server** - Model Context Protocol server for API integration
    - **MCP Infrastructure** - Lambda functions and API Gateway endpoints for MCP communication
 
-9. **Verify Stacks Deployment**
+10. **Verify Stacks Deployment**
 
     ```bash title="Verifying stacks deployment"
     # Verify all stacks deployed successfully
@@ -142,40 +158,26 @@ If you've already installed these tools, you can proceed directly to Step 2.
     ```
 
     You should see all three stacks in the list:
-    - `AgentCoreTechSummitMockApis` - Mock hotel booking APIs
-    - `AgentCoreTechSummitBookingAgent` - Hotel booking agent
-    - `AgentCoreTechSummitMcpServer` - MCP server for API integration
+    - `VibeCodingWorkshopMockApis` - Mock hotel booking APIs
+    - `VibeCodingWorkshopBookingAgent` - Hotel booking agent with AgentCore runtime
+    - `VibeCodingWorkshopMcpServer` - MCP server with AgentCore runtime
 
-10. **Deploy Agent and MCP Server on Amazon Bedrock AgentCore**
-
-      <Steps>
-         1. Deploy the Agent to Amazon Bedrock AgentCore
-            
-            ```bash title="Deploying Agent to AgentCore"
-            ./packages/agentcore-tools/deploy.sh ./packages/agentcore-agents/hotel-booking-agent/hotel_booking_agent.py hotel_booking_agent
-            ```
-         2. Deploy the MCP Server to Amazon Bedrock AgentCore
-            
-            ```bash title="Deploying MCP Server to AgentCore"
-            ./packages/agentcore-tools/deploy.sh ./packages/agentcore-mcp-servers/hotel-booking/hotel_booking_mcp.py hotel_booking_mcp
-            ```
-         3. Confirm successful deployment
-            - Making sure there are no errors in the output of each script
-            - Verifying that the Agent and the MCP Server are listed on the AWS Console of your account
-      </Steps>
+    <Aside type="note" title="AgentCore Deployment">
+      The `VibeCodingWorkshopBookingAgent` and `VibeCodingWorkshopMcpServer` CDK stacks automatically deploy the AgentCore runtimes. No additional deployment steps are needed.
+    </Aside>
 
 </Steps>
 
 <Aside type="note" title="Deployment Time">
-  The CDK deployment typically takes 5-10 minutes. The stack
-  creates Lambda functions, API Gateway endpoints, DynamoDB tables, and other AWS
+  The CDK deployment typically takes 5-10 minutes. The stacks
+  create Lambda functions, API Gateway endpoints, DynamoDB tables, AgentCore runtimes, and other AWS
   resources needed for the hotel booking system.
 </Aside>
 
 <Aside type="tip" title="Troubleshooting Deployment">
   If deployment fails: 
-    1. Check that you have the necessary AWS permissions for creating Lambda functions, API Gateway, DynamoDB tables, and IAM
-    roles.
+    1. Check that you have the necessary AWS permissions for creating Lambda functions, API Gateway, DynamoDB tables, IAM
+    roles, and Bedrock AgentCore resources.
     2. Review common issues in our [Troubleshooting Guide](/faq/troubleshooting/)
     3. For AgentCore-specific deployment issues, see [AgentCore Deployment Troubleshooting](/faq/troubleshooting/#agentcore-deployment-issues)
 </Aside>

@@ -126,6 +126,40 @@ Exit status 2
   aws sts get-caller-identity
   ```
 
+### API Testing Credentials
+
+**Problem**: API tests fail with credential-related errors
+
+**How Credentials Work**:
+
+The API tests require these environment variables to be set:
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`  
+- `AWS_SESSION_TOKEN` (for temporary credentials)
+
+A helper script (`set-aws-creds.sh`) is provided to automatically export these from your AWS CLI configuration.
+
+**Workshop Studio Participants**:
+- Find credentials in your Workshop Studio dashboard (see Workshop Studio guide)
+- Set them as environment variables before running tests
+- The helper script will detect and use them automatically
+
+**Self-Deployment - macOS/Linux/Git Bash**:
+- Use the optional helper script to export credentials:
+  ```bash
+  cd packages/cdk-infra-python/tests/bruno
+  . ./set-aws-creds.sh
+  ```
+- Or ensure AWS CLI is configured and variables will be auto-detected: `aws configure list`
+
+**Self-Deployment - Windows cmd/PowerShell**:
+- Manually set environment variables before running tests:
+  ```powershell
+  $env:AWS_ACCESS_KEY_ID="your_key_here"
+  $env:AWS_SECRET_ACCESS_KEY="your_secret_here"
+  $env:AWS_SESSION_TOKEN="your_token_here"
+  ```
+
 ### CDK Deployment Permissions Denied
 
 **Problem**: CDK deployment permissions denied
@@ -138,7 +172,7 @@ Exit status 2
 
 ### Stack Does Not Exist Error
 
-**Problem**: Getting "Stack with id AgentCoreTechSummitMockApis does not exist" when running CloudFormation commands
+**Problem**: Getting "Stack with id VibeCodingWorkshopMockApis does not exist" when running CloudFormation commands
 
 **Solution**:
 
@@ -151,13 +185,13 @@ This usually means you're using a different AWS profile than the one used for de
   ```bash
   # For CloudFormation commands
   aws cloudformation describe-stacks \
-    --stack-name AgentCoreTechSummitMockApis \
+    --stack-name VibeCodingWorkshopMockApis \
     --profile YOUR_PROFILE_NAME \
     --query 'Stacks[0].Outputs[*].[OutputKey,OutputValue]' \
     --output table
 
   # For CDK commands
-  pnpm cdk deploy AgentCoreTechSummitMockApis --profile YOUR_PROFILE_NAME
+  pnpm cdk deploy VibeCodingWorkshopMockApis --profile YOUR_PROFILE_NAME
 
   # Or set the profile as default for the session
   export AWS_PROFILE=YOUR_PROFILE_NAME

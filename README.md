@@ -58,7 +58,9 @@ The solution implements a multi-tier architecture combining Amazon Bedrock Agent
 
 ![Architecture Diagram - Overview](assets/images/guidance-vibe-coding-aws-mcp-1.png)
 
-![Architecture Diagram - Detailed Components](assets/images/guidance-vibe-coding-aws-mcp-2.png)
+![Hotel Booking System – Sample Application 1](assets/images/guidance-vibe-coding-aws-mcp-2.png)
+
+![Hotel Booking System – Sample Application 2](assets/images/guidance-vibe-coding-aws-mcp-3.png)
 
 **Architecture Flow:**
 
@@ -136,9 +138,6 @@ This repository contains a complete Amazon Bedrock AgentCore hotel booking syste
 │   │   └── hotel-booking-agent/    # Intelligent hotel booking assistant
 │   ├── agentcore-mcp-servers/  # Model Context Protocol servers
 │   │   └── hotel-booking/      # Hotel booking MCP server
-│   ├── agentcore-tools/        # AgentCore deployment utilities
-│   │   ├── deploy.sh          # Agent/MCP server deployment script
-│   │   └── destroy.sh         # Cleanup and removal script
 │   └── cdk-infra-python/      # AWS CDK infrastructure
 │       ├── src/stacks/        # CDK stack definitions
 │       └── app.py             # CDK application entry point
@@ -178,6 +177,8 @@ Your environment is **completely pre-configured** with all tools, dependencies, 
 ### Operating System
 
 These deployment instructions are optimized to work on **macOS, Linux, and Windows** operating systems.
+
+> **Note:** Amazon Bedrock AgentCore requires ARM64 container images ([AWS Documentation](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/runtime-troubleshooting.html#troubleshoot-runtime-requirements)). Docker Desktop includes built-in ARM64 emulation. For Docker Engine users, run `docker run --privileged --rm tonistiigi/binfmt --install all` to enable ARM64 support.
 
 ## Deployment Steps
 
@@ -222,16 +223,16 @@ Verify your deployment was successful:
 
    You should see these stacks:
 
-   - `AgentCoreTechSummitMockApis`
-   - `AgentCoreTechSummitBookingAgent`
-   - `AgentCoreTechSummitMcpServer`
+   - `VibeCodingWorkshopMockApis`
+   - `VibeCodingWorkshopBookingAgent`
+   - `VibeCodingWorkshopMcpServer`
 
 2. **Verify API Endpoints**
 
    ```bash
    # Get stack outputs (API URLs and keys)
    aws cloudformation describe-stacks \
-     --stack-name AgentCoreTechSummitMockApis \
+     --stack-name VibeCodingWorkshopMockApis \
      --query 'Stacks[0].Outputs[*].[OutputKey,OutputValue]' \
      --output table
    ```
@@ -300,21 +301,13 @@ After completing the workshop, consider these enhancements:
 
 To avoid ongoing charges, delete all deployed resources:
 
-1. **Destroy AgentCore Deployments**
-
-   ```bash
-   # Remove Agent and MCP Server from AgentCore
-   ./packages/agentcore-tools/destroy.sh ./packages/agentcore-agents/hotel-booking-agent/hotel_booking_agent.py hotel_booking_agent
-   ./packages/agentcore-tools/destroy.sh ./packages/agentcore-mcp-servers/hotel-booking/hotel_booking_mcp.py hotel_booking_mcp
-   ```
-
-2. **Delete CDK Stacks**
+**Delete CDK Stacks**
 
    ```bash
    # Delete all stacks in reverse order
-   pnpm cdk destroy AgentCoreTechSummitMcpServer
-   pnpm cdk destroy AgentCoreTechSummitBookingAgent
-   pnpm cdk destroy AgentCoreTechSummitMockApis
+   pnpm cdk destroy VibeCodingWorkshopMcpServer
+   pnpm cdk destroy VibeCodingWorkshopBookingAgent
+   pnpm cdk destroy VibeCodingWorkshopMockApis
    ```
 
 For detailed cleanup instructions including CodeBuild cleanup, ECR cleanup, verification steps, and local environment cleanup, see the [Cleanup Guide](http://localhost:4321/dev-env/cleanup).

@@ -1,1 +1,1 @@
-# Constructs package for AgentCore Tech Summit 2025
+# Constructs package for AgentCore Vibe Coding 2025

@@ -114,7 +114,7 @@ Make sure you installed the [Bruno CLI](/intro/prerequisites/#step-3-install-rec
    
    ```bash
    # Get stack outputs (includes API IDs, URLs and API Key IDs)
-   aws cloudformation describe-stacks --stack-name AgentCoreTechSummitMockApis --query "Stacks[0].Outputs"
+   aws cloudformation describe-stacks --stack-name VibeCodingWorkshopMockApis --query "Stacks[0].Outputs"
    ```
    
    ```bash
@@ -199,14 +199,41 @@ Make sure you installed the [Bruno CLI](/intro/prerequisites/#step-3-install-rec
    }
    ```
 
-2. **Run API Tests**
+2. **Set Up AWS Credentials**
+
+   <Aside type="note" title="AWS Credentials Required">
+   The API tests require these environment variables:
+   - `AWS_ACCESS_KEY_ID`
+   - `AWS_SECRET_ACCESS_KEY`
+   - `AWS_SESSION_TOKEN` (for temporary credentials)
+
+   **Workshop Studio**: 
+   - Find credentials in your Workshop Studio dashboard
+   - Export them as environment variables in your terminal
+   
+   **Self-Deployment - macOS/Linux/Git Bash**: 
+   - Option 1: Use the helper script (recommended):
+     ```bash
+     cd packages/cdk-infra-python/tests/bruno
+     . ./set-aws-creds.sh
+     cd ../..
+     ```
+   - Option 2: Set variables manually if AWS CLI is already configured
+   
+   **Self-Deployment - Windows cmd/PowerShell**:
+   - Set environment variables manually:
+     ```powershell
+     $env:AWS_ACCESS_KEY_ID="your_key"
+     $env:AWS_SECRET_ACCESS_KEY="your_secret"
+     $env:AWS_SESSION_TOKEN="your_token"
+     ```
+   </Aside>
+
+3. **Run API Tests**
 
    The test scripts automatically handle AWS authentication and run the Bruno tests:
 
    ```bash title="Testing APIs"
-   # Navigate to the CDK directory
-   cd packages/cdk-infra-python
-
    # Test all APIs at once (recommended first run)
    pnpm run test:apis:all
 
@@ -216,7 +243,7 @@ Make sure you installed the [Bruno CLI](/intro/prerequisites/#step-3-install-rec
    pnpm run test:apis:toxicity            # Content moderation
    ```
 
-3. **Analyze Test Results**
+4. **Analyze Test Results**
 
    Each test suite validates different aspects:
 

@@ -7,7 +7,7 @@ using Bruno API configuration instead of Parameter Store.
 
 ⚠️ SETUP REQUIRED:
 Before running this script, you must:
-1. Deploy the AgentCoreTechSummitMockApis CDK stack
+1. Deploy the VibeCodingWorkshopMockApis CDK stack
 2. Get the API URLs from CloudFormation stack outputs
 3. Get the API keys from AWS API Gateway console
 4. Replace the placeholder values in BrunoConfig.__init__()
