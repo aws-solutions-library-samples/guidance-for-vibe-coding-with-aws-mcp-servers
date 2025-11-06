@@ -4,6 +4,7 @@ Test script to demonstrate hotel booking agent memory functionality
 """
 
 import json
+import logging
 import os
 import sys
 
@@ -15,7 +16,7 @@ if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
 
 from bedrock_agentcore.memory import MemoryClient  # noqa: E402
-from common.aws_config import AWS_REGION  # noqa: E402
+from common.aws_config import AWSConfig  # noqa: E402
 from memory.memory_hooks import MEMORY_NAME  # noqa: E402
 
 
@@ -23,7 +24,8 @@ def test_memory_setup():
     """Test memory setup and seeding with sample data"""
 
     # Configuration
-    REGION = AWS_REGION  # Use detected region or fallback
+    aws_config = AWSConfig(logger=logging.getLogger(__name__))
+    REGION = aws_config.get_region()
     CUSTOMER_ID = "customer_test_001"
 
     print("🧠 Testing Hotel Booking Agent Memory Setup")

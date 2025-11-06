@@ -198,8 +198,8 @@ def main():
     # Test 2: Store and retrieve conversation
     # actor_id, session_id = test_conversation_storage(memory_client, memory_id)
 
-    session_id = "8b81d737-91a2-4b80-998d-52e1cc76e381"
-    actor_id = "customer_004"
+    session_id = "33edc917-f061-411d-a5ad-8d5e69ca7a37"
+    actor_id = "e908f5c9-23db-4f5e-afe2-5d4dfbcc6f53"
     if not actor_id or not session_id:
         print("❌ Cannot continue tests without conversation data")
         return 1
