@@ -6,7 +6,7 @@
   - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
     - [AWS MCP Servers](#aws-mcp-servers)
-    - [Architecture (In Review)](#architecture-in-review)
+    - [Architecture](#architecture)
     - [Cost](#cost)
     - [Sample Cost Table](#sample-cost-table)
   - [Deployment Options](#deployment-options)
@@ -52,7 +52,7 @@ The workshop demonstrates these capabilities across three practical scenarios:
 - **Frontend Development**: Modern React applications with AWS Amplify integration
 - **Production Readiness**: Real-time cost analysis and security assessment
 
-### Architecture (In Review)
+### Architecture
 
 The solution implements a multi-tier architecture combining Amazon Bedrock AgentCore with serverless AWS services:
 
@@ -73,7 +73,7 @@ The solution implements a multi-tier architecture combining Amazon Bedrock Agent
 **Key Components:**
 
 - **Amazon Bedrock AgentCore** - Intelligent conversational agent with natural language understanding
-- **MCP Server** (AWS Lambda) - Protocol bridge connecting agent to backend APIs
+- **MCP Server** - Protocol bridge connecting agent to backend APIs
 - **Property Resolution API** (AWS Lambda + API Gateway) - Hotel search powered by Amazon Location Service
 - **Reservations API** (AWS Lambda + API Gateway) - Booking management and CRUD operations
 - **Toxicity Detection API** (AWS Lambda + API Gateway) - Content moderation using Amazon Comprehend
@@ -303,12 +303,12 @@ To avoid ongoing charges, delete all deployed resources:
 
 **Delete CDK Stacks**
 
-   ```bash
-   # Delete all stacks in reverse order
-   pnpm cdk destroy VibeCodingWorkshopMcpServer
-   pnpm cdk destroy VibeCodingWorkshopBookingAgent
-   pnpm cdk destroy VibeCodingWorkshopMockApis
-   ```
+```bash
+# Delete all stacks in reverse order
+pnpm cdk destroy VibeCodingWorkshopMcpServer
+pnpm cdk destroy VibeCodingWorkshopBookingAgent
+pnpm cdk destroy VibeCodingWorkshopMockApis
+```
 
 For detailed cleanup instructions including CodeBuild cleanup, ECR cleanup, verification steps, and local environment cleanup, see the [Cleanup Guide](http://localhost:4321/dev-env/cleanup).
 
