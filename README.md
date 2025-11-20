@@ -353,12 +353,21 @@ A: This Guidance is designed as a workshop and learning tool. Not intended for p
    - **Problem:** `spawn uvx ENOENT` error when MCP servers try to start
    - **Solution:** Use the full path to uvx in your MCP configuration. Find it with `which uvx` and update your MCP settings file.
 
-4. **API Tests Timeout**
+4. **Q CLI Authentication in Remote Environments**
+
+   - **Problem:** When running `q login` and selecting "Use for Free with Builder ID", after clicking "Allow access" on the OIDC URL, sometimes you might see: `This site can't be reached - 127.0.0.1 refused to connect`
+   - **Cause:** This occurs in remote or cloud environments where Q CLI attempts to open a browser on localhost, but the OAuth callback cannot reach the local server
+   - **Solution:** Use the device flow authentication method instead:
+     ```bash
+     q login --license free --use-device-flow
+     ```
+
+5. **API Tests Timeout**
 
    - **Problem:** Bruno API tests timeout on first run
    - **Solution:** Wait a few seconds for Lambda cold start and retry the tests.
 
-5. **CDK Bootstrap Stack**
+6. **CDK Bootstrap Stack**
    - **Note:** Keep the CDK bootstrap stack if you plan to use CDK for other projects. Only delete if you're certain you won't use CDK in this AWS account/region again.
 
 ## Notices
