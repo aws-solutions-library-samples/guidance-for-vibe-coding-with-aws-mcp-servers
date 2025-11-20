@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@astrojs/starlight": "0.35.2",
-    "astro": "5.13.2",
+    "astro": "5.15.9",
     "rehype-external-links": "3.0.0",
     "sharp": "0.34.3",
     "starlight-image-zoom": "0.10.1"
