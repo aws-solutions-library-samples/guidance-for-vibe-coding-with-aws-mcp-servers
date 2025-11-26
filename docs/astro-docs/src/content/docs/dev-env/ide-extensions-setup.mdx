@@ -148,20 +148,15 @@ With Amazon Q Developer, MCP severs are configured by creating and modifying a f
             },
             "transportType": "stdio"
         },
-        "awslabs.cdk-mcp-server": {
+        "awslabs.aws-iac-mcp-server": {
             "autoApprove": [
-                "CDKGeneralGuidance",
-                "SearchGenAICDKConstructs",
-                "GenerateBedrockAgentSchema",
-                "CheckCDKNagSuppressions",
-                "GetAwsSolutionsConstructPattern",
-                "LambdaLayerDocumentationProvider",
-                "ExplainCDKNagRule"
+                "read_cdk_documentation_page"
             ],
             "disabled": false,
+            "timeout": 60,
             "command": "uvx",
             "args": [
-                "awslabs.cdk-mcp-server@latest"
+                "awslabs.aws-iac-mcp-server@latest"
             ],
             "env": {
                 "FASTMCP_LOG_LEVEL": "ERROR"
@@ -270,7 +265,7 @@ After you copied and save the contents of your `mcp.json` file, you can verify t
     "When developing AWS Applications, leverage the following MCP Servers: 
     - AWS Knowledge MCP Server (aws-knowledge-mcp-server) to retrieve up to date documentation of AWS services
     - AWS API MCP Server (awslabs.aws-api-mcp-server) to interact with AWS services and resources through AWS CLI commands
-    - AWS CDK MCP Server (awslabs.cdk-mcp-server) to build AWS CDK applications
+    - AWS IaC MCP Server (awslabs.aws-iac-mcp-server) to build AWS infrastructure as code applications
     - AWS Pricing MCP Server (awslabs.aws-pricing-mcp-server) for AWS service pricing information and cost estimation capabilities
     - AWS Diagram MCP Server (awslabs.aws-diagram-mcp-server) to generate architecture diagrams from code and infrastructure descriptions
     - AWS Frontend MCP Server (awslabs.frontend-mcp-server) for developing modern react-based frontend applications using AWS Amplify, other AWS services, and additional web technologies
@@ -345,20 +340,15 @@ To set up the AWS MCP servers in Cline, you can follow [these instructions](http
             },
             "transportType": "stdio"
         },
-        "awslabs.cdk-mcp-server": {
+        "awslabs.aws-iac-mcp-server": {
             "autoApprove": [
-                "CDKGeneralGuidance",
-                "SearchGenAICDKConstructs",
-                "GenerateBedrockAgentSchema",
-                "CheckCDKNagSuppressions",
-                "GetAwsSolutionsConstructPattern",
-                "LambdaLayerDocumentationProvider",
-                "ExplainCDKNagRule"
+                "read_cdk_documentation_page"
             ],
             "disabled": false,
+            "timeout": 60,
             "command": "uvx",
             "args": [
-                "awslabs.cdk-mcp-server@latest"
+                "awslabs.aws-iac-mcp-server@latest"
             ],
             "env": {
                 "FASTMCP_LOG_LEVEL": "ERROR"
@@ -457,7 +447,7 @@ After you copied and save the contents of your `cline_mcp_settings.json` file, y
     "When developing AWS Applications, leverage the following MCP Servers: 
     - AWS Knowledge MCP Server (aws-knowledge-mcp-server) to retrieve up to date documentation of AWS services
     - AWS API MCP Server (awslabs.aws-api-mcp-server) to interact with AWS services and resources through AWS CLI commands
-    - AWS CDK MCP Server (awslabs.cdk-mcp-server) to build AWS CDK applications
+    - AWS IaC MCP Server (awslabs.aws-iac-mcp-server) to build AWS infrastructure as code applications
     - AWS Pricing MCP Server (awslabs.aws-pricing-mcp-server) for AWS service pricing information and cost estimation capabilities
     - AWS Diagram MCP Server (awslabs.aws-diagram-mcp-server) to generate architecture diagrams from code and infrastructure descriptions
     - AWS Frontend MCP Server (awslabs.frontend-mcp-server) for developing modern react-based frontend applications using AWS Amplify, other AWS services, and additional web technologies
