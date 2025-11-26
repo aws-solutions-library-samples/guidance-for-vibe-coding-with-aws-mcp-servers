@@ -47,7 +47,7 @@ The idea is to leverage your AI coding assistant to:
 - Currently, the AWS Pricing MCP Server will not provide pricing for this service, as it uses the CDK constructs to understand the services used in an application and fetch its prices.
 </Aside>
 
-### 🔐 Security Assessment with CDK MCP Server
+### 🔐 Security Assessment with AWS IaC MCP Server
 
 **The Challenge**: The infrastructure code already has CDK Nag implemented with several security suppressions. Your mission is to audit these suppressions and improve the security posture.
 
@@ -78,7 +78,7 @@ Generate a security improvement checklist prioritized by severity."
 ```
 
 ```text title="Sample Security Fix Prompt"
-"Using the AWS CDK MCP Server and AWS Knowledge MCP Server:
+"Using the AWS IaC MCP Server and AWS Knowledge MCP Server:
 1. Research best practices for [specific security rule]
 2. Implement a fix that resolves the suppression while maintaining functionality
 3. Test the changes to ensure they don't break the deployment"
