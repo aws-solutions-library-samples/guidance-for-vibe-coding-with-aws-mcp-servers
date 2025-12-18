@@ -69,7 +69,7 @@ class HotelBookingService:
             APIError: If the request fails
         """
         try:
-            logger.info(f"Making {method} request to {url}")
+            logger.info(f"Making {method} request")
 
             # Prepare the request body
             body = None

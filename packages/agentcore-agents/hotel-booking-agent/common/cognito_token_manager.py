@@ -34,7 +34,7 @@ class CognitoTokenManager:
         """
         try:
             if self._cached_credentials is None:
-                logger.info(f"Retrieving Cognito credentials from secret: {self.secret_name}")
+                logger.info("Retrieving Cognito credentials from Secrets Manager")
 
                 secret_value = self.secrets_client.get_secret_value(SecretId=self.secret_name)
                 self._cached_credentials = json.loads(secret_value["SecretString"])
