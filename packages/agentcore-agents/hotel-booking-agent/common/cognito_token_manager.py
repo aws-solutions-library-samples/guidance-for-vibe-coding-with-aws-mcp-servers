@@ -44,10 +44,10 @@ class CognitoTokenManager:
             return self._cached_credentials
 
         except ClientError as e:
-            logger.error(f"Failed to retrieve Cognito credentials: {e}")
+            logger.error(f"Failed to retrieve Cognito credentials: {e.response['Error']['Code']}")
             raise
-        except json.JSONDecodeError as e:
-            logger.error(f"Failed to parse Cognito credentials JSON: {e}")
+        except json.JSONDecodeError:
+            logger.error("Failed to parse Cognito credentials JSON")
             raise
 
     def refresh_bearer_token(self) -> str:
@@ -69,7 +69,7 @@ class CognitoTokenManager:
             username = credentials.get("username", "")
             password = credentials.get("password", "")
 
-            logger.info(f"Refreshing bearer token for user: {username}")
+            logger.info("Refreshing bearer token")
 
             # Initialize Cognito Identity Provider client
             cognito_client = boto3.client("cognito-idp")

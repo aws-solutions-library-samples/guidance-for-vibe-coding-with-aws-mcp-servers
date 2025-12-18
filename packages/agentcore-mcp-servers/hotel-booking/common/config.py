@@ -121,8 +121,8 @@ class Config:
                 logger.error(f"Failed to resolve API key ID: {e}")
             # Return the ID as fallback - might work if the API expects the ID
             return api_key_id
-        except Exception as e:
-            logger.error(f"Unexpected error resolving API key ID {api_key_id}: {e}")
+        except Exception:
+            logger.error("Unexpected error resolving API key ID")
             return api_key_id
 
     def _validate_config(self) -> None:
