@@ -42,7 +42,7 @@ def handler(event, context):  # noqa: ARG001
         # Resolve Property Resolution API Key if provided
         if "PropertyResolutionApiKeyId" in properties:
             api_key_id = properties["PropertyResolutionApiKeyId"]
-            logger.info(f"Resolving Property Resolution API Key: {api_key_id}")
+            logger.info("Resolving Property Resolution API Key")
 
             try:
                 response = apigateway.get_api_key(apiKey=api_key_id, includeValue=True)
@@ -58,16 +58,16 @@ def handler(event, context):  # noqa: ARG001
                 )
 
                 resolved_keys["PropertyResolution"] = "SUCCESS"
-                logger.info(f"Successfully resolved Property Resolution API Key: {api_key_id}")
+                logger.info("Successfully resolved Property Resolution API Key")
 
-            except Exception as e:
-                logger.error(f"Failed to resolve Property Resolution API Key {api_key_id}: {e}")
-                resolved_keys["PropertyResolution"] = f"ERROR: {str(e)}"
+            except Exception:
+                logger.error("Failed to resolve Property Resolution API Key")
+                resolved_keys["PropertyResolution"] = "ERROR"
 
         # Resolve Toxicity Detection API Key if provided
         if "ToxicityDetectionApiKeyId" in properties:
             api_key_id = properties["ToxicityDetectionApiKeyId"]
-            logger.info(f"Resolving Toxicity Detection API Key: {api_key_id}")
+            logger.info("Resolving Toxicity Detection API Key")
 
             try:
                 response = apigateway.get_api_key(apiKey=api_key_id, includeValue=True)
@@ -83,13 +83,13 @@ def handler(event, context):  # noqa: ARG001
                 )
 
                 resolved_keys["ToxicityDetection"] = "SUCCESS"
-                logger.info(f"Successfully resolved Toxicity Detection API Key: {api_key_id}")
+                logger.info("Successfully resolved Toxicity Detection API Key")
 
-            except Exception as e:
-                logger.error(f"Failed to resolve Toxicity Detection API Key {api_key_id}: {e}")
-                resolved_keys["ToxicityDetection"] = f"ERROR: {str(e)}"
+            except Exception:
+                logger.error("Failed to resolve Toxicity Detection API Key")
+                resolved_keys["ToxicityDetection"] = "ERROR"
 
-        logger.info(f"API Key resolution completed: {resolved_keys}")
+        logger.info("API Key resolution completed")
 
         return {"PhysicalResourceId": "api-key-resolver", "Data": resolved_keys}
 

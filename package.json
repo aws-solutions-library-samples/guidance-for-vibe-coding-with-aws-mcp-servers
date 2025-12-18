@@ -40,9 +40,10 @@
       "prettier --write --ignore-unknown",
       "eslint --fix --config ./eslint.config.js"
     ],
-    "**/*.{py,pyi,ipynb}": [
+    "**/*.{py,pyi}": [
       "uvx ruff format . --config ./ruff.toml",
-      "uvx ruff check . --fix --config ./ruff.toml"
+      "uvx ruff check . --fix --config ./ruff.toml",
+      "uvx bandit -ll"
     ]
   },
   "packageManager": "pnpm@10.14.0",

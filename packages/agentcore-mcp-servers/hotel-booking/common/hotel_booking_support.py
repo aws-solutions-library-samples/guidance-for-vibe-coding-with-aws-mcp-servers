@@ -76,7 +76,6 @@ class HotelBookingService:
             if data:
                 body = json.dumps(data)
                 headers["Content-Type"] = "application/json"
-                logger.info(f"Request body prepared: {len(body)} bytes")
 
             # If we have AWS credentials, sign the request with SigV4
             if self.credentials:

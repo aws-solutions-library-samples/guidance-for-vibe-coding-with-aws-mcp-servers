@@ -10,9 +10,9 @@ from aws_cdk import (
     Duration,
     RemovalPolicy,
     Stack,
-    aws_ecr_assets as ecr_assets,
     aws_bedrock_agentcore_alpha as agentcore,
     aws_cognito as cognito,
+    aws_ecr_assets as ecr_assets,
     aws_iam as iam,
     aws_lambda as lambda_,
     aws_logs as logs,
@@ -323,8 +323,7 @@ def handler(event, context):
         mcp_server_path = Path(__file__).parent.parent.parent.parent / "agentcore-mcp-servers" / "hotel-booking"
 
         agent_runtime_artifact = agentcore.AgentRuntimeArtifact.from_asset(
-            str(mcp_server_path),
-            platform=ecr_assets.Platform.LINUX_ARM64
+            str(mcp_server_path), platform=ecr_assets.Platform.LINUX_ARM64
         )
 
         # Create runtime
@@ -339,10 +338,7 @@ def handler(event, context):
                 f"https://cognito-idp.{self.region}.amazonaws.com/{self.user_pool.user_pool_id}/.well-known/openid-configuration",
                 [self.user_pool_client.user_pool_client_id],
             ),
-            environment_variables={
-                "AWS_REGION": self.region,
-                "AWS_DEFAULT_REGION": self.region,
-            },
+            environment_variables={"AWS_REGION": self.region, "AWS_DEFAULT_REGION": self.region},
         )
 
         # Ensure IAM policy is attached before runtime is created
