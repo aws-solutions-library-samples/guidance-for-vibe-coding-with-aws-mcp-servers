@@ -74,6 +74,7 @@ export default defineConfig({
               label: "3. Production Readiness Assessment Section",
               link: "/workshop/phase-3/",
             },
+            { label: "Secure Vibe Coding", link: "/workshop/secure-vibe-coding/" },
             { label: "Wrap-up", link: "/workshop/wrap-up/" },
           ],
         },
