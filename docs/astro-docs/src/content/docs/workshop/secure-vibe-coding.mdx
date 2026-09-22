@@ -1,0 +1,57 @@
+---
+title: Secure Vibe Coding
+description: Using PkgDiet as a local guardrail alongside the AWS MCP Server
+---
+
+# Secure Vibe Coding with AWS MCP Servers & PkgDiet
+
+## Overview
+When using agentic AI to build AWS infrastructure (like CDK stacks or Lambda functions), it's highly productive to use the `aws-iac-mcp-server` to let the AI write your CloudFormation or CDK code.
+
+However, AIs often hallucinate or suggest outdated/vulnerable `npm` packages for your Lambda functions (e.g., suggesting `request` or `moment.js`). 
+
+By combining the **AWS IaC MCP Server** with the **PkgDiet MCP Server**, you create a **Secure Vibe Coding** environment. The AI can generate the infrastructure, while PkgDiet acts as a guardrail to ensure only healthy, modern, and secure dependencies are provisioned.
+
+## Local Examples
+
+We have provided local, zero-cost examples in `examples/aws-secure-vibe-coding/`. These examples demonstrate how PkgDiet audits standard Node.js applications without deploying any AWS resources.
+
+### 1. Vulnerable Example
+Navigate to `examples/aws-secure-vibe-coding/vulnerable-example`:
+```bash
+npm ci
+npx pkgdiet audit
+```
+*Notice how PkgDiet flags the outdated packages and suggests modern alternatives.*
+
+### 2. Guarded Example
+Navigate to `examples/aws-secure-vibe-coding/guarded-example`:
+```bash
+npm ci
+npx pkgdiet ci
+```
+*Notice how the CI gate cleanly passes because the dependencies have been modernized.*
+
+## Adding PkgDiet to your AWS Vibe Coding Setup
+
+Add both servers to your `mcp.json` (e.g., in Cursor or Kiro):
+
+```json
+{
+  "mcpServers": {
+    "aws-iac": {
+      "command": "uvx",
+      "args": ["awslabs.aws-iac-mcp-server@latest"]
+    },
+    "pkgdiet": {
+      "command": "npx",
+      "args": ["-y", "pkgdiet@2.0.1", "mcp"]
+    }
+  }
+}
+```
+
+Now, when you prompt the agent:
+> "Write a CDK stack with a Lambda function that fetches data from an API and parses the date."
+
+The agent will use `aws-iac` for the CDK constructs, and `pkgdiet` to check the dependencies before it finalizes the `package.json` for the Lambda function, steering it away from `request` and `moment` towards native `fetch` and `date-fns`!
